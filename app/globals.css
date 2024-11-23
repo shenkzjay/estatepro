@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+/* Remove default marker styles */
+
+.robo {
+  font-family: var(--robo);
+}
+
+nav.scaledown {
+  width: 4vw;
+  transition: width 0.2s linear;
+}
+
+@media screen and (max-width: 800px) {
+  nav.scaledown {
+    width: 0vw;
+    transition: width 0.2s linear;
+  }
+}
+
+nav {
+  transition: width 0.2s linear;
+}
+
+.tabler tr td {
+  padding: 24px;
+}
+
+.tabler thead tr th {
+  padding: 24px;
+}
+
+.upload-wrapper .uploadzone .success {
+  display: none;
+}
+
+.upload-wrapper:hover .uploadzone {
+  border: 2px dashed #1abc9c;
+}
+
+.upload-wrapper input[type="file"]:valid + .uploadzone {
+  border-color: #1abc9c;
+}
+
+.upload-wrapper input[type="file"]:valid + .uploadzone .success {
+  display: inline-block;
+}
+
+.upload-wrapper input[type="file"]:valid + .uploadzone .default {
+  display: none;
+}

@@ -1,0 +1,33 @@
+.statusPill {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.statusPill div {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 100px;
+}
+
+.statusPill.success div {
+  background-color: #e7f6ec;
+  color: #139d8f;
+}
+
+.statusPill.warning div {
+  background-color: #fef6e7;
+  color: #865503;
+}
+
+.statusPill.danger div {
+  background-color: #fbeae9;
+  color: #9e0a05;
+}
+
+.statusPill.default div {
+  background-color: #e5e5e5;
+  color: #7b7b7b;
+}

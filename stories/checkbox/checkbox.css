@@ -1,0 +1,11 @@
+.checkboxwrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 1rem;
+}
+
+.checkboxwrapper label {
+  text-wrap: nowrap;
+  color: #666;
+}

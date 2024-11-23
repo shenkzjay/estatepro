@@ -1,0 +1,63 @@
+details {
+  background-color: white;
+  width: 100%;
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+  details {
+    padding: 15px;
+  }
+
+  details summary {
+    color: #7b7b7b;
+  }
+
+  details p {
+    color: #7b7b7b;
+  }
+}
+
+details p {
+  color: #7b7b7b;
+}
+
+details summary {
+  list-style: none;
+}
+
+details summary {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  padding: 1rem 0;
+  color: #535353;
+}
+
+details summary::before {
+  content: "+";
+  right: 0;
+  top: 0;
+  position: absolute;
+  background-color: #c3f8f2;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  font-size: clamp(16px, 5vw, 24px);
+  color: #7b7b7b;
+}
+
+details[open] summary::before {
+  content: "ｘ";
+  right: 0;
+  position: absolute;
+  font-size: clamp(16px, 5vw, 24px);
+  color: #7b7b7b;
+}

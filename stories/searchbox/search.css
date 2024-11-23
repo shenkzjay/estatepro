@@ -1,0 +1,28 @@
+.searchbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.searchbox span {
+  position: absolute;
+  /* top: 20%; */
+  padding: 0 0.5rem;
+}
+
+.searchbox input {
+  outline: none;
+  border: none;
+  padding: 0.5rem 2.5rem;
+  width: 100%;
+  border-radius: 100px;
+}
+
+.searchbox input:focus {
+  outline: 1px solid #c4c4c4;
+}
+
+.searchbox input[placehoder] {
+  color: #6d7175;
+}

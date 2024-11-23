@@ -1,0 +1,46 @@
+.dialog-wrapper {
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 40rem;
+}
+
+.dialog-wrapper > button {
+  font-weight: 700;
+  padding: 8px 26px;
+  font-size: 18px;
+  border-radius: 20px;
+  color: red;
+  justify-content: center;
+
+  display: flex;
+  text-align: center;
+  /* width: 100%; */
+}
+
+.dialog-wrapper > h3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog_header button {
+  color: red;
+}
+
+.dialog_header > h3 {
+  font-weight: 700;
+  color: #7b7b7b;
+}
+
+@media screen and (max-width: 800px) {
+  .dialog-wrapper {
+    width: 100%;
+  }
+}

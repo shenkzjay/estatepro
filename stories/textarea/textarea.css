@@ -1,0 +1,16 @@
+.text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.text-wrap textarea {
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.text-wrap textarea:focus {
+  outline: none;
+  border: 2px solid #ddd;
+}

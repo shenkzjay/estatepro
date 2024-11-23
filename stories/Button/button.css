@@ -1,0 +1,109 @@
+.button.Primary {
+  background-color: #139d8f;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 10px;
+  height: 100%;
+  border-radius: 100px;
+  border: none;
+}
+
+.button.Primary:hover {
+  transform: scale(0.9);
+  transition: transform 0.3s ease-in-out;
+}
+
+.button.Primary > div {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  color: white;
+}
+
+.button.Primary > p {
+  font-family: var(--urbanist);
+  font-weight: 400;
+  font-size: 18px;
+  padding-left: 14px;
+  color: white;
+}
+
+.button.Primary svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 4;
+
+  /* color: white !important; */
+}
+
+.button.Secondary {
+  background-color: #c3f8f2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 10px 24px;
+  border-radius: 100px;
+  border: none;
+}
+
+.button.Secondary svg {
+  width: 16px;
+  height: 16px;
+  color: #535353 !important;
+  stroke-width: 4;
+}
+
+.button.Secondary > p {
+  font-family: var(--urbanist);
+  font-weight: 400;
+  font-size: 18px;
+  color: #535353;
+}
+
+.button.Secondary > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button.Tertiary {
+  background-color: #c3f8f2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 8px 12px;
+  border-radius: 100px;
+  border: none;
+}
+
+button.Tertiary svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 4;
+}
+
+.button.Tertiary > p {
+  /* font-family: var(--urbanist); */
+  font-weight: 400;
+  font-size: 18px;
+  text-wrap: nowrap;
+  /* color: #535353; */
+}
+
+.button.Tertiary > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

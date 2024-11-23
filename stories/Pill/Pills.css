@@ -1,0 +1,62 @@
+:root {
+  --primarycolor: #139d8f;
+}
+
+.pillstyle {
+  display: flex;
+  width: 100%;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 9999px;
+  position: relative;
+}
+
+.pillstyle .pillbackgroundcolor {
+  padding: 10px;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pillbackgroundcolor svg {
+  width: 16px;
+  height: 16px;
+}
+
+.afterIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.pillstyle.pillstylebefore {
+  padding-right: 14px;
+  color: black;
+}
+
+.pillstyle.pillstyleafter {
+  justify-content: center;
+  color: black;
+}
+
+.tooltip {
+  position: absolute;
+  top: 0.7rem;
+  left: 3rem;
+  font-size: clamp(0.2rem, 5vw, 0.8rem);
+  color: black;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 5px;
+  display: none;
+}
+
+.pillstyle:hover .tooltip {
+  display: flex;
+  padding-left: 0.3rem;
+}
