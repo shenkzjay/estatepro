@@ -58,7 +58,7 @@ export function Navbar() {
       </div>
       <div>
         <div className=" flex-row md:flex hidden">
-          <Link href={"/resident"}>
+          <Link href={"/admin"}>
             <Button
               variant="Primary"
               label="Login"
