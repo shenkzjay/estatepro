@@ -12,7 +12,11 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@prisma/client": "^6.0.1",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.9.6",
     "next": "14.1.4",
+    "next-auth": "^5.0.0-beta.25",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -27,7 +31,8 @@
     "@storybook/react": "^8.0.8",
     "@storybook/test": "^8.0.8",
     "@testing-library/react": "^15.0.2",
-    "@types/node": "^20",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.17.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.2.1",
@@ -38,9 +43,16 @@
     "install": "^0.13.0",
     "jsdom": "^24.0.0",
     "postcss": "^8",
+    "prisma": "^6.0.1",
     "storybook": "^8.0.8",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
     "vitest": "^1.5.0"
-  }
+  },
+  "description": "This is an estate management portal",
+  "main": "postcss.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

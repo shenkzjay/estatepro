@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String           @unique
+  password      String?
+  image         String?
+  role          Role             @default(RESIDENT)
+  permissions   UserPermission[]
+  magicToken    String?
+  expiresAt     DateTime?
+  createdBy     User?            @relation("CreatedBy", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdById   String?          @db.ObjectId
+  createdUsers  User[]           @relation("CreatedBy")
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model Permission {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  users       UserPermission[]
+}
+
+model UserPermission {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String     @db.ObjectId
+  permissionId String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  assignedAt   DateTime   @default(now())
+
+  @@unique([userId, permissionId])
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  RESIDENT
+  STAFF
+}
