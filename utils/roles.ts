@@ -1,4 +1,4 @@
-export enum Role {
+enum Role {
   SUPERADMIN,
   ADMIN,
   RESIDENT,
