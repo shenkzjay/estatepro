@@ -143,7 +143,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
       };
 
       //set resident data to state
-      setResidentData([...residentData, newResidentData]);
+      setResidentData((prevResidentData) => [...prevResidentData, newResidentData]);
 
       //close modal
       modalRef.current?.close();

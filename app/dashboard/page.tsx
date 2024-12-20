@@ -10,7 +10,7 @@ export default async function HomeAdminDashboard() {
     return (
       <div>
         <span>Oops Error</span>
-        <p>You don't have sufficient clearance to view this page</p>
+        <p>You don&apos;t have sufficient clearance to view this page</p>
         <Link href="/auth/signin">Please login to continue</Link>
       </div>
     );
