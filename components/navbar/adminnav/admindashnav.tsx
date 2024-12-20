@@ -3,12 +3,17 @@ import { SetStateAction, Dispatch } from "react";
 import { AdminSideMenuNav } from "./adminsidemenunav";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
+import { User } from "@prisma/client";
+import { useAdminContext } from "@/app/dashboard/admin/provider";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
-  SetIsCollapse: Dispatch<SetStateAction<boolean>>;
+  SetIsCollapse: Dispatch<React.SetStateAction<boolean>>;
+  user: User;
 }
-export const AdminDashBoardNav = ({ isCollapse, SetIsCollapse }: DashBoardNavProp) => {
+export const AdminDashBoardNav = ({ isCollapse, SetIsCollapse, user }: DashBoardNavProp) => {
+  console.log("admindash", isCollapse);
+
   //useMatch media hook to check for viewport size
   const mobileView = useMatchMedia("(max-width:840px)");
   return (
@@ -16,7 +21,7 @@ export const AdminDashBoardNav = ({ isCollapse, SetIsCollapse }: DashBoardNavPro
       {!mobileView ? (
         <div>
           <div className="">
-            <AdminSideMenuNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} />
+            <AdminSideMenuNav />
 
             <div
               className="flex text-white z-[9999] relative"

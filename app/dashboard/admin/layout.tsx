@@ -1,10 +1,16 @@
-"use client";
+// "use client";
 
 import { Roboto } from "next/font/google";
-import "../globals.css";
-import { AdminDashBoardNav } from "@/components/navbar/adminnav/admindashnav";
-import { useState, createContext } from "react";
-import { ToggleAdminContext } from "./provider";
+import "../../../app/globals.css";
+import { AdminDashboardContent } from "../admin/admin";
+import { redirect } from "next/navigation";
+// import { AdminDashBoardNav } from "@/components/navbar/adminnav/admindashnav";
+
+// import { ToggleAdminContext } from "./provider";
+
+import { GetUsers } from "@/app/api/queries/getUser";
+
+import { AdminContextProvider } from "./provider";
 
 const Robotofont = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -12,18 +18,24 @@ const Robotofont = Roboto({
   variable: "--robo",
 });
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isCollapse, SetIsCollapse] = useState<boolean>(true);
+  const user = await GetUsers();
+
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
+  // if (user.role !== "SUPERADMIN") {
+  //   return <div>UnAuthorized user</div>;
+  // }
+
   return (
-    <section>
-      <ToggleAdminContext.Provider value={{ isCollapse, SetIsCollapse }}>
-        <AdminDashBoardNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} />
-        <main className={``}>{children}</main>
-      </ToggleAdminContext.Provider>
-    </section>
+    <AdminContextProvider user={user}>
+      <AdminDashboardContent>{children}</AdminDashboardContent>
+    </AdminContextProvider>
   );
 }

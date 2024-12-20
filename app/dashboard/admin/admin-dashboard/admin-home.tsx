@@ -14,6 +14,8 @@ interface updatesProps {
 }
 
 export const AdminHome = ({ isCollapse }: AdminDashBoardProp) => {
+  console.log("admin-home", isCollapse);
+
   const updates: updatesProps[] = [
     {
       id: 1,

@@ -28,7 +28,8 @@
     ".next/types/**/*.ts",
     "utils/next-auth.d.ds",
     "utils/next-auth..d.ds",
-    "utils/next-auth..d.ds"
+    "utils/next-auth..d.ds",
+    "prisma/seed.js"
   ],
   "exclude": ["node_modules"]
 }

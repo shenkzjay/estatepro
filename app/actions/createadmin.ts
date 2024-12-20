@@ -3,13 +3,16 @@ import { prisma } from "@/utils/prisma";
 // import { randomBytes } from "crypto";
 import { Role } from "@prisma/client";
 import nodemailer from "nodemailer";
+import { auth } from "@/auth";
 
 export async function getMagiclink(prevState: any, formData: FormData) {
   const rawData = {
-    fullname: formData.get("fullname") as string,
+    name: formData.get("fullname") as string,
     email: formData.get("email") as string,
     role: formData.get("role") as Role,
   };
+
+  const session = await auth();
 
   const token = window.crypto.randomUUID();
 
@@ -47,7 +50,7 @@ export async function getMagiclink(prevState: any, formData: FormData) {
       to: rawData.email,
       subject: "Set up your account",
       html: `
-        <p>Hello ${rawData.fullname},</p>
+        <p>Hello ${rawData.name},</p>
         <p>You've been invited to set up your account. Click the link below to complete your account setup:</p>
         <a href="${magiclink}">Set up your account</a>
         <p>This link will expire in 24 hours.</p>
@@ -57,11 +60,9 @@ export async function getMagiclink(prevState: any, formData: FormData) {
     // If the email sends successfully, create the user
     await prisma.user.create({
       data: {
-        name: rawData.fullname,
+        name: rawData.name,
         email: rawData.email,
         role: roles,
-        magicToken: token,
-        expiresAt,
       },
     });
 

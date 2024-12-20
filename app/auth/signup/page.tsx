@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { getMagiclink } from "@/app/actions/magiclink";
+import { getMagiclink } from "@/app/actions/createadmin";
 import { Role } from "@prisma/client";
 import { Toaster, toast } from "sonner";
 

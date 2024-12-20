@@ -3,7 +3,7 @@
 import { Logo } from "@/public/svgIcons/logo";
 import { Pills } from "@/stories/Pill/Pills";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, useEffect, useState } from "react";
 import { LogoIconOnly } from "@/public/svgIcons/logoIconOnly";
 import { LogOutIcon } from "@/public/svgIcons/logoutIcon";
 import { HomeIcon } from "@/public/svgIcons/homeIcon";
@@ -15,13 +15,19 @@ import { UpdatesIcon } from "@/public/svgIcons/updatesIcon";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
 import { usePathname } from "next/navigation";
+import { User } from "@prisma/client";
+import { useAdminContext } from "@/app/dashboard/admin/provider";
+import { signOutAction } from "@/app/actions/handlesignin-action";
 
 interface SideMenuProps {
   isCollapse: boolean;
   SetIsCollapse: Dispatch<SetStateAction<boolean>>;
+  user: User;
 }
 
-export const AdminSideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) => {
+export const AdminSideMenuNav = () => {
+  const { isCollapse, user } = useAdminContext();
+
   //useMatch media hook to check for viewport size
   const mobileView = useMatchMedia("(max-width:800px)");
 
@@ -50,7 +56,7 @@ export const AdminSideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) =
                 <div
                   className={`${pathname === "/admin" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/admin"}>
+                  <Link href={"/dashboard/admin"}>
                     <Pills
                       pillText="Home"
                       bgColor="transparent"
@@ -62,9 +68,9 @@ export const AdminSideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) =
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/admin" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/admin"}>
+                  <Link href={"/dashboard/admin"}>
                     {" "}
                     <Pills
                       pillText=""
@@ -81,9 +87,9 @@ export const AdminSideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) =
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/admin/manage-residents"}>
+                  <Link href={"/dashboard/admin/manage-residents"}>
                     <Pills
                       pillText="Manage residents"
                       bgColor="transparent"
@@ -95,9 +101,9 @@ export const AdminSideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) =
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/admin/manage-residents"}>
+                  <Link href={"/dashboard/admin/manage-residents"}>
                     {" "}
                     <Pills
                       pillText=""
@@ -245,18 +251,31 @@ export const AdminSideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) =
             {isCollapse ? (
               <div className="flex flex-row justify-between w-full">
                 <div>
-                  <h3>Alison Eyo</h3>
-                  <p>alison@rayna.ui</p>
+                  <h3>{user?.name}</h3>
+                  <p>{user?.email}</p>
                 </div>
-
-                <div className="flex justify-center items-center md:justify-end  w-full">
-                  <LogOutIcon />
-                </div>
+                <Suspense>
+                  <button
+                    onClick={async () => {
+                      await signOutAction();
+                    }}
+                    className="flex justify-center items-center md:justify-end  w-full"
+                  >
+                    <LogOutIcon />
+                  </button>
+                </Suspense>
               </div>
             ) : (
-              <div className="flex justify-center  items-center w-full">
-                <LogOutIcon />
-              </div>
+              <Suspense>
+                <button
+                  onClick={async () => {
+                    await signOutAction();
+                  }}
+                  className="flex justify-center  items-center w-full"
+                >
+                  <LogOutIcon />
+                </button>
+              </Suspense>
             )}
           </footer>
         </nav>

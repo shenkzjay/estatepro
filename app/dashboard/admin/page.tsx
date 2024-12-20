@@ -1,16 +1,15 @@
 "use client";
 
 import { AdminHome } from "./admin-dashboard/admin-home";
-import { useContext } from "react";
-import { ToggleAdminContext } from "./provider";
+import { useAdminContext } from "./provider";
 
 export default function Pages() {
-  const contextValue = useContext(ToggleAdminContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+  const user = useAdminContext();
+
   return (
     <section className="relative w-full">
       <div>
-        <AdminHome isCollapse={isCollapse} />
+        <AdminHome isCollapse={user.isCollapse} />
       </div>
     </section>
   );

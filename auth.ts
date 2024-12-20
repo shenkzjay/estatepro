@@ -1,27 +1,64 @@
-import NextAuth from "next-auth";
-import Nodemailer from "next-auth/providers/nodemailer";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./utils/prisma";
-import { Role } from "@prisma/client";
+
+import Credentials from "next-auth/providers/credentials";
+import NextAuth from "next-auth";
+
+import { compare } from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   providers: [
-    Nodemailer({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
-        secure: true,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
+    Credentials({
+      name: "Credentials",
+
+      async authorize(credentials) {
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email as string,
+          },
+        });
+
+        if (!user) {
+          throw new Error("Invalid credentials");
+        }
+
+        if (!user.password) {
+          throw new Error("Please set your password");
+        }
+
+        const passwordMatch = await compare(credentials.password as string, user.password);
+        if (!passwordMatch) {
+          throw new Error("Invalid credentials");
+        }
+
+        return {
+          id: user?.id,
+          email: user?.email,
+          name: user?.name,
+          role: user?.role,
+        } as any;
       },
-      from: process.env.EMAIL_FROM,
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      // session.user.id = token.sub;
+      if (token.role) {
+        session.user.role = token.role; // Add role to the session
+      }
 
-  debug: true,
+      return session;
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
+  },
+
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
