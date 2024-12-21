@@ -2,7 +2,7 @@
 
 import { ManageVendors } from "../admin-dashboard/admin-vendors";
 import { useContext } from "react";
-import { ToggleAdminContext } from "../provider";
+import { ToggleAdminContext } from "../../provider";
 
 export default function AdminVendors() {
   const contextValue = useContext(ToggleAdminContext);

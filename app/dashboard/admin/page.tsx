@@ -1,7 +1,7 @@
 "use client";
 
 import { AdminHome } from "./admin-dashboard/admin-home";
-import { useAdminContext } from "./provider";
+import { useAdminContext } from "../provider";
 
 export default function Pages() {
   const user = useAdminContext();

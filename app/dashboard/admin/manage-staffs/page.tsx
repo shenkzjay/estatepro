@@ -2,7 +2,7 @@
 
 import { ManagedStaff } from "../admin-dashboard/admin-staff";
 import { useContext } from "react";
-import { ToggleAdminContext } from "../provider";
+import { ToggleAdminContext } from "../../provider";
 
 export default function AdminStaff() {
   const contextValue = useContext(ToggleAdminContext);

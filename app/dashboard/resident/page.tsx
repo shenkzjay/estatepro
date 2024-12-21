@@ -1,16 +1,14 @@
 "use client";
 
 import { DashHome } from "./dashboard/dash-home";
-import { useContext } from "react";
-import { ToggleContext } from "./layout";
+import { useAdminContext } from "../provider";
 
 export default function Pages() {
-  const contextValue = useContext(ToggleContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+  const user = useAdminContext();
   return (
     <section className="relative w-full">
       <div>
-        <DashHome isCollapse={isCollapse} />
+        <DashHome isCollapse={user?.isCollapse} />
       </div>
     </section>
   );

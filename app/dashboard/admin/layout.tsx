@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 import { GetUsers } from "@/app/api/queries/getUser";
 
-import { AdminContextProvider } from "./provider";
+import { AdminContextProvider } from "../provider";
 
 const Robotofont = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -29,9 +29,9 @@ export default async function AdminLayout({
     redirect("/auth/signin");
   }
 
-  // if (user.role !== "SUPERADMIN") {
-  //   return <div>UnAuthorized user</div>;
-  // }
+  if (user.role === "STAFF" || user.role === "RESIDENT") {
+    return <div>UnAuthorized user</div>;
+  }
 
   return (
     <AdminContextProvider user={user}>

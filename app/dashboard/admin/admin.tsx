@@ -1,5 +1,5 @@
 "use client";
-import { useAdminContext } from "./provider";
+import { useAdminContext } from "../provider";
 import { AdminDashBoardNav } from "@/components/navbar/adminnav/admindashnav";
 
 export const AdminDashboardContent = ({ children }: { children: React.ReactNode }) => {

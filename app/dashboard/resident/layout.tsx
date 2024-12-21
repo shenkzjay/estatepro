@@ -1,33 +1,29 @@
-"use client";
-
-import { Roboto } from "next/font/google";
 import "../../../app/globals.css";
-import { DashBoardNav } from "@/components/navbar/residentnav/dashboardnav";
-import { useState, createContext } from "react";
+import { AdminContextProvider } from "../provider";
+import { ResidentDashboardContent } from "./resident";
+import { GetUsers } from "@/app/api/queries/getUser";
+import { redirect } from "next/navigation";
 
-const Robotofont = Roboto({
-  weight: ["400", "500", "700", "900"],
-  subsets: ["latin"],
-  variable: "--robo",
-});
-
-export const ToggleContext = createContext<{
-  isCollapse: boolean;
-  SetIsCollapse: React.Dispatch<React.SetStateAction<boolean>>;
-} | null>(null);
-
-export default function ResidentLayout({
+export default async function ResidentLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isCollapse, SetIsCollapse] = useState<boolean>(true);
+  const user = await GetUsers();
+
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
+  if (user.role === "STAFF" || user.role === "ADMIN") {
+    return <div>UnAuthorized user</div>;
+  }
+
   return (
     <section>
-      <ToggleContext.Provider value={{ isCollapse, SetIsCollapse }}>
-        <DashBoardNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} />
-        <main className={``}>{children}</main>
-      </ToggleContext.Provider>
+      <AdminContextProvider user={user}>
+        <ResidentDashboardContent>{children}</ResidentDashboardContent>
+      </AdminContextProvider>
     </section>
   );
 }

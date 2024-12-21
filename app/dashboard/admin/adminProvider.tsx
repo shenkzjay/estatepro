@@ -24,7 +24,7 @@ export default async function AdminProvider({
   return (
     <section className="h-full flex">
       <div className=" mt-10">
-        <AdminDashBoardNav />
+        <AdminDashBoardNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} user={user} />
       </div>
       <div className=" w-full h-screen border bg-[#f5f5f5]">{children}</div>
     </section>

@@ -3,12 +3,14 @@ import { SetStateAction, Dispatch } from "react";
 import { SideMenuNav } from "./sidemenunav";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
+import { User } from "@prisma/client";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
   SetIsCollapse: Dispatch<SetStateAction<boolean>>;
+  user: User;
 }
-export const DashBoardNav = ({ isCollapse, SetIsCollapse }: DashBoardNavProp) => {
+export const DashBoardNav = ({ isCollapse, SetIsCollapse, user }: DashBoardNavProp) => {
   //useMatch media hook to check for viewport size
   const mobileView = useMatchMedia("(max-width:840px)");
   return (
@@ -16,7 +18,7 @@ export const DashBoardNav = ({ isCollapse, SetIsCollapse }: DashBoardNavProp) =>
       {!mobileView ? (
         <div>
           <div className="">
-            <SideMenuNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} />
+            <SideMenuNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} user={user} />
 
             <div
               className="flex text-white z-[9999] relative"

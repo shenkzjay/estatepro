@@ -15,13 +15,17 @@ import { UpdatesIcon } from "@/public/svgIcons/updatesIcon";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
 import { usePathname } from "next/navigation";
+import { User } from "@prisma/client";
+import { signOutAction } from "@/app/actions/handlesignin-action";
+import { Suspense } from "react";
 
 interface SideMenuProps {
   isCollapse: boolean;
   SetIsCollapse: Dispatch<SetStateAction<boolean>>;
+  user: User;
 }
 
-export const SideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) => {
+export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) => {
   //useMatch media hook to check for viewport size
   const mobileView = useMatchMedia("(max-width:800px)");
 
@@ -241,18 +245,32 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse }: SideMenuProps) => {
             {isCollapse ? (
               <div className="flex flex-row justify-between w-full">
                 <div>
-                  <h3>Alison Eyo</h3>
-                  <p>alison@rayna.ui</p>
+                  <h3>{user.name}</h3>
+                  <p>{user.email}</p>
                 </div>
 
-                <div className="flex justify-center items-center md:justify-end  w-full">
-                  <LogOutIcon />
-                </div>
+                <Suspense>
+                  <button
+                    onClick={async () => {
+                      await signOutAction();
+                    }}
+                    className="flex justify-center items-center md:justify-end  w-full"
+                  >
+                    <LogOutIcon />
+                  </button>
+                </Suspense>
               </div>
             ) : (
-              <div className="flex justify-center  items-center w-full">
-                <LogOutIcon />
-              </div>
+              <Suspense>
+                <button
+                  onClick={async () => {
+                    await signOutAction();
+                  }}
+                  className="flex justify-center items-center md:justify-end  w-full"
+                >
+                  <LogOutIcon />
+                </button>
+              </Suspense>
             )}
           </footer>
         </nav>

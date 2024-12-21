@@ -2,7 +2,7 @@
 
 import { ManagedUpdates } from "../admin-dashboard/admin-updates";
 import { useContext } from "react";
-import { ToggleAdminContext } from "../provider";
+import { ToggleAdminContext } from "../../provider";
 
 export default function AdminEstateUpdate() {
   const contextValue = useContext(ToggleAdminContext);

@@ -4,7 +4,7 @@ import { AdminSideMenuNav } from "./adminsidemenunav";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { User } from "@prisma/client";
-import { useAdminContext } from "@/app/dashboard/admin/provider";
+import { useAdminContext } from "@/app/dashboard/provider";
 
 interface DashBoardNavProp {
   isCollapse: boolean;

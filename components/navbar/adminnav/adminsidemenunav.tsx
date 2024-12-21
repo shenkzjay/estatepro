@@ -16,7 +16,7 @@ import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
 import { usePathname } from "next/navigation";
 import { User } from "@prisma/client";
-import { useAdminContext } from "@/app/dashboard/admin/provider";
+import { useAdminContext } from "@/app/dashboard/provider";
 import { signOutAction } from "@/app/actions/handlesignin-action";
 
 interface SideMenuProps {
