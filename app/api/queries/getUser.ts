@@ -1,3 +1,5 @@
+"use server";
+
 import { getSession } from "@/app/lib/session";
 import { prisma } from "@/utils/prisma";
 import { unstable_cache } from "next/cache";
