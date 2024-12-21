@@ -1,13 +1,11 @@
 "use client";
 
 import { DashMaintenance } from "../dashboard/dash-maintenace";
-import { useContext } from "react";
-import { ToggleContext } from "../layout";
+import { useAdminContext } from "../../provider";
 
 export default function Maintenance() {
-  const contextValue = useContext(ToggleContext);
+  const { isCollapse } = useAdminContext();
 
-  const isCollapse = contextValue?.isCollapse ?? false;
   return (
     <div>
       <DashMaintenance isCollapse={isCollapse} />

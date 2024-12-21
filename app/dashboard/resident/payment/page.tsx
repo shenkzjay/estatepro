@@ -1,12 +1,11 @@
 "use client";
 
 import { DashPayment } from "../dashboard/dash-payment";
-import { useContext } from "react";
-import { ToggleContext } from "../layout";
+import { useAdminContext } from "../../provider";
 
 export default function Payment() {
-  const contextValue = useContext(ToggleContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+  const { isCollapse } = useAdminContext();
+
   return (
     <div>
       <DashPayment isCollapse={isCollapse} />
