@@ -23,6 +23,7 @@ export function Button({
   color = "white",
   icon = LinkArrow,
   textcolor,
+
   btnbgColor,
   size = "Large",
   ...props
