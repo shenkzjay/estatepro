@@ -1,3 +1,5 @@
+"use server";
+
 import "../../../app/globals.css";
 import { AdminContextProvider } from "../provider";
 import { ResidentDashboardContent } from "./resident";

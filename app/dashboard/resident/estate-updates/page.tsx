@@ -2,12 +2,11 @@
 
 import { DashboardEstateUpdate } from "../dashboard/dash-updates";
 
-import { useContext } from "react";
-import { ToggleContext } from "../layout";
+import { useAdminContext } from "../../provider";
 
 export default function EstateUpdates() {
-  const contextValue = useContext(ToggleContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+  const { isCollapse } = useAdminContext();
+
   return (
     <div>
       <DashboardEstateUpdate isCollapse={isCollapse} />
