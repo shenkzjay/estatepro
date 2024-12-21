@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { GetUsers } from "../api/queries/getUser";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomeAdminDashboard() {
   const user = await GetUsers();
 
