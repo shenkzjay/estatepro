@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { GetUsers } from "../api/queries/getUser";
-import Link from "next/link";
 
 export default async function HomeAdminDashboard() {
   const user = await GetUsers();
