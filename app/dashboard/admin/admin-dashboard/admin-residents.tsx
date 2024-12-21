@@ -11,6 +11,7 @@ import { Modal } from "@/stories/modal/modal";
 import { useRef, useState } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
+import { CreateResident } from "@/app/actions/createresident";
 
 interface AdminDashBoardProp {
   isCollapse: boolean;
@@ -35,7 +36,7 @@ interface nextFormDataProps {
   date: Date;
 }
 
-interface newResidentProps {
+export interface newResidentProps {
   prevResidentData: prevFormDataProps;
   nextResidentData: nextFormDataProps;
 }
@@ -119,7 +120,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
     }
   };
 
-  const handleAddNewResident = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddNewResident = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     //get the resident details from session
     const prevResidentData: prevFormDataProps = JSON.parse(
@@ -141,6 +142,10 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
         nextResidentData: nextFormData,
         prevResidentData,
       };
+
+      const newRes = await CreateResident(newResidentData);
+
+      console.log(newRes);
 
       //set resident data to state
       setResidentData((prevResidentData) => [...prevResidentData, newResidentData]);

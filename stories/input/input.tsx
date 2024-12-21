@@ -4,7 +4,7 @@ import { useState } from "react";
 interface Input {
   label: string;
   title: string;
-  inputtype: "text" | "email" | "tel" | "date";
+  inputtype: "text" | "email" | "tel" | "date" | "password";
   color?: string;
   value?: string;
   labelbg?: string;

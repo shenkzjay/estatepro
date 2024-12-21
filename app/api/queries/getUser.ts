@@ -33,7 +33,7 @@ export const GetUsers = unstable_cache(
 
       return user;
     } catch (error) {
-      console.error("Error fetching players:", error);
+      console.error("Error fetching users:", error);
     }
   },
   ["users"],

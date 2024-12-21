@@ -6,14 +6,14 @@ export default async function HomeAdminDashboard() {
   const user = await GetUsers();
 
   if (!user) {
-    // redirect("/auth/signin");
-    return (
-      <div>
-        <span>Oops Error</span>
-        <p>You don&apos;t have sufficient clearance to view this page</p>
-        <Link href="/auth/signin">Please login to continue</Link>
-      </div>
-    );
+    redirect("/auth/signin");
+    // return (
+    //   <div>
+    //     <span>Oops Error</span>
+    //     <p>You don&apos;t have sufficient clearance to view this page</p>
+    //     <Link href="/auth/signin">Please login to continue</Link>
+    //   </div>
+    // );
   }
 
   if (user.role === "ADMIN" || user.role === "SUPERADMIN") {

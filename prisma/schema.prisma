@@ -15,11 +15,12 @@ model User {
   password             String?
   image                String?
   role                 Role?            @default(RESIDENT)
+  Magiclink            Magiclink[]      @relation("MagiclinkToUser")
   residentData         Resident?        @relation("UserToResident")
   staffData            Staff?           @relation("UserToStaff")
   createdBy            User?            @relation("CreatedBy", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdById          String?          @db.ObjectId
-  createdUsers         User[]           @relation("CreatedBy")
+  createdUsers         User[]          @relation("CreatedBy")
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
 }
@@ -31,23 +32,41 @@ model Resident {
   housetype     String?
   moveindata    DateTime?
   phonenumber   String?
-  user          User            @relation("UserToResident", fields:[userId], references: [id], onDelete: Cascade)
+  vehicle       Vehicle[]       @relation("ResidentToVehicle")
+  user          User            @relation("UserToResident", fields: [userId], references: [id], onDelete:Cascade)
   userId        String          @unique @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
 }
 
+model Magiclink{
+    id            String           @id @default(auto()) @map("_id") @db.ObjectId
+    token         String?          @unique
+    expiresAt     DateTime?
+    user          User             @relation("MagiclinkToUser", fields:[userId], references:[id], onDelete:Cascade)
+    userId        String           @db.ObjectId
+
+}
+
+model Vehicle {
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  resident      Resident         @relation("ResidentToVehicle", fields:[residentId], references:[id], onDelete:Cascade)
+  residentId    String           @db.ObjectId
+  vehiclenumber String?
+  vehiclemake   String?
+  vehiclemodel  String?
+  vehiclecolor  String?
+}
+
 
 model Staff {
     id            String           @id @default(auto()) @map("_id") @db.ObjectId
     user          User             @relation("UserToStaff",fields: [userId], references: [id], onDelete: Cascade)
-    userId    String   @unique @db.ObjectId
+    userId        String   @unique @db.ObjectId
     position      String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 }
 
 
