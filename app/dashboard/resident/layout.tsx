@@ -6,6 +6,8 @@ import { ResidentDashboardContent } from "./resident";
 import { GetUsers } from "@/app/api/queries/getUser";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function ResidentLayout({
   children,
 }: Readonly<{
