@@ -150,7 +150,7 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
         </Modal>
 
         <form
-          className="flex flex-col md:w-[40%] bg-white gap-8  p-6 text-[14px] rounded-[16px] h-full"
+          className="flex flex-col md:w-[40%] bg-white gap-8 p-6 text-[14px] rounded-[16px] h-full"
           ref={formEle}
           action={GenerateCodeFormAction}
         >
@@ -178,7 +178,7 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
             inputBg="white"
             Border="1px solid #E3E5E5"
             arialabel="phonenumber"
-            required={false}
+            required={true}
           />
           <Inputs
             label="Email address (optional)"
@@ -220,7 +220,7 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
           <div className="w-full flex justify-center">
             <Button
               variant="Primary"
-              onClick={(e) => handleCodeGeneration(e)}
+              onClick={() => console.log("hi")}
               label="Generate code"
               iconAlign="after"
               bgColor="#1AD9C5"

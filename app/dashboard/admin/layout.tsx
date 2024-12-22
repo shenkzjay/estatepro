@@ -5,7 +5,7 @@ import "../../../app/globals.css";
 import { AdminDashboardContent } from "../admin/admin";
 import { redirect } from "next/navigation";
 
-import { GetUsers } from "@/app/api/queries/getUser";
+import { GetUsers } from "@/app/api/queries/getuser-session";
 
 import { AdminContextProvider } from "../provider";
 

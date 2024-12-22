@@ -3,14 +3,12 @@ import { Suspense } from "react";
 
 export default function CompleteSignIn() {
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center mt-0">
-      <h3 className="text-black font-bold text-4xl w-1/3 text-center">
-        Create your password to complete account setup
-      </h3>
-
-      <Suspense fallback={<div>Loading...</div>}>
-        <CompleteSignUp />
-      </Suspense>
+    <div className="logbg w-full h-screen flex flex-col justify-center items-center">
+      <div className="bg-white p-10 rounded-[32px] md:w-1/3 mx-6 md:mx-0">
+        <Suspense fallback={<div>Loading...</div>}>
+          <CompleteSignUp />
+        </Suspense>
+      </div>
     </div>
   );
 }

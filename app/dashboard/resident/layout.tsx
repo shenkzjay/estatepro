@@ -1,7 +1,7 @@
 import "../../../app/globals.css";
 import { AdminContextProvider } from "../provider";
 import { ResidentDashboardContent } from "./resident";
-import { GetUsers } from "@/app/api/queries/getUser";
+import { GetUsers } from "@/app/api/queries/getuser-session";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";

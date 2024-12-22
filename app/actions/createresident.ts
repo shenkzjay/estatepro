@@ -1,13 +1,29 @@
 "use server";
 
 import { prisma } from "@/utils/prisma";
-import { newResidentProps } from "../dashboard/admin/admin-dashboard/admin-residents";
 import { headers } from "next/headers";
 import nodemailer from "nodemailer";
-import { Role } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
+import { revalidateTag } from "next/cache";
 
-export async function CreateResident(residentData: newResidentProps) {
+export async function CreateResident(formData: FormData) {
+  const residentData = {
+    fullname: formData.get("fullname") as string,
+    email: formData.get("email") as string,
+    phoneNumber: formData.get("phonenumber") as string,
+    houseNumber: formData.get("housenumber") as string,
+    houseType: formData.get("houseType") as string,
+    streetAddress: formData.get("streetaddress") as string,
+    moveInDate: formData.get("moveindate") as string,
+    vehicleMake: formData.get("vehiclemake") as string,
+    vehicleNumber: formData.get("vehiclenumber") as string,
+    vehicleColor: formData.get("vehiclecolor") as string,
+    vehicleModel: formData.get("vehiclemodel") as string,
+  };
+
+  console.log({ residentData });
+
   try {
     const ip = (await headers().get("x-real-ip")) ?? "local";
 
@@ -30,12 +46,12 @@ export async function CreateResident(residentData: newResidentProps) {
     // Send the email first
     await transporter.sendMail({
       from: `"Your email" <${process.env.EMAIL_SERVER_USER}>`,
-      to: residentData.prevResidentData.email,
+      to: residentData.email,
       subject: "Set up your account",
       html: `
-          <p>Hello ${residentData.prevResidentData.firstName},</p>
+          <p>Hello ${residentData.fullname},</p>
           <p>You've been invited to set up your account. Click the link below to complete your account setup:</p>
-          <a href="${magiclink}">Set up your account</a>
+          <a href="${magiclink}" style{{padding:12px 16px; border-radius:10px; background-color:blue; color:white}}>Set up your account</a>
           <p>This link will expire in 24 hours.</p>
         `,
     });
@@ -45,8 +61,8 @@ export async function CreateResident(residentData: newResidentProps) {
     // If the email sends successfully, create the user
     const newResident = await prisma.user.create({
       data: {
-        name: `${residentData.prevResidentData.firstName} ${residentData.prevResidentData.lastName}`,
-        email: residentData.prevResidentData.email,
+        name: residentData.fullname,
+        email: residentData.email,
         role: Role.RESIDENT,
         Magiclink: {
           create: {
@@ -56,18 +72,18 @@ export async function CreateResident(residentData: newResidentProps) {
         },
         residentData: {
           create: {
-            housenumber: residentData.prevResidentData.houseNumber,
-            housetype: residentData.prevResidentData.houseType,
-            streetaddress: residentData.prevResidentData.streetAddress,
-            phonenumber: residentData.prevResidentData.phoneNumber,
-            moveindata: new Date(residentData.prevResidentData.moveInDate).toISOString(),
+            housenumber: residentData.houseNumber,
+            housetype: residentData.houseType,
+            streetaddress: residentData.streetAddress,
+            phonenumber: residentData.phoneNumber,
+            moveindata: new Date(residentData.moveInDate).toISOString(),
             vehicle: {
               create: [
                 {
-                  vehiclecolor: residentData.nextResidentData.vehicleColor,
-                  vehiclemake: residentData.nextResidentData.vehicleMake,
-                  vehiclemodel: residentData.nextResidentData.vehicleModel,
-                  vehiclenumber: residentData.nextResidentData.vehicleNumber,
+                  vehiclecolor: residentData.vehicleColor,
+                  vehiclemake: residentData.vehicleMake,
+                  vehiclemodel: residentData.vehicleModel,
+                  vehiclenumber: residentData.vehicleNumber,
                 },
               ],
             },
@@ -77,6 +93,8 @@ export async function CreateResident(residentData: newResidentProps) {
     });
 
     console.log({ newResident });
+
+    revalidateTag("get-residents");
 
     return {
       message: "Magic link sent successfully",

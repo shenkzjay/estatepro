@@ -32,6 +32,7 @@ model Resident {
   housetype     String?
   moveindata    DateTime?
   phonenumber   String?
+  payment       PaymentData[]       @relation("ResidentToPayment")
   vehicle       Vehicle[]       @relation("ResidentToVehicle")
   user          User            @relation("UserToResident", fields: [userId], references: [id], onDelete:Cascade)
   userId        String          @unique @db.ObjectId
@@ -57,6 +58,17 @@ model Vehicle {
   vehiclemake   String?
   vehiclemodel  String?
   vehiclecolor  String?
+}
+
+
+model PaymentType {
+    id            String        @id @default(auto()) @map("_id") @db.ObjectId
+    resident      Resident      @relation("ResidentToPayment", fields:[residentId], references:[id], onDelete:Cascade)
+    residentId    String         @db.ObjectId
+    paymenttype   String?
+    duedate       DateTime?
+    paymentamount String?
+
 }
 
 

@@ -8,7 +8,7 @@ export const ResidentDashboardContent = ({ children }: { children: React.ReactNo
   if (!user) return;
   return (
     <section className="h-full flex">
-      <div className=" mt-10">
+      <div className=" mt-10 w-full">
         <DashBoardNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} user={user} />
         <main className={`w-full h-screen border bg-[#f5f5f5]`}>{children}</main>
       </div>

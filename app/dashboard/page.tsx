@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { GetUsers } from "../api/queries/getUser";
+import { GetUsers } from "../api/queries/getuser-session";
 
 export const dynamic = "force-dynamic";
 

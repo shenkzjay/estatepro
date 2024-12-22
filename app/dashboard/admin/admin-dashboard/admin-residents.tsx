@@ -8,37 +8,43 @@ import { StatusPill } from "@/stories/statuspills/statuspill";
 import { MoreIcon } from "@/public/svgIcons/moreIcon";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { Modal } from "@/stories/modal/modal";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
 import { CreateResident } from "@/app/actions/createresident";
+import { User } from "@prisma/client";
+import { getResidents } from "@/app/api/queries/get-residents";
 
 interface AdminDashBoardProp {
   isCollapse: boolean;
 }
 
-interface prevFormDataProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  houseNumber: string;
-  streetAddress: string;
-  houseType: string;
-  moveInDate: string;
+interface residentShit {
+  id: string;
+  name: string | null;
+  email: string | null;
+  createdAt: string;
+  residentData?: houseData;
 }
 
-interface nextFormDataProps {
-  vehicleMake: string;
-  vehicleNumber: string;
-  vehicleModel: string;
-  vehicleColor: string;
-  date: Date;
+interface houseData {
+  phonenumber?: string;
+  housenumber?: string;
+  streetaddress?: string;
+  houseType?: string;
+  moveindate?: string;
+  vehicle: vehicleData[];
 }
 
-export interface newResidentProps {
-  prevResidentData: prevFormDataProps;
-  nextResidentData: nextFormDataProps;
+interface vehicleData {
+  vehicleMake?: string;
+  vehicleNumber?: string;
+  vehicleModel?: string;
+  vehicleColor?: string;
+}
+
+interface resData extends User {
+  residentData: houseData;
 }
 
 interface createPaymentProps {
@@ -67,9 +73,15 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
   const [toggleDeleteButton, setToggleDeleteButton] = useState<boolean>(false);
   const [selectedCheckbox, setSelectedCheckbox] = useState<number[]>([]);
   const [selectedPaymentCheckbox, setSelectedPaymentCheckbox] = useState<number[]>([]);
-  const [residentData, setResidentData] = useState<newResidentProps[]>([]);
+  const [residentDatas, setResidentDatas] = useState<residentShit[]>([]);
   const [createResidentPayment, setCreateResidentPayment] = useState<createPaymentProps[]>([]);
   const [popoverToggle, setPopoverToggle] = useState<boolean>(false);
+
+  console.log({ residentDatas });
+
+  const initMessage = {
+    message: "",
+  };
 
   console.log(selectedCheckbox, "indexes");
 
@@ -80,6 +92,18 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
     "2 bedroom-terrace",
     "3 bedroom-detached-duplex",
   ];
+
+  useEffect(() => {
+    const handleGetResident = async () => {
+      const responses = await getResidents("RESIDENT");
+
+      const datas = responses?.map((res) => res);
+
+      setResidentDatas(datas?.map((res) => res) as any);
+    };
+
+    handleGetResident();
+  }, []);
 
   //init resident modal
   const handleOpenModal = () => {
@@ -97,17 +121,18 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
   };
 
   //handles move to next form
-  const handleNext = () => {
+  const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (currentState <= 2) {
       setCurrentState((prev) => prev + 1);
     }
 
     if (prevFormRef.current) {
-      const formData = new FormData(prevFormRef?.current);
+      const formData = new FormData(prevFormRef.current);
 
-      const residentFormData: prevFormDataProps = {
-        firstName: formData.get("firstname") as string,
-        lastName: formData.get("lastname") as string,
+      const residentFormData = {
+        fullname: formData.get("fullname") as string,
         email: formData.get("email") as string,
         phoneNumber: formData.get("phonenumber") as string,
         houseNumber: formData.get("housenumber") as string,
@@ -115,6 +140,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
         streetAddress: formData.get("streetaddress") as string,
         moveInDate: formData.get("moveindate") as string,
       };
+      formData.append("houseType", isHouseType);
 
       sessionStorage.setItem("resident", JSON.stringify(residentFormData));
     }
@@ -123,38 +149,31 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
   const handleAddNewResident = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     //get the resident details from session
-    const prevResidentData: prevFormDataProps = JSON.parse(
-      sessionStorage.getItem("resident") as string
-    );
+    const prevResidentData = JSON.parse(sessionStorage.getItem("resident") as string);
 
-    if (nextFormRef.current) {
-      const formData = new FormData(nextFormRef?.current);
+    if (prevFormRef.current) {
+      const formData = new FormData(prevFormRef.current);
 
-      const nextFormData: nextFormDataProps = {
-        vehicleMake: formData.get("vehiclemake") as string,
-        vehicleNumber: formData.get("vehiclenumber") as string,
-        vehicleColor: formData.get("vehiclecolor") as string,
-        vehicleModel: formData.get("vehiclemodel") as string,
-        date: new Date(),
-      };
+      formData.append("fullname", prevResidentData.fullname);
+      formData.append("email", prevResidentData.email);
+      formData.append("phonenumber", prevResidentData.phoneNumber);
+      formData.append("housenumber", prevResidentData.houseNumber);
+      formData.append("houseType", prevResidentData.houseType);
+      formData.append("streetaddress", prevResidentData.streetAddress);
+      formData.append("moveindate", prevResidentData.moveInDate);
 
-      const newResidentData: newResidentProps = {
-        nextResidentData: nextFormData,
-        prevResidentData,
-      };
-
-      const newRes = await CreateResident(newResidentData);
+      const newRes = await CreateResident(formData);
 
       console.log(newRes);
 
       //set resident data to state
-      setResidentData((prevResidentData) => [...prevResidentData, newResidentData]);
+      // setResidentData((prevResidentData) => [...prevResidentData, newRes.newResident]);
 
       //close modal
       modalRef.current?.close();
 
       //rest form values
-      nextFormRef.current.reset();
+      // nextFormRef.current.reset();
       prevFormRef.current?.reset();
 
       //clear session storage
@@ -166,7 +185,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
       //reset dropdown item
       setSelectedItem("");
 
-      console.log("resident", residentData);
+      console.log("resident", residentDatas);
     }
   };
 
@@ -191,15 +210,17 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
     if (selectAll) {
       setSelectedCheckbox([]);
     } else {
-      setSelectedCheckbox(residentData.map((_, index) => index));
+      setSelectedCheckbox(residentDatas.map((_, index) => index));
     }
 
     setSelectAll(!selectAll);
   };
 
   const handleDeleteResidentRow = () => {
-    const deleteSelectedRows = residentData.filter((_, index) => !selectedCheckbox.includes(index));
-    setResidentData(deleteSelectedRows);
+    const deleteSelectedRows = residentDatas.filter(
+      (_, index) => !selectedCheckbox.includes(index)
+    );
+    setResidentDatas(deleteSelectedRows);
   };
 
   const handleCreateNewPayment = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -299,7 +320,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
         <section className="px-6 bg-[#F8F8F8] ">
           <h3 className="mb-6 text-xl text-buttongray font-semibold ">Residents</h3>
 
-          {selectedCheckbox.length > 0 && residentData.length > 0 && (
+          {selectedCheckbox.length > 0 && residentDatas.length > 0 && (
             <div>
               <button
                 onClick={handleDeleteResidentRow}
@@ -335,8 +356,8 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
                 </tr>
               </thead>
               <tbody className="bg-white p-0 w-full">
-                {residentData && residentData.length > 0 ? (
-                  residentData.map((resident, index) => (
+                {residentDatas && residentDatas.length > 0 ? (
+                  residentDatas.map((resident, index) => (
                     <tr
                       key={index}
                       className={`border-b  border-[#F0F2F5] w-full p-4 ${selectedCheckbox.includes(index) ? "bg-secondary/30" : ""}`}
@@ -353,26 +374,26 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
 
                       <td className="flex flex-row items-center gap-4 py-6 ">
                         <span className="flex w-10 h-10 rounded-full justify-center items-center font-bold bg-[#FFECE5] text-[#F56630] uppercase">
-                          {resident.prevResidentData.firstName.slice(0, 1)}
+                          {resident?.name?.slice(0, 1)}
                         </span>
                         <div>
-                          <h4 className="font-bold ">{resident.prevResidentData.firstName}</h4>
-                          <p className="text-buttongray">{resident.prevResidentData.email}</p>
+                          <h4 className="font-bold ">{resident?.name}</h4>
+                          <p className="text-buttongray">{resident?.email}</p>
                         </div>
                       </td>
 
                       <td className="text-buttongray py-6 text-nowrap">
                         <p>
-                          {resident.prevResidentData.houseNumber}{" "}
-                          {resident.prevResidentData.streetAddress}
+                          {`${resident.residentData?.housenumber},
+                          ${resident?.residentData?.streetaddress}`}
                         </p>
                       </td>
 
                       <td className="text-buttongray py-6 text-nowrap">
-                        <p>{resident.prevResidentData.phoneNumber}</p>
+                        <p>{resident?.residentData?.phonenumber}</p>
                       </td>
                       <td className="text-buttongray">
-                        {resident.nextResidentData.date.toDateString()}
+                        {new Date(resident?.createdAt).toDateString()}
                       </td>
                       <td className="text-[12px]  flex">
                         <StatusPill title="Paid" status="success" />
@@ -395,7 +416,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
               </tbody>
             </table>
           </div>
-          {residentData && residentData.length > 5 && (
+          {residentDatas && residentDatas.length > 5 && (
             <div className="flex gap-2 justify-center bg-white p-4 text-buttongray rounded-b-[20px]">
               <button className="border py-1 px-3 rounded-md [transform:_scale(-1,1)]">
                 <ArrowIcon color="#344054" />
@@ -565,85 +586,74 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
           </span>
 
           {/**Form ! */}
-          {currentState === 1 && (
-            <form ref={prevFormRef}>
-              <fieldset className="flex flex-col gap-8">
-                <legend className="font-semibold text-primary mb-6">
-                  Resident Information (Compulsory)
-                </legend>
-                <div className="flex flex-row gap-6 mt-6">
-                  <Inputs
-                    label="First Name"
-                    title="firstname"
-                    placeholder=""
-                    arialabel="firstname"
-                    BorderRadius="10px"
-                    inputtype="text"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
 
-                  <Inputs
-                    label="Last Name"
-                    title="lastname"
-                    placeholder=""
-                    arialabel="lastname"
-                    BorderRadius="10px"
-                    inputtype="text"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
-                </div>
+          <form ref={prevFormRef}>
+            {currentState === 1 && (
+              <div>
+                <fieldset className="flex flex-col gap-8">
+                  <legend className="font-semibold text-primary mb-6">
+                    Resident Information (Compulsory)
+                  </legend>
+                  <div className="flex flex-row gap-6 mt-6">
+                    <Inputs
+                      label="Full Name"
+                      title="fullname"
+                      placeholder=""
+                      arialabel="fullname"
+                      BorderRadius="10px"
+                      inputtype="text"
+                      required={false}
+                      Border="1px solid #E3E5E5"
+                    />
+                  </div>
 
-                <div className="flex flex-row gap-6">
-                  <Inputs
-                    label="Email address"
-                    title="email"
-                    placeholder=""
-                    arialabel="email"
-                    BorderRadius="10px"
-                    inputtype="text"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
+                  <div className="flex flex-row gap-6">
+                    <Inputs
+                      label="Email address"
+                      title="email"
+                      placeholder=""
+                      arialabel="email"
+                      BorderRadius="10px"
+                      inputtype="text"
+                      required={false}
+                      Border="1px solid #E3E5E5"
+                    />
 
-                  <Inputs
-                    label="Phone number"
-                    title="phonenumber"
-                    placeholder=""
-                    arialabel="phonenumber"
-                    BorderRadius="10px"
-                    inputtype="text"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
-                </div>
-              </fieldset>
+                    <Inputs
+                      label="Phone number"
+                      title="phonenumber"
+                      placeholder=""
+                      arialabel="phonenumber"
+                      BorderRadius="10px"
+                      inputtype="text"
+                      required={false}
+                      Border="1px solid #E3E5E5"
+                    />
+                  </div>
 
-              <fieldset className="flex flex-col mt-6">
-                <legend className=" font-semibold text-primary">Residential information</legend>
-                <div className="flex flex-col gap-8 mt-12">
-                  <Inputs
-                    label="Unit/House number"
-                    title="housenumber"
-                    placeholder=""
-                    arialabel="phonenumber"
-                    BorderRadius="10px"
-                    inputtype="text"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
-                  <Inputs
-                    label="Street address"
-                    title="streetaddress"
-                    placeholder=""
-                    arialabel="Street address"
-                    BorderRadius="10px"
-                    inputtype="text"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
-                  {/* <Inputs
+                  <legend className=" font-semibold text-primary">Residential information</legend>
+                  <div className="flex flex-col gap-8 mt-12">
+                    <Inputs
+                      label="Unit/House number"
+                      title="housenumber"
+                      placeholder=""
+                      arialabel="phonenumber"
+                      BorderRadius="10px"
+                      inputtype="text"
+                      required={false}
+                      Border="1px solid #E3E5E5"
+                    />
+                    <Inputs
+                      label="Street address"
+                      title="streetaddress"
+                      placeholder=""
+                      arialabel="Street address"
+                      BorderRadius="10px"
+                      inputtype="text"
+                      required={false}
+                      Border="1px solid #E3E5E5"
+                    />
+                    {/* <Inputs
                     label="Unit/House type"
                     title="House_type"
                     placeholder=""
@@ -653,42 +663,42 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
                     required={false}
                     Border="1px solid #E3E5E5"
                   /> */}
-                  <div className="text-sm text-buttongray mb-6 mt-[-2rem]">
-                    <Select
-                      selectData={houseTypeData}
-                      setSelectedItem={setIsHouseType}
-                      selectedItem={isHouseType}
-                      title="Unit/House type"
-                      setIndex={setIndex}
+                    <div className="text-sm text-buttongray mb-6 mt-[-2rem]">
+                      <Select
+                        selectData={houseTypeData}
+                        setSelectedItem={setIsHouseType}
+                        selectedItem={isHouseType}
+                        title="Unit/House type"
+                        setIndex={setIndex}
+                      />
+                    </div>
+                    <Inputs
+                      label="Move-in Date"
+                      title="moveindate"
+                      placeholder=""
+                      arialabel="moveindate"
+                      BorderRadius="10px"
+                      inputtype="date"
+                      required={false}
+                      Border="1px solid #E3E5E5"
                     />
                   </div>
-                  <Inputs
-                    label="Move-in Date"
-                    title="moveindate"
-                    placeholder=""
-                    arialabel="moveindate"
-                    BorderRadius="10px"
-                    inputtype="date"
-                    required={false}
-                    Border="1px solid #E3E5E5"
-                  />
-                </div>
-              </fieldset>
-              <div className="w-full flex justify-center mt-6 mb-2">
-                <Button
-                  label="Next"
-                  onClick={handleNext}
-                  iconAlign="after"
-                  variant="Primary"
-                  color="#139D8F"
-                />
-              </div>
-            </form>
-          )}
 
-          {/**Form 2 */}
-          {currentState === 2 && (
-            <form ref={nextFormRef}>
+                  <div className="w-full flex justify-center mt-6 mb-2">
+                    <Button
+                      label="Next"
+                      onClick={handleNext}
+                      iconAlign="after"
+                      variant="Primary"
+                      color="#139D8F"
+                    />
+                  </div>
+                </fieldset>
+              </div>
+            )}
+
+            {/**Form 2 */}
+            {currentState === 2 && (
               <fieldset className="flex flex-col gap-8">
                 <legend className="font-semibold text-primary">Vehicle info</legend>
                 <div className="flex flex-row gap-6 mt-12">
@@ -737,25 +747,25 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
                     Border="1px solid #E3E5E5"
                   />
                 </div>
+                <div className="mt-6 flex flex-row justify-between">
+                  <Button
+                    label="Back"
+                    onClick={handlePrev}
+                    iconAlign="none"
+                    variant="Secondary"
+                    color="#139D8F"
+                  />
+                  <Button
+                    label="Create"
+                    onClick={handleAddNewResident}
+                    iconAlign="after"
+                    variant="Primary"
+                    color="#139D8F"
+                  />
+                </div>
               </fieldset>
-              <div className="mt-6 flex flex-row justify-between">
-                <Button
-                  label="Back"
-                  onClick={handlePrev}
-                  iconAlign="none"
-                  variant="Secondary"
-                  color="#139D8F"
-                />
-                <Button
-                  label="Create"
-                  onClick={(event) => handleAddNewResident(event)}
-                  iconAlign="after"
-                  variant="Primary"
-                  color="#139D8F"
-                />
-              </div>
-            </form>
-          )}
+            )}
+          </form>
         </div>
       </Modal>
 
@@ -767,7 +777,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
 
             <Select
               title="Select resident"
-              selectData={residentData.map((resident) => resident.prevResidentData.firstName)}
+              selectData={residentDatas.map((resident) => resident?.name || "")}
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
               setIndex={setIndex}
@@ -783,7 +793,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
                 inputtype="text"
                 required={false}
                 Border="1px solid #E3E5E5"
-                defaultValue={index !== null ? residentData[index]?.prevResidentData.email : ""}
+                defaultValue={index !== null ? residentDatas[index]?.email : ""}
                 readOnly={true}
               />
               <Inputs
@@ -795,9 +805,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
                 inputtype="text"
                 required={false}
                 Border="1px solid #E3E5E5"
-                defaultValue={
-                  index !== null ? residentData[index]?.prevResidentData.phoneNumber : ""
-                }
+                defaultValue={index !== null ? residentDatas[index]?.residentData?.phonenumber : ""}
                 readOnly={true}
               />
 
@@ -812,7 +820,7 @@ export function ManageResident({ isCollapse }: AdminDashBoardProp) {
                 Border="1px solid #E3E5E5"
                 defaultValue={
                   index !== null
-                    ? `${residentData[index]?.prevResidentData?.houseNumber || ""} ${residentData[index]?.prevResidentData?.streetAddress || ""}`
+                    ? `${residentDatas[index]?.residentData?.housenumber || ""} ${residentDatas[index]?.residentData?.streetaddress || ""}`
                     : ""
                 }
                 readOnly={true}

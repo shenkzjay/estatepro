@@ -14,6 +14,7 @@ export const SubmitButton = () => {
       label={pending ? "Loading" : "Log in"}
       iconAlign="after"
       onClick={() => console.log("hi")}
+      bgColor="#1AD9C5"
     />
   );
 };

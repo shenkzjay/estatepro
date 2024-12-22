@@ -1,6 +1,6 @@
 import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
 import { Modal } from "@/stories/modal/modal";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface AdminDashBoardProp {
   isCollapse: boolean;
