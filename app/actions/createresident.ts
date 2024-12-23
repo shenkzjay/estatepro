@@ -76,7 +76,7 @@ export async function CreateResident(formData: FormData) {
             housetype: residentData.houseType,
             streetaddress: residentData.streetAddress,
             phonenumber: residentData.phoneNumber,
-            moveindata: new Date(residentData.moveInDate).toISOString(),
+            moveindate: new Date(residentData.moveInDate).toISOString(),
             vehicle: {
               create: [
                 {

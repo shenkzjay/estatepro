@@ -30,9 +30,10 @@ model Resident {
   housenumber   String?
   streetaddress String?
   housetype     String?
-  moveindata    DateTime?
+  moveindate    DateTime?
   phonenumber   String?
-  payment       PaymentData[]       @relation("ResidentToPayment")
+  payment       PaymentData[]   @relation("ResidentToPayment")
+  visitorcode   VisitorCode[]    @relation("ResidentToVisitorcode")
   vehicle       Vehicle[]       @relation("ResidentToVehicle")
   user          User            @relation("UserToResident", fields: [userId], references: [id], onDelete:Cascade)
   userId        String          @unique @db.ObjectId
@@ -61,14 +62,29 @@ model Vehicle {
 }
 
 
-model PaymentType {
+model PaymentData {
     id            String        @id @default(auto()) @map("_id") @db.ObjectId
     resident      Resident      @relation("ResidentToPayment", fields:[residentId], references:[id], onDelete:Cascade)
     residentId    String         @db.ObjectId
     paymenttype   String?
     duedate       DateTime?
-    paymentamount String?
+    paymentamount Int
+    createdAt     DateTime @default(now())
+    paymentstatus PaymentStatus?  @default(PENDING)
 
+}
+
+
+
+model VisitorCode {
+    id            String        @id @default(auto()) @map("_id") @db.ObjectId
+    visitorname   String   
+    visitornumber String
+    visitoremail  String?
+    Dateofvisit   DateTime
+    resident      Resident      @relation("ResidentToVisitorcode", fields:[residentId], references:[id], onDelete:Cascade)
+    residentId    String         @db.ObjectId
+    createdAt     DateTime @default(now())
 }
 
 
@@ -81,11 +97,15 @@ model Staff {
     updatedAt     DateTime @updatedAt
 }
 
-
-
 enum Role {
   SUPERADMIN
   ADMIN
   RESIDENT
   STAFF
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  OVERDUE
 }

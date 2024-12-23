@@ -16,6 +16,7 @@ export const getResidents = unstable_cache(
           createdAt: true,
           residentData: {
             select: {
+              id: true,
               housenumber: true,
               streetaddress: true,
               housetype: true,
@@ -25,6 +26,16 @@ export const getResidents = unstable_cache(
                   vehiclemake: true,
                   vehiclemodel: true,
                   vehiclenumber: true,
+                },
+              },
+              payment: {
+                select: {
+                  id: true,
+                  paymentamount: true,
+                  paymenttype: true,
+                  duedate: true,
+                  paymentstatus: true,
+                  createdAt: true,
                 },
               },
             },
@@ -38,5 +49,5 @@ export const getResidents = unstable_cache(
     }
   },
   ["get-residents"],
-  { tags: ["get-residents"], revalidate: 3600 }
+  { tags: ["get-residents"] }
 );

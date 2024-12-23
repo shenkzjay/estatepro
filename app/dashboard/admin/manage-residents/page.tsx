@@ -1,15 +1,25 @@
-"use client";
+import { getResidents } from "@/app/api/queries/get-residents";
 
 import { ManageResident } from "../admin-dashboard/admin-residents";
-import { useContext } from "react";
-import { ToggleAdminContext } from "../../provider";
+import { Role } from "@prisma/client";
 
-export default function AdminResident() {
-  const contextValue = useContext(ToggleAdminContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+export default async function AdminResident() {
+  const responses = await getResidents(Role.RESIDENT);
+
+  const residentDatas = responses?.map((res) => res);
+
+  if (!residentDatas) null;
+
+  // console.log({ residentDatas });
+
+  const residentPayments = residentDatas?.filter(
+    (res) => res.residentData && res.residentData?.payment?.length > 0
+  );
+
   return (
     <section>
-      <ManageResident isCollapse={isCollapse} />
+      {/* too lazy, i will comeback to make it typesafe */}
+      <ManageResident resident={residentDatas as any} residentPayments={residentPayments as any} />
     </section>
   );
 }

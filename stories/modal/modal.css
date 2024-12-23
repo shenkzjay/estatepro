@@ -1,7 +1,7 @@
 .dialog-wrapper {
   border-radius: 20px;
   padding: 30px;
-  max-width: 40rem;
+  max-width: 50rem;
 }
 
 .dialog-wrapper > button {
