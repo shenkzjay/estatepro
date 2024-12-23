@@ -16,6 +16,20 @@ export const CompleteSignUp = () => {
 
   const searchquery = search.get("token");
 
+  useEffect(() => {
+    const handleTokenValidation = async () => {
+      if (searchquery) {
+        const res = await ValidateToken(searchquery);
+
+        if (!res) {
+          return null;
+        }
+      }
+    };
+
+    handleTokenValidation();
+  }, []);
+
   if (!searchquery) {
     return (
       <div className="text-center flex flex-col gap-8 justify-center items-center">
@@ -33,22 +47,6 @@ export const CompleteSignUp = () => {
   }
 
   console.log({ searchquery });
-
-  useEffect(() => {
-    const handleTokenValidation = async () => {
-      if (searchquery) {
-        const res = await ValidateToken(searchquery);
-
-        if (!res) {
-          return null;
-        }
-
-        console.log(res.message);
-      }
-    };
-
-    handleTokenValidation();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
