@@ -10,6 +10,7 @@ import { useRef, useState, useEffect } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
 import { CreateResident } from "@/app/actions/createresident";
+import { StatusPill } from "@/stories/statuspills/statuspill";
 
 import { nameInitials } from "@/utils/nameInitials";
 
@@ -232,7 +233,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                 <th className="text-start">House number</th>
                 <th className="text-start text-nowrap">Phone number</th>
                 <th className="text-start">Date created</th>
-                {/* <th className="text-start">Status</th> */}
+                <th className="text-start">Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -276,9 +277,9 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                     <td className="text-buttongray">
                       {new Date(resident?.createdAt).toDateString()}
                     </td>
-                    {/* <td className="text-[12px]  flex">
-                        <StatusPill title="Paid" status="success" />
-                      </td> */}
+                    <td className="text-[12px]  flex">
+                      <StatusPill title="Residing" status="success" />
+                    </td>
 
                     <td className="relative">
                       <button onClick={() => handleMoreIconButton(index)}>

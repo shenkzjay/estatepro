@@ -42,7 +42,7 @@ export const AdminMobileMenuNavbar = () => {
           id="mobile"
           className={`${pathname === "/admin" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] `}
         >
-          <a href={"/admin"}>
+          <a href={"/dashboard/admin"}>
             <Pills
               pillText="Home"
               bgColor="transparent"
@@ -53,9 +53,9 @@ export const AdminMobileMenuNavbar = () => {
           </a>
         </li>
         <li
-          className={`${pathname === "/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] `}
+          className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] `}
         >
-          <a href={"/admin/manage-residents"}>
+          <a href={"/dashboard/admin/manage-residents"}>
             <Pills
               pillText="Manage residents"
               bgColor="transparent"
@@ -66,9 +66,9 @@ export const AdminMobileMenuNavbar = () => {
           </a>
         </li>
         <li
-          className={`${pathname === "/admin/manage-staffs" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+          className={`${pathname === "/dashboard/admin/manage-staffs" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
         >
-          <a href={"/admin/manage-staffs"}>
+          <a href={"/dashboard/admin/manage-staffs"}>
             <Pills
               pillText="Manage staffs"
               bgColor="transparent"
@@ -79,9 +79,9 @@ export const AdminMobileMenuNavbar = () => {
           </a>
         </li>
         <li
-          className={`${pathname === "/admin/manage-vendors" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+          className={`${pathname === "/dashboard/admin/manage-vendors" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
         >
-          <a href={"/admin/manage-vendors"}>
+          <a href={"/dashboard/admin/manage-vendors"}>
             <Pills
               pillText="Manage vendors"
               bgColor="transparent"
@@ -92,9 +92,9 @@ export const AdminMobileMenuNavbar = () => {
           </a>
         </li>
         <li
-          className={`${pathname === "/admin/manage-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+          className={`${pathname === "/dashboard/admin/manage-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
         >
-          <a href={"/admin/manage-updates"}>
+          <a href={"/dashboard/admin/manage-updates"}>
             <Pills
               pillText="Estate Updates"
               bgColor="transparent"

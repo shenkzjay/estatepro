@@ -22,7 +22,7 @@ export default async function HomeAdminDashboard() {
   } else if (user.role === "RESIDENT") {
     redirect("/dashboard/resident");
   } else if (user.role === "STAFF") {
-    redirect("/dashboard/resident");
+    redirect("/dashboard/staff");
   } else {
     redirect("/auth/signin");
   }

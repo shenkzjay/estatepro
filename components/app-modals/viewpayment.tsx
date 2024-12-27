@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 import { PaymentStatus } from "@prisma/client";
 import { UpdatePaymentStatus } from "@/app/actions/update-payment-status";
+import { DeleteIcon } from "@/public/svgIcons/deleteIcon";
 
 interface viewPaymentProps {
   currentViewPayment: residentShit | undefined;
@@ -58,19 +59,27 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
     }
   };
 
+  const getStatusPillType = (paymentStatus: PaymentStatus, dueDate: string) => {
+    const isOverdue = Date.now() > new Date(dueDate).getTime();
+    if (isOverdue) return "danger"; // Overdue if dueDate has passed
+    if (paymentStatus === PaymentStatus.PAID) return "success";
+    return "warning";
+  };
+
   return (
-    <ul className="w-[45vw] mt-10 grid gap-4">
+    <ul className="w-[50vw] mt-10 grid gap-4">
       <h3 className="grid grid-cols-[repeat(auto-fit,minmax(10px,1fr))] text-sm justify-center items-center ">
         <p>Payment type</p>
         <p className="ml-3">Amount</p>
         <p className="ml-1">CreatedAt</p>
         <p className="ml-2">Due date</p>
         <p></p>
+        <p></p>
       </h3>
       {payments.map((viewpayment, index) => (
         <li
           key={index}
-          className="grid grid-cols-[repeat(auto-fit,minmax(10px,1fr))] bg-[#f7f7f7] text-sm justify-center items-center p-4 rounded-[12px]"
+          className="grid grid-cols-[repeat(auto-fit,minmax(10px,1fr))]  bg-[#f7f7f7] text-sm justify-center items-center p-4 rounded-[12px]"
         >
           {/* <div>{index + 1}</div> */}
           <div>{viewpayment.paymenttype}</div>
@@ -91,16 +100,17 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
                 ))}
               </select>
             ) : (
-              <div className="flex gap-2 !text-sm">
+              <div className="flex gap-1 !text-sm">
                 <StatusPill
-                  status={
-                    viewpayment.paymentstatus === PaymentStatus.OVERDUE
-                      ? "danger"
-                      : viewpayment.paymentstatus === PaymentStatus.PENDING
-                        ? "warning"
-                        : "success"
+                  status={getStatusPillType(
+                    viewpayment?.paymentstatus as PaymentStatus,
+                    viewpayment.duedate
+                  )}
+                  title={
+                    Date.now() > new Date(viewpayment.duedate).getTime()
+                      ? "Overdue"
+                      : (viewpayment.paymentstatus as string)
                   }
-                  title={viewpayment?.paymentstatus || (selectedStatus as string)}
                 />
 
                 <button onClick={() => handleUpdatePaymentStatus(index)}>Update</button>
@@ -108,6 +118,10 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
             )}
             {}
           </div>
+          <button>
+            {/* <DeleteIcon /> */}
+            delete
+          </button>
         </li>
       ))}
     </ul>

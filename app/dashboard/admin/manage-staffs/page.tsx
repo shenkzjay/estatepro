@@ -1,15 +1,30 @@
-"use client";
-
 import { ManagedStaff } from "../admin-dashboard/admin-staff";
-import { useContext } from "react";
-import { ToggleAdminContext } from "../../provider";
+import { getStaff } from "@/app/api/queries/get-staff";
+import { Role } from "@prisma/client";
 
-export default function AdminStaff() {
-  const contextValue = useContext(ToggleAdminContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+export interface StaffProps {
+  name: string;
+  email: string;
+  id: string;
+  createdAt: Date;
+  staffData: {
+    position: string;
+    phonenumber: string;
+  };
+}
+
+export default async function AdminStaff() {
+  const staff = (await getStaff(Role.STAFF)) as StaffProps[];
+
+  if (!staff) {
+    return null;
+  }
+
+  console.log("staffPage", staff);
+
   return (
     <div>
-      <ManagedStaff isCollapse={isCollapse} />
+      <ManagedStaff staff={staff} />
     </div>
   );
 }
