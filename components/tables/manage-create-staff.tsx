@@ -9,7 +9,7 @@ import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { Modal } from "@/stories/modal/modal";
 import { useRef, useState } from "react";
 import { Inputs } from "@/stories/input/input";
-import { CreateStaff } from "@/app/actions/create-staff";
+import { CreateStaff } from "@/app/dashboard/admin/actions/create-staff";
 import { createNewStaffProps } from "@/app/dashboard/admin/admin-dashboard/admin-staff";
 import { StaffProps } from "@/app/dashboard/admin/manage-staffs/page";
 import { StatusPill } from "@/stories/statuspills/statuspill";
@@ -41,7 +41,7 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
     if (newStaffFormRef.current) {
       const formData = new FormData(newStaffFormRef.current);
 
-      const newStaffData = await CreateStaff(formData);
+      await CreateStaff(formData);
 
       // setAllStaffs([...allStaffs, newStaffData]);
 

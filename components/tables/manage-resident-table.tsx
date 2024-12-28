@@ -9,7 +9,7 @@ import { Modal } from "@/stories/modal/modal";
 import { useRef, useState, useEffect } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
-import { CreateResident } from "@/app/actions/createresident";
+import { CreateResident } from "@/app/dashboard/admin/actions/createresident";
 import { StatusPill } from "@/stories/statuspills/statuspill";
 
 import { nameInitials } from "@/utils/nameInitials";

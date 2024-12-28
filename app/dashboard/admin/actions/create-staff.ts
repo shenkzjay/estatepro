@@ -77,6 +77,7 @@ export async function CreateStaff(formData: FormData) {
         staffData: {
           create: {
             position: staffDetails.position,
+            phonenumber: staffDetails.phonenumber,
           },
         },
       },

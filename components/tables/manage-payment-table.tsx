@@ -11,7 +11,7 @@ import { useRef, useState, useEffect } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
-import { ResidentPayment } from "@/app/actions/create-resident-payment";
+import { ResidentPayment } from "@/app/dashboard/admin/actions/create-resident-payment";
 import { nameInitials } from "@/utils/nameInitials";
 import { ViewPaymentModal } from "@/components/app-modals/viewpayment";
 
