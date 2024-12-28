@@ -4,7 +4,6 @@ import { prisma } from "@/utils/prisma";
 import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { comparePassword, setSession } from "../lib/session";
-import { useAdminContext } from "../dashboard/provider";
 import { revalidateTag } from "next/cache";
 
 export async function handleSignInAction(prev: any, formData: FormData) {

@@ -81,6 +81,7 @@ model VisitorCode {
     visitorname   String   
     visitornumber String
     visitoremail  String?
+    code          String
     Dateofvisit   DateTime
     resident      Resident      @relation("ResidentToVisitorcode", fields:[residentId], references:[id], onDelete:Cascade)
     residentId    String         @db.ObjectId

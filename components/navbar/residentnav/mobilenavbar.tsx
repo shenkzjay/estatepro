@@ -9,7 +9,7 @@ import { UpdatesIcon } from "@/public/svgIcons/updatesIcon";
 import { LogOutIcon } from "@/public/svgIcons/logoutIcon";
 import { usePathname } from "next/navigation";
 
-export const StaffMobileMenuNavbar = () => {
+export const MobileMenuNavbar = () => {
   //init pathname hook
   const pathname = usePathname();
   return (

@@ -15,6 +15,7 @@ import { SucessIcon } from "@/public/svgIcons/successIcon";
 import { ClipBoardCopy } from "@/public/svgIcons/clipboardIcon";
 import { Popover } from "@/stories/popover/popover";
 import { CreateCodeInvites } from "../actions/createinvites";
+import { useAdminContext } from "../../provider";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
@@ -44,11 +45,19 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
   //selected state
   const [isSelected, setIsSelected] = useState<number>();
 
+  const [gencode, setGencode] = useState("");
+
   //popover
   const [popverToggle, setIsPopoverToggle] = useState<boolean>(false);
 
   //revoke
   const [revokeButton, setRevokeButton] = useState<boolean>(false);
+
+  const { user } = useAdminContext();
+
+  console.log({ user });
+
+  console.log({ gencode });
 
   /**
    * @description function to open modal
@@ -60,24 +69,34 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
   /**
    * @description function that handles code generation
    */
-  const handleCodeGeneration = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCodeGeneration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     //checks if formElement is present
-    if (formEle.current) {
+    if (formEle.current && user) {
       const formData = new FormData(formEle.current);
 
       //generates random alphanumeric code
       const ramdomCode = Math.random().toString(36).slice(6);
 
       //get and store formData in object
-      const codeformdata = {
-        visitorname: formData.get("visitorname") as string,
-        visitoremail: formData.get("Email address") as string,
-        Date_of_visit: formData.get("Date of visitation") as string,
-        phone_number: Number(formData.get("Phone number")),
-        code: ramdomCode,
-      };
+      // const codeformdata = {
+      //   visitorname: formData.get("visitorname") as string,
+      //   visitoremail: formData.get("Email address") as string,
+      //   Date_of_visit: formData.get("Date of visitation") as string,
+      //   phone_number: Number(formData.get("Phone number")),
+      // };
+
+      formData.append("email", user?.email);
+
+      const code = await GenerateCodeFormAction(formData);
+
+      const cad = await code?.code;
+
+      if (!cad) return;
+
+      setGencode(cad as string);
 
       //post data to endpoint here
       //const { response, error } = await CreateCodeInvites(codeformdata);
@@ -85,10 +104,10 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
       //console.log(response, error);
 
       //updates all formdata
-      setAllFormData([...allformData, codeformdata]);
+      // setAllFormData([...allformData, codeformdata]);
 
       //updates formdata state
-      setIsformdata(codeformdata);
+      // setIsformdata(codeformdata);
 
       //opens modal
       handleOpenModal();
@@ -138,7 +157,7 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
             <p className="text-buttongray w-2/3 text-center">
               The generated code has been sent to the visitor&apos;s phone number
             </p>
-            <h3 className="text-6xl font-bold">{isformData?.code}</h3>
+            <h3 className="text-6xl font-bold">{gencode}</h3>
             <p className="text-buttongray">Haven&apos;t received code yet?</p>
             <div className="flex flex-row gap-2 border px-4 py-2 text-buttongray rounded-full ">
               <button onClick={handleShareButton}>Share code</button>
@@ -152,7 +171,7 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
         <form
           className="flex flex-col md:w-[40%] bg-white gap-8 p-6 text-[14px] rounded-[16px] h-full"
           ref={formEle}
-          action={GenerateCodeFormAction}
+          onSubmit={(e) => handleCodeGeneration(e)}
         >
           <h3 className="font-semibold text-xl text-buttongray mb-6">
             Generate Visitor&apos;s code
@@ -247,7 +266,7 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
                   icon={FilterIcon}
                   label="Filter"
                   color="#139D8F"
-                  onClick={() => "click"}
+                  onClick={() => console.log("hi")}
                 />
               </div>
 
