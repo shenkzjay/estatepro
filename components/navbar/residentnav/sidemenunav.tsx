@@ -52,7 +52,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div className="hover:bg-primary rounded-[4px]">
-                  <Link href={"/resident"}>
+                  <Link href={"/dashboard/resident"}>
                     <Pills
                       pillText="Home"
                       bgColor="transparent"
@@ -64,9 +64,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident"}>
+                  <Link href={"/dashboard/resident"}>
                     {" "}
                     <Pills
                       pillText=""
@@ -80,45 +80,15 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               )}
             </li>
-            {/* <li>
-              {isCollapse ? (
-                <div
-                  className={`${pathname === "/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
-                >
-                  <Link href={"/resident"}>
-                    <Pills
-                      pillText="Invite code generator"
-                      bgColor="transparent"
-                      iconAlign="before"
-                      icon={BarcodeIcon}
-                      color="white"
-                    />
-                  </Link>
-                </div>
-              ) : (
-                <div className="relative hover:bg-primary rounded-[4px]">
-                  <Link href={"/"}>
-                    {" "}
-                    <Pills
-                      pillText=""
-                      bgColor="transparent"
-                      iconAlign="before"
-                      icon={BarcodeIcon}
-                      color="white"
-                      tooltip="Invite code generator"
-                    />
-                  </Link>
-                </div>
-              )}
-            </li> */}
+
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident/payment"}>
+                  <Link href={"/dashboard/resident/payment"}>
                     <Pills
-                      pillText="Payment"
+                      pillText="Payments"
                       bgColor="transparent"
                       iconAlign="before"
                       icon={PaymentIcon}
@@ -128,9 +98,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident/payment"}>
+                  <Link href={"/dashboard/resident/payment"}>
                     {" "}
                     <Pills
                       pillText=""
@@ -147,9 +117,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident/maintenance"}>
+                  <Link href={"/dashboard/resident/maintenance"}>
                     <Pills
                       pillText="Maintenance & issues"
                       bgColor="transparent"
@@ -161,9 +131,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident/maintenance"}>
+                  <Link href={"/dashboard/resident/maintenance"}>
                     {" "}
                     <Pills
                       pillText=""
@@ -180,9 +150,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident/estate-updates"}>
+                  <Link href={"/dashboard/resident/estate-updates"}>
                     <Pills
                       pillText="Estate Updates"
                       bgColor="transparent"
@@ -194,9 +164,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/resident/estate-updates"}>
+                  <Link href={"/dashboard/resident/estate-updates"}>
                     {" "}
                     <Pills
                       pillText=""

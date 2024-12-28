@@ -1,6 +1,6 @@
 import "../../../app/globals.css";
 import { AdminContextProvider } from "../provider";
-import { ResidentDashboardContent } from "./resident";
+import { StaffDashboardContent } from "./staff";
 import { GetUsers } from "@/app/api/queries/getuser-session";
 import { redirect } from "next/navigation";
 
@@ -24,7 +24,7 @@ export default async function ResidentLayout({
   return (
     <section>
       <AdminContextProvider user={user}>
-        <ResidentDashboardContent>{children}</ResidentDashboardContent>
+        <StaffDashboardContent>{children}</StaffDashboardContent>
       </AdminContextProvider>
     </section>
   );

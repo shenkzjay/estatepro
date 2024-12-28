@@ -85,6 +85,8 @@ model VisitorCode {
     resident      Resident      @relation("ResidentToVisitorcode", fields:[residentId], references:[id], onDelete:Cascade)
     residentId    String         @db.ObjectId
     createdAt     DateTime @default(now())
+    expiresAt     DateTime
+    status        VisitorCodeStatus? @default(ACTIVE)
 }
 
 
@@ -109,4 +111,10 @@ enum PaymentStatus {
   PAID
   PENDING
   OVERDUE
+}
+
+enum VisitorCodeStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
 }
