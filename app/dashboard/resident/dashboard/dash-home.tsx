@@ -16,6 +16,7 @@ import { ClipBoardCopy } from "@/public/svgIcons/clipboardIcon";
 import { Popover } from "@/stories/popover/popover";
 import { CreateCodeInvites } from "../actions/createinvites";
 import { useAdminContext } from "../../provider";
+import { GetVisitorsCode } from "@/app/api/queries/get-visitor-code";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
@@ -92,11 +93,11 @@ export const DashHome = ({ isCollapse }: DashBoardNavProp) => {
 
       const code = await GenerateCodeFormAction(formData);
 
-      const cad = await code?.code;
+      const visitors = await GetVisitorsCode();
 
-      if (!cad) return;
+      console.log(Object.values(visitors));
 
-      setGencode(cad as string);
+      // setGencode();
 
       //post data to endpoint here
       //const { response, error } = await CreateCodeInvites(codeformdata);
