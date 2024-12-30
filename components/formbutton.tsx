@@ -3,7 +3,11 @@
 import { Button } from "@/stories/Button/Button";
 import { useFormStatus } from "react-dom";
 
-export const SubmitButton = () => {
+interface LabelProp {
+  ButtonName: string;
+}
+
+export const SubmitButton = ({ ButtonName }: LabelProp) => {
   const { pending } = useFormStatus();
   return (
     // <button type="submit" className="border" disabled={pending}>
@@ -11,10 +15,11 @@ export const SubmitButton = () => {
     // </button>
     <Button
       variant="Primary"
-      label={pending ? "Loading" : "Log in"}
+      label={pending ? "Loading" : ButtonName}
       iconAlign="after"
       onClick={() => console.log("hi")}
-      bgColor="#1AD9C5"
+      bgColor={pending ? "#f4f4f4" : "#1AD9C5"}
+      diasbled={pending}
     />
   );
 };

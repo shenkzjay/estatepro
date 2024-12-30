@@ -63,3 +63,17 @@ input[type="radio"]:checked ~ label {
   width: 100%;
   background: linear-gradient(90deg, #9ffff6, #139d8f);
 }
+
+.anchor {
+  anchor-name: --dropdown;
+}
+
+.positionedElement {
+  position: absolute;
+  z-index: 9;
+  position-anchor: --dropdown;
+  top: calc(anchor(bottom) - 60px);
+  right: anchor(left);
+  justify-self: anchor-left;
+  /* bottom: anchor(bottom); */
+}

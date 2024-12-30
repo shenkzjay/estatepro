@@ -12,6 +12,7 @@ interface ButtonProps {
   textcolor?: string;
   btnbgColor?: string;
   size?: "Large" | "Medium" | "Small";
+  diasbled?: boolean;
 }
 
 export function Button({
@@ -23,7 +24,7 @@ export function Button({
   color = "white",
   icon = LinkArrow,
   textcolor,
-
+  diasbled = false,
   btnbgColor,
   size = "Large",
   ...props
@@ -38,6 +39,7 @@ export function Button({
           className={`button ${variant}`}
           {...props}
           onClick={onClick}
+          disabled={diasbled}
         >
           <p className="slide-up" style={{ color: textcolor, fontSize: buttonSize }}>
             {label}
@@ -53,6 +55,7 @@ export function Button({
           className={`button ${variant}`}
           {...props}
           onClick={onClick}
+          disabled={diasbled}
         >
           <div style={{ backgroundColor: bgColor }}>{icon && icon()}</div>
           <p style={{ color: textcolor, fontSize: buttonSize }}>{label}</p>
@@ -65,6 +68,7 @@ export function Button({
           className={`button ${variant}`}
           {...props}
           onClick={onClick}
+          disabled={diasbled}
         >
           <p className="" style={{ color: textcolor, fontSize: buttonSize }}>
             {label}

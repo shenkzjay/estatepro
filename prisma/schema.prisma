@@ -83,9 +83,9 @@ model VisitorCode {
     visitoremail  String?
     code          String
     Dateofvisit   DateTime
-    resident      Resident      @relation("ResidentToVisitorcode", fields:[residentId], references:[id], onDelete:Cascade)
+    resident      Resident       @relation("ResidentToVisitorcode", fields:[residentId], references:[id], onDelete:Cascade)
     residentId    String         @db.ObjectId
-    createdAt     DateTime @default(now())
+    createdAt     DateTime       @default(now())
     expiresAt     DateTime
     status        VisitorCodeStatus? @default(ACTIVE)
 }
