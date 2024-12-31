@@ -16,7 +16,7 @@ export interface VisitorProp {
   status: VisitorCodeStatus | null;
 }
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export const DashHome = async () => {
   const user = await GetUsers();
