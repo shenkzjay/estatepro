@@ -19,6 +19,8 @@ export interface PaymentProp {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function Payment() {
   const user = await GetUsers();
 

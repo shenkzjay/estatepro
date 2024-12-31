@@ -1,4 +1,4 @@
-import { StaffMobileMenuNavbar } from "@/components/navbar/staffnav/mobilenavbar";
+import { MobileMenuNavbar } from "./mobilenavbar";
 import { SetStateAction, Dispatch } from "react";
 import { SideMenuNav } from "./sidemenunav";
 import { useMatchMedia } from "@/hooks/useMatchMedia";
@@ -43,7 +43,7 @@ export const DashBoardNav = ({ isCollapse, SetIsCollapse, user }: DashBoardNavPr
           </div>
         </div>
       ) : (
-        <StaffMobileMenuNavbar />
+        <MobileMenuNavbar />
       )}
     </div>
   );

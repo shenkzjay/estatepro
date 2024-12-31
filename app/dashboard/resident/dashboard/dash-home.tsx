@@ -3,7 +3,6 @@ import { GetVisitorsCode } from "@/app/api/queries/get-visitor-code";
 import { GetUsers } from "@/app/api/queries/getuser-session";
 import { redirect } from "next/navigation";
 import { VisitorCodeStatus } from "@prisma/client";
-import { ValidateCodeStatus } from "@/app/api/queries/validatecodestatus";
 
 export interface VisitorProp {
   id: string;
@@ -14,6 +13,8 @@ export interface VisitorProp {
   Dateofvisit: Date;
   status: VisitorCodeStatus | null;
 }
+
+export const dynamic = "force-dynamic";
 
 export const DashHome = async () => {
   const user = await GetUsers();

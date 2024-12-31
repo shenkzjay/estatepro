@@ -1,4 +1,4 @@
-import { CompleteSignUp } from "@/app/auth/completesignup/complete-signup";
+import { CompleteSignUp } from "./complete-signup";
 import { Suspense } from "react";
 
 export default function CompleteSignIn() {
