@@ -1,3 +1,5 @@
+"use server";
+
 import { VisitorsCodeTable } from "@/components/tables/visitors-table";
 import { GetVisitorsCode } from "@/app/api/queries/get-visitor-code";
 import { GetUsers } from "@/app/api/queries/getuser-session";

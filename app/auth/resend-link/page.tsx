@@ -1,5 +1,5 @@
 import { GetUsers } from "@/app/api/queries/getuser-session";
-import { ResendEmailLink } from "./resendlink";
+import { ResendEmail } from "./resendlink";
 
 export const dynamic = "force-dynamic";
 export default async function Page() {
@@ -9,7 +9,7 @@ export default async function Page() {
 
   return (
     <div>
-      <ResendEmailLink />
+      <ResendEmail />
     </div>
   );
 }
