@@ -1,3 +1,5 @@
+"use client";
+
 import { DashBreadcrumbs } from "@/components/dashboardheader/dash-breadcrumbs";
 import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
 import { StatusPill } from "@/stories/statuspills/statuspill";
@@ -7,12 +9,21 @@ import { SearchBox } from "@/stories/searchbox/search";
 import { Button } from "@/stories/Button/Button";
 import { FilterIcon } from "@/public/svgIcons/filter";
 import { DownoadIcon } from "@/public/svgIcons/downloadIcon";
+import { useAdminContext } from "../../provider";
+import { PaymentStatus } from "@prisma/client";
+import { PaymentProp } from "../payment/page";
 
-interface DashBoardNavProp {
-  isCollapse: boolean;
-}
+export const DashPayment = ({ payments }: PaymentProp) => {
+  console.log({ payments });
 
-export const DashPayment = ({ isCollapse }: DashBoardNavProp) => {
+  const pendingPayment = payments?.payments.filter(
+    (payment) => payment.paymentstatus === "PENDING"
+  );
+
+  const paidPayment = payments.payments.filter((payment) => payment.paymentstatus === "PAID");
+
+  const { isCollapse } = useAdminContext();
+
   return (
     <div>
       <div
@@ -37,29 +48,32 @@ export const DashPayment = ({ isCollapse }: DashBoardNavProp) => {
                 </tr>
               </thead>
               <tbody className="bg-white p-0 w-full">
-                <tr className="border-b border-[#F0F2F5] w-full p-4">
-                  <td className="" width={10}>
-                    1
-                  </td>
-                  <td className="">
-                    <div>
-                      <p className="text-buttongray">Electrical maintenance</p>
-                    </div>
-                  </td>
-                  <td className="text-buttongray py-6 text-nowrap">
-                    <p>3000</p>
-                  </td>
+                {pendingPayment &&
+                  pendingPayment.map((payment, index) => (
+                    <tr key={index} className="border-b border-[#F0F2F5] w-full p-4">
+                      <td className="" width={10}>
+                        {index + 1}
+                      </td>
+                      <td className="">
+                        <div>
+                          <p className="text-buttongray">{payment.paymenttype}</p>
+                        </div>
+                      </td>
+                      <td className="text-buttongray py-6 text-nowrap">
+                        <p>{payment.paymentamount.toLocaleString()}</p>
+                      </td>
 
-                  <td className="text-buttongray py-6 text-nowrap">
-                    <p>Apr 14, 2023</p>
-                  </td>
-                  {/* <td>0</td>
+                      <td className="text-buttongray py-6 text-nowrap">
+                        <p>{new Date(payment.duedate || "").toDateString()}</p>
+                      </td>
+                      {/* <td>0</td>
                   <td className="text-[12px]  flex">
                     <StatusPill title="Paid" status="success" />
                   </td> */}
-                </tr>
+                    </tr>
+                  ))}
 
-                <tr className="border-b border-[#F0F2F5]">
+                {/* <tr className="border-b border-[#F0F2F5]">
                   <td>2</td>
                   <td className=" ">
                     <div>
@@ -89,7 +103,7 @@ export const DashPayment = ({ isCollapse }: DashBoardNavProp) => {
                   <td className="text-buttongray py-6">
                     <p>Apr 14, 2023</p>
                   </td>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
           </div>
@@ -148,28 +162,31 @@ export const DashPayment = ({ isCollapse }: DashBoardNavProp) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white p-0 w-full">
-                  <tr className="border-b border-[#F0F2F5] w-full p-4">
-                    <td className="" width={10}>
-                      1
-                    </td>
-                    <td className="">
-                      <div className="">
-                        <p className="text-buttongray">Electricity</p>
-                      </div>
-                    </td>
+                  {paidPayment &&
+                    paidPayment.map((payment, index) => (
+                      <tr key={index} className="border-b border-[#F0F2F5] w-full p-4">
+                        <td className="" width={10}>
+                          {index + 1}
+                        </td>
+                        <td className="">
+                          <div className="">
+                            <p className="text-buttongray">{payment.paymenttype}</p>
+                          </div>
+                        </td>
 
-                    <td className="text-buttongray py-6 text-nowrap">
-                      <p>24000</p>
-                    </td>
-                    <td className="text-buttongray py-6 text-nowrap">
-                      <p>Apr 14, 2024</p>
-                    </td>
-                    <td className="text-buttongray py-6 text-nowrap">
-                      <p className="text-blue-400 underline">Download ↗</p>
-                    </td>
-                  </tr>
+                        <td className="text-buttongray py-6 text-nowrap">
+                          <p>{payment.paymentamount.toLocaleString()}</p>
+                        </td>
+                        <td className="text-buttongray py-6 text-nowrap">
+                          <p>{new Date(payment.duedate || "").toDateString()}</p>
+                        </td>
+                        <td className="text-buttongray py-6 text-nowrap">
+                          <p className="text-blue-400 underline">Download ↗</p>
+                        </td>
+                      </tr>
+                    ))}
 
-                  <tr className="border-b border-[#F0F2F5] w-full p-4">
+                  {/* <tr className="border-b border-[#F0F2F5] w-full p-4">
                     <td className="" width={10}>
                       2
                     </td>
@@ -209,7 +226,7 @@ export const DashPayment = ({ isCollapse }: DashBoardNavProp) => {
                     <td className="text-buttongray py-6 text-nowrap">
                       <p className="text-blue-400 underline">Download ↗</p>
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
             </div>

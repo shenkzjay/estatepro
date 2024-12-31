@@ -25,5 +25,5 @@ export const GetUsers = unstable_cache(
     }
   },
   ["users"],
-  { tags: ["users"], revalidate: 3600 }
+  { tags: ["users"], revalidate: 60 }
 );

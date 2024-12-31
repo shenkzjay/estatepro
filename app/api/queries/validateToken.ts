@@ -29,5 +29,5 @@ export const ValidateToken = unstable_cache(
     }
   },
   ["validatetoken"],
-  { tags: ["validatetoken"], revalidate: 3600 }
+  { tags: ["validatetoken"], revalidate: 60 }
 );
