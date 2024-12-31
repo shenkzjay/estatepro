@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardEstateUpdate } from "../dashboard/dash-updates";
+import { DashboardEstateUpdate } from "../../resident/dashboard/dash-updates";
 
 import { useAdminContext } from "../../provider";
 
