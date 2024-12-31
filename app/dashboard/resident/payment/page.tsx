@@ -1,5 +1,3 @@
-"use server";
-
 import { GetSingleResident } from "@/app/api/queries/get-single-residents";
 import { DashPayment } from "../dashboard/dash-payment";
 import { GetUsers } from "@/app/api/queries/getuser-session";
