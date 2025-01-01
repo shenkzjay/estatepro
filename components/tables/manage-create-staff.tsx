@@ -116,7 +116,10 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
                         <span className="flex w-10 h-10 rounded-full justify-center items-center font-bold bg-[#FFECE5] text-[#F56630] uppercase">
                           {nameInitials(staff.name)}
                         </span>
-                        {staff.name}
+                        <span className="flex flex-col">
+                          <p>{staff.name}</p>
+                          <p className="text-slate-400">{staff.email}</p>
+                        </span>
                       </td>
 
                       <td className="text-buttongray py-6 text-nowrap">
