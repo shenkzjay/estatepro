@@ -20,10 +20,10 @@ export default async function HomeAdminDashboard() {
   if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
     return redirect("/dashboard/admin");
   } else if (user.role === "RESIDENT") {
-    redirect("/dashboard/resident");
+    return redirect("/dashboard/resident");
   } else if (user.role === "STAFF") {
-    redirect("/dashboard/staff");
+    return redirect("/dashboard/staff");
   } else {
-    redirect("/auth/signin");
+    return redirect("/auth/signin");
   }
 }

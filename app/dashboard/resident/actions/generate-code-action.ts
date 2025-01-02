@@ -44,7 +44,7 @@ export const GenerateCodeFormAction = async (formdata: FormData) => {
 
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
-    await prisma.resident.update({
+    const visitor = await prisma.resident.update({
       where: {
         id: resident_Id,
       },
@@ -63,6 +63,14 @@ export const GenerateCodeFormAction = async (formdata: FormData) => {
           ],
         },
       },
+
+      include: {
+        visitorcode: {
+          where: {
+            code: data.visitorscode,
+          },
+        },
+      },
     });
 
     console.log(data, "data");
@@ -72,7 +80,7 @@ export const GenerateCodeFormAction = async (formdata: FormData) => {
 
     return {
       message: "visitor's code successfullly created",
-      code: data.visitorscode,
+      code: visitor.visitorcode,
     };
   } catch (error) {
     return {

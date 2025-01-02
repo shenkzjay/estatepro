@@ -2,8 +2,8 @@ export const SucessIcon = () => {
   return (
     <div>
       <svg
-        width="122"
-        height="121"
+        width="84"
+        height="84"
         viewBox="0 0 122 121"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

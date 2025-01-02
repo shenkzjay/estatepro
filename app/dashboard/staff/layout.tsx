@@ -17,7 +17,7 @@ export default async function ResidentLayout({
     redirect("/auth/signin");
   }
 
-  if (user.role === "STAFF" || user.role === "ADMIN") {
+  if (user.role === "RESIDENT") {
     return <div>UnAuthorized user</div>;
   }
 

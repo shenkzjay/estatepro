@@ -21,6 +21,7 @@ import { VisitorProp } from "@/app/dashboard/resident/dashboard/dash-home";
 import { SubmitButton } from "../formbutton";
 import { ValidateCodeStatus } from "@/app/api/queries/validatecodestatus";
 import { RevokeCode } from "@/app/api/queries/revokecode";
+import QRCode from "react-qr-code";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
@@ -47,9 +48,6 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
   //store formElement ref
   const formEle = useRef<HTMLFormElement>(null);
 
-  //init formdata state
-  const [isformData, setIsformdata] = useState<formdataProp>();
-
   //store state for all formdatas
   const [allformData, setAllFormData] = useState<formdataProp[]>([]);
 
@@ -61,8 +59,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
   //popover
   const [popverToggle, setIsPopoverToggle] = useState<boolean>(false);
 
-  //revoke
-  const [revokeButton, setRevokeButton] = useState<boolean>(false);
+  const [QRCodeData, setQRCodeData] = useState<string>("");
 
   const { user } = useAdminContext();
 
@@ -111,9 +108,20 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
 
       const response = await GenerateCodeFormAction(formData);
 
-      if (response.code) {
-        setGencode(response.code);
-      }
+      if (!response) return;
+
+      const code = response?.code?.[0];
+
+      setGencode(code?.code || "");
+
+      //   const qrCodeData = {
+      //     visitorname: response.code?.map((name) => name.visitorname),
+      //     visitornumber: response.code?.map((number) => number.visitornumber),
+      //   };
+
+      const qrcodeLink = `http://localhost:3000/dashboard/staff/qrcode?value=${JSON.stringify(code)}`;
+
+      setQRCodeData(qrcodeLink);
 
       //opens modal
       handleOpenModal();
@@ -187,14 +195,27 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
     >
       <DashBoardHeader title="Home" />
       <section className="bg-[#F8F8F8] p-6 flex md:flex-row flex-col gap-6 w-full">
+        {/* QR code modal */}
         <Modal title="Modal" handleOpenModal={handleOpenModal} ref={modalRef}>
           <div className="flex flex-col justify-center items-center gap-4 p-6 rounded-[20px]">
             <SucessIcon />
             <p className="text-buttongray w-2/3 text-center">
-              The generated code has been sent to the visitor&apos;s phone number
+              Please copy to share code or click the share button to share QRCode with the visitor
             </p>
-            <h3 className="text-6xl font-bold">{gencode}</h3>
-            <p className="text-buttongray">Haven&apos;t received code yet?</p>
+            <div className="flex flex-row gap-6">
+              <p className="text-4xl font-bold">{gencode}</p>
+              <span>
+                <ClipBoardCopy />
+              </span>
+            </div>
+            {/* <p className="text-buttongray">Haven&apos;t received code yet?</p> */}
+            <div>
+              <QRCode
+                size={150}
+                value={QRCodeData}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+              />
+            </div>
             <div className="flex flex-row gap-2 border px-4 py-2 text-buttongray rounded-full ">
               <button onClick={handleShareButton}>Share code</button>
               <span>
@@ -204,6 +225,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
           </div>
         </Modal>
 
+        {/* confirmation modal */}
         <Modal
           title="Revoke visitor's code"
           handleOpenModal={OpenRevokeCodeAlertModal}
@@ -419,34 +441,54 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
                               </button>
                               <div className="positionedElement">
                                 {isSelected === index && (
-                                  <Popover>
-                                    <ul className="flex flex-col bg-white text-[14px] text-nowrap text-buttongray drop-shadow-[0_8px_24px_rgba(0,0,0,0.1)] rounded-[8px]">
-                                      <li>
-                                        <button
-                                          className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  "
-                                          aria-label="Revoke code button"
-                                          role="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleRevokeVisitorCode(index);
-                                          }}
-                                        >
-                                          Revoke Code
-                                        </button>
-                                      </li>
-                                      <li className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  ">
-                                        Delete Visitor
-                                      </li>
-                                      <li
-                                        className=" text-red-500 rounded-b-[8px] text-center font-semibold py-1 hover:bg-slate-200"
-                                        role="button"
-                                        aria-label="close popup"
-                                        onClick={() => setIsSelected(null)}
-                                      >
-                                        Close
-                                      </li>
-                                    </ul>
-                                  </Popover>
+                                  <>
+                                    {tableData.status === "ACTIVE" ? (
+                                      <Popover>
+                                        <ul className="flex flex-col bg-white text-[14px] text-nowrap text-buttongray drop-shadow-[0_8px_24px_rgba(0,0,0,0.1)] rounded-[8px]">
+                                          <li>
+                                            <button
+                                              className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  "
+                                              aria-label="Revoke code button"
+                                              role="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleRevokeVisitorCode(index);
+                                              }}
+                                            >
+                                              Revoke Code
+                                            </button>
+                                          </li>
+                                          <li className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  ">
+                                            Delete Visitor
+                                          </li>
+                                          <li
+                                            className=" text-red-500 rounded-b-[8px] text-center font-semibold py-1 hover:bg-slate-200"
+                                            role="button"
+                                            aria-label="close popup"
+                                            onClick={() => setIsSelected(null)}
+                                          >
+                                            Close
+                                          </li>
+                                        </ul>
+                                      </Popover>
+                                    ) : (
+                                      <Popover>
+                                        <ul className="flex flex-col bg-white text-[14px] text-nowrap text-buttongray drop-shadow-[0_8px_24px_rgba(0,0,0,0.1)] rounded-[8px]">
+                                          <li className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  ">
+                                            Delete Visitor
+                                          </li>
+                                          <li
+                                            className=" text-red-500 rounded-b-[8px] text-center font-semibold py-1 hover:bg-slate-200"
+                                            role="button"
+                                            aria-label="close popup"
+                                            onClick={() => setIsSelected(null)}
+                                          >
+                                            Close
+                                          </li>
+                                        </ul>
+                                      </Popover>
+                                    )}
+                                  </>
                                 )}
                               </div>
                             </div>

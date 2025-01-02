@@ -61,7 +61,7 @@ export function ManageResident({ resident, residentPayments }: residentProp) {
       <DashBreadcrumbs title="Manage-residents" />
 
       <ManageCreateResidentTable residents={resident} />
-      <ManageResidentPaymentTable residentPayments={residentPayments} />
+      <ManageResidentPaymentTable residentPayments={residentPayments} residents={resident} />
     </section>
   );
 }

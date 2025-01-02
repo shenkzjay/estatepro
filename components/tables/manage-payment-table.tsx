@@ -3,7 +3,6 @@ import { FilterIcon } from "@/public/svgIcons/filter";
 import { PlusIcon } from "@/public/svgIcons/plusIcon";
 import { Button } from "@/stories/Button/Button";
 import { SearchBox } from "@/stories/searchbox/search";
-
 import { MoreIcon } from "@/public/svgIcons/moreIcon";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { Modal } from "@/stories/modal/modal";
@@ -17,20 +16,17 @@ import { ViewPaymentModal } from "@/components/app-modals/viewpayment";
 
 interface residentDataProps {
   residentPayments: residentShit[];
+  residents: residentShit[];
 }
 
-export const ManageResidentPaymentTable = ({ residentPayments }: residentDataProps) => {
+export const ManageResidentPaymentTable = ({ residentPayments, residents }: residentDataProps) => {
   const viewPaymentRef = useRef<HTMLDialogElement | null>(null);
   const createPaymentRef = useRef<HTMLDialogElement | null>(null);
   const createPaymentFormRef = useRef<HTMLFormElement | null>(null);
-
   const [selectedItem, setSelectedItem] = useState("");
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
-
   const [index, setIndex] = useState<number | null>(null);
-
   const [selectAllPayments, setSelectAllPayments] = useState<boolean>(false);
-
   const [selectedPaymentCheckbox, setSelectedPaymentCheckbox] = useState<number[]>([]);
   const [residentDatas, setResidentDatas] = useState<residentShit[]>([]);
   const [createResidentPayment, setCreateResidentPayment] = useState<residentShit[]>([]);
@@ -250,7 +246,7 @@ export const ManageResidentPaymentTable = ({ residentPayments }: residentDataPro
 
             <Select
               title="Select resident"
-              selectData={residentDatas.map((resident) => resident?.name || "")}
+              selectData={residents.map((resident) => resident?.name || "")}
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
               setIndex={setIndex}
@@ -266,7 +262,7 @@ export const ManageResidentPaymentTable = ({ residentPayments }: residentDataPro
                 inputtype="text"
                 required={false}
                 Border="1px solid #E3E5E5"
-                defaultValue={index !== null ? (residentDatas[index]?.email as string) : ""}
+                defaultValue={index !== null ? (residents[index]?.email as string) : ""}
                 readOnly={true}
               />
               <Inputs
@@ -278,7 +274,7 @@ export const ManageResidentPaymentTable = ({ residentPayments }: residentDataPro
                 inputtype="text"
                 required={false}
                 Border="1px solid #E3E5E5"
-                defaultValue={index !== null ? residentDatas[index]?.residentData?.phonenumber : ""}
+                defaultValue={index !== null ? residents[index]?.residentData?.phonenumber : ""}
                 readOnly={true}
               />
 
@@ -293,7 +289,7 @@ export const ManageResidentPaymentTable = ({ residentPayments }: residentDataPro
                 Border="1px solid #E3E5E5"
                 defaultValue={
                   index !== null
-                    ? `${residentDatas[index]?.residentData?.housenumber || ""} ${residentDatas[index]?.residentData?.streetaddress || ""}`
+                    ? `${residents[index]?.residentData?.housenumber || ""} ${residentDatas[index]?.residentData?.streetaddress || ""}`
                     : ""
                 }
                 readOnly={true}
