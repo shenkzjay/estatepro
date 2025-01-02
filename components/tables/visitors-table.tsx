@@ -10,7 +10,7 @@ import { GenerateCodeFormAction } from "@/app/dashboard/resident/actions/generat
 import { StatusPill } from "@/stories/statuspills/statuspill";
 import { MoreIcon } from "@/public/svgIcons/moreIcon";
 import { Modal } from "@/stories/modal/modal";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SucessIcon } from "@/public/svgIcons/successIcon";
 import { ClipBoardCopy } from "@/public/svgIcons/clipboardIcon";
 import { Popover } from "@/stories/popover/popover";
@@ -22,6 +22,10 @@ import { SubmitButton } from "../formbutton";
 import { ValidateCodeStatus } from "@/app/api/queries/validatecodestatus";
 import { RevokeCode } from "@/app/api/queries/revokecode";
 import QRCode from "react-qr-code";
+import { DeleteVisitorCode } from "@/app/api/queries/delete-visitorcode";
+
+import { toPng } from "html-to-image";
+import { title } from "process";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
@@ -45,6 +49,12 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
 
   const revokeRef = useRef<HTMLDialogElement>(null);
 
+  const deleteCodeRef = useRef<HTMLDialogElement>(null);
+
+  const codeRef = useRef<HTMLParagraphElement | null>(null);
+
+  const htmltoPngRef = useRef<HTMLDivElement | null>(null);
+
   //store formElement ref
   const formEle = useRef<HTMLFormElement>(null);
 
@@ -53,6 +63,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
 
   //selected state
   const [isSelected, setIsSelected] = useState<number | null>(null);
+  const [shareData, setShareData] = useState(null);
 
   const [gencode, setGencode] = useState("");
 
@@ -133,9 +144,47 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
   /**
    * @description function that handles share button logic
    */
-  const handleShareButton = () => {
-    console.log("shares");
-  };
+  const handleShareButton = useCallback(async () => {
+    if (!htmltoPngRef.current) return;
+
+    try {
+      // Convert the HTML element to a PNG data URL
+      const dataUrl = await toPng(htmltoPngRef.current, { cacheBust: true });
+      const blob = await fetch(dataUrl).then((res) => res.blob());
+
+      // Prepare sharing data
+      const shareText =
+        "Please present this QR code to the security at the gate to grant access. Thank you!";
+
+      if ("canShare" in navigator) {
+        const shareFile = new File([blob], "QR-code.png", { type: "image/png" });
+        const sharePayload = {
+          files: [shareFile],
+          title: "QR Code",
+          text: shareText,
+        };
+
+        if (navigator.canShare(sharePayload)) {
+          try {
+            await navigator.share(sharePayload);
+          } catch (error: any) {
+            if (error.name !== "AbortError") {
+              console.error("Sharing failed:", error);
+            }
+          }
+          return;
+        }
+      }
+
+      // Fallback to download if sharing is not supported
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "QR-code.png";
+      link.click();
+    } catch (error) {
+      console.error("Error processing the PNG or sharing:", error);
+    }
+  }, []);
 
   /**
    * @description functions that handles Popover toggle
@@ -167,6 +216,10 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
     revokeRef.current?.showModal();
   };
 
+  const OpenDeleteCodeModal = () => {
+    deleteCodeRef.current?.showModal();
+  };
+
   const handleRevokeVisitorCode = (index: number) => {
     OpenRevokeCodeAlertModal();
     setIsSelected(index);
@@ -174,7 +227,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
   };
 
   const handleVisitorCodeRevoke = async () => {
-    if (isSelected) {
+    if (isSelected !== null) {
       const visitor = visitors[isSelected];
 
       const visitorId = visitor.id;
@@ -187,6 +240,35 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
     revokeRef.current?.close();
   };
 
+  const handleOpenDeleteVisitorCode = (index: number) => {
+    OpenDeleteCodeModal();
+    setIsSelected(index);
+    setIsPopoverToggle(true);
+  };
+
+  const handleVisitorCodeDelete = async () => {
+    if (isSelected !== null) {
+      const visitor = visitors[isSelected];
+
+      const visitorId = visitor.id;
+
+      await DeleteVisitorCode(visitorId);
+
+      setIsSelected(null);
+    }
+
+    deleteCodeRef.current?.close();
+  };
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(codeRef.current?.textContent || "");
+      return alert(`Copied to clipboard!!!`);
+    } catch (error) {
+      return console.error("Failed to copy code", error);
+    }
+  };
+
   const { isCollapse } = useAdminContext();
 
   return (
@@ -196,17 +278,22 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
       <DashBoardHeader title="Home" />
       <section className="bg-[#F8F8F8] p-6 flex md:flex-row flex-col gap-6 w-full">
         {/* QR code modal */}
-        <Modal title="Modal" handleOpenModal={handleOpenModal} ref={modalRef}>
-          <div className="flex flex-col justify-center items-center gap-4 p-6 rounded-[20px]">
+        <Modal title="Generate code" handleOpenModal={handleOpenModal} ref={modalRef}>
+          <div
+            ref={htmltoPngRef}
+            className="flex flex-col justify-center items-center gap-4 p-6 rounded-[20px]"
+          >
             <SucessIcon />
             <p className="text-buttongray w-2/3 text-center">
               Please copy to share code or click the share button to share QRCode with the visitor
             </p>
-            <div className="flex flex-row gap-6">
-              <p className="text-4xl font-bold">{gencode}</p>
-              <span>
-                <ClipBoardCopy />
-              </span>
+            <div className="flex flex-row gap-6 items-center justify-center">
+              <p className="text-4xl font-bold" ref={codeRef}>
+                {gencode}
+              </p>
+              <button className="flex gap-2" onClick={handleCopyCode}>
+                <ClipBoardCopy /> <p>Copy</p>
+              </button>
             </div>
             {/* <p className="text-buttongray">Haven&apos;t received code yet?</p> */}
             <div>
@@ -225,7 +312,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
           </div>
         </Modal>
 
-        {/* confirmation modal */}
+        {/* Revoke code confirmation modal */}
         <Modal
           title="Revoke visitor's code"
           handleOpenModal={OpenRevokeCodeAlertModal}
@@ -247,6 +334,35 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
               <button
                 className="py-2 px-4 bg-[#c3f8f2] rounded-[10px] text-primary font-bold"
                 onClick={handleVisitorCodeRevoke}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Delete code confirmation modal */}
+        <Modal
+          title="Delete Confirmation"
+          handleOpenModal={OpenDeleteCodeModal}
+          ref={deleteCodeRef}
+        >
+          <div className="flex flex-col gap-4 mt-6">
+            <p>Do you want to delete this visitor's code?</p>
+            <p>Please note that this action is irreversible</p>
+            <div className="flex justify-between">
+              <button
+                onClick={() => {
+                  deleteCodeRef.current?.close();
+                  setIsSelected(null);
+                }}
+                className="py-2 px-4 bg-red-500 rounded-[10px] text-white font-bold"
+              >
+                No
+              </button>
+              <button
+                className="py-2 px-4 bg-[#c3f8f2] rounded-[10px] text-primary font-bold"
+                onClick={handleVisitorCodeDelete}
               >
                 Continue
               </button>
@@ -442,9 +558,9 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
                               <div className="positionedElement">
                                 {isSelected === index && (
                                   <>
-                                    {tableData.status === "ACTIVE" ? (
-                                      <Popover>
-                                        <ul className="flex flex-col bg-white text-[14px] text-nowrap text-buttongray drop-shadow-[0_8px_24px_rgba(0,0,0,0.1)] rounded-[8px]">
+                                    <Popover>
+                                      <ul className="flex flex-col bg-white text-[14px] text-nowrap text-buttongray drop-shadow-[0_8px_24px_rgba(0,0,0,0.1)] rounded-[8px]">
+                                        {tableData.status === "ACTIVE" && (
                                           <li>
                                             <button
                                               className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  "
@@ -458,36 +574,30 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
                                               Revoke Code
                                             </button>
                                           </li>
-                                          <li className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  ">
-                                            Delete Visitor
-                                          </li>
-                                          <li
-                                            className=" text-red-500 rounded-b-[8px] text-center font-semibold py-1 hover:bg-slate-200"
+                                        )}
+                                        <li>
+                                          <button
+                                            aria-label="Delete code button"
                                             role="button"
-                                            aria-label="close popup"
-                                            onClick={() => setIsSelected(null)}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleOpenDeleteVisitorCode(index);
+                                            }}
+                                            className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black "
                                           >
-                                            Close
-                                          </li>
-                                        </ul>
-                                      </Popover>
-                                    ) : (
-                                      <Popover>
-                                        <ul className="flex flex-col bg-white text-[14px] text-nowrap text-buttongray drop-shadow-[0_8px_24px_rgba(0,0,0,0.1)] rounded-[8px]">
-                                          <li className="p-2 hover:bg-slate-200 cursor-pointer hover:text-black  ">
                                             Delete Visitor
-                                          </li>
-                                          <li
-                                            className=" text-red-500 rounded-b-[8px] text-center font-semibold py-1 hover:bg-slate-200"
-                                            role="button"
-                                            aria-label="close popup"
-                                            onClick={() => setIsSelected(null)}
-                                          >
-                                            Close
-                                          </li>
-                                        </ul>
-                                      </Popover>
-                                    )}
+                                          </button>
+                                        </li>
+                                        <li
+                                          className=" text-red-500 rounded-b-[8px] text-center font-semibold py-1 hover:bg-slate-200"
+                                          role="button"
+                                          aria-label="close popup"
+                                          onClick={() => setIsSelected(null)}
+                                        >
+                                          Close
+                                        </li>
+                                      </ul>
+                                    </Popover>
                                   </>
                                 )}
                               </div>

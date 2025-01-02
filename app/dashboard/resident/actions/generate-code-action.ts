@@ -1,11 +1,12 @@
 "use server";
 
 import { prisma } from "@/utils/prisma";
+import { generateRandomCodes } from "@/utils/randomcodes";
 import { VisitorCodeStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 
 export const GenerateCodeFormAction = async (formdata: FormData) => {
-  const randomCode = Math.random().toString(36).slice(6);
+  const randomCode = generateRandomCodes(8);
   const data = {
     visitorname: formdata.get("visitorname") as string,
     visitoremail: formdata.get("Email address") as string,

@@ -19,6 +19,7 @@ export const SubmitButton = ({ ButtonName }: LabelProp) => {
       iconAlign="after"
       onClick={() => console.log("hi")}
       bgColor={pending ? "#f4f4f4" : "#1AD9C5"}
+      btnbgColor={pending ? "#e4e4e4" : "#139D8F"}
       diasbled={pending}
     />
   );
