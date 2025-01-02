@@ -28,7 +28,7 @@ export default function Page() {
       <DashBreadcrumbs title="QR Scan details" />
 
       <div className="m-6 p-6 bg-white flex flex-col gap-6">
-        <h3 className="text-2xl text-buttongray font-semibold">Visitor's details</h3>
+        <h3 className="text-2xl text-buttongray font-semibold">Visitor&apos;s details</h3>
         <div>
           <p className="text-buttongray text-sm">NAME</p>
           <p className="font-semibold">{parseQuery.visitorname}</p>

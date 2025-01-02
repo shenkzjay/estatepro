@@ -89,7 +89,9 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
             </span>
           </div>
           <figure className="w-full border p-4 rounded-xl flex flex-col gap-4">
-            <figcaption className="font-semibold text-buttongray">Visitor's details</figcaption>
+            <figcaption className="font-semibold text-buttongray">
+              Visitor&apos;s details
+            </figcaption>
             <div>
               <p className="text-buttongray text-sm">Name</p>
               <p className="font-bold">{visitorDetails?.visitorname}</p>
@@ -105,7 +107,9 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
             </div>
           </figure>
           <figure className="w-full border p-4 rounded-xl flex flex-col gap-4">
-            <figcaption className="font-semibold text-buttongray">Resident's details</figcaption>
+            <figcaption className="font-semibold text-buttongray">
+              Resident&apos;s details
+            </figcaption>
             <div>
               <p className="text-buttongray text-sm">Name</p>
               <p className="font-bold">{visitorDetails?.resident?.user?.name}</p>
