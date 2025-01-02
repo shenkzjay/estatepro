@@ -24,7 +24,7 @@ import { RevokeCode } from "@/app/api/queries/revokecode";
 import QRCode from "react-qr-code";
 import { DeleteVisitorCode } from "@/app/api/queries/delete-visitorcode";
 
-import { toPng } from "html-to-image";
+import { toJpeg } from "html-to-image";
 import { title } from "process";
 
 interface DashBoardNavProp {
@@ -149,7 +149,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
 
     try {
       // Convert the HTML element to a PNG data URL
-      const dataUrl = await toPng(htmltoPngRef.current, { cacheBust: true });
+      const dataUrl = await toJpeg(htmltoPngRef.current, { cacheBust: true });
       const blob = await fetch(dataUrl).then((res) => res.blob());
 
       // Prepare sharing data
