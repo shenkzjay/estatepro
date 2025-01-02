@@ -1,3 +1,5 @@
+"use client";
+
 import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
 import { DashBreadcrumbs } from "@/components/dashboardheader/dash-breadcrumbs";
 import { SearchBox } from "@/stories/searchbox/search";
