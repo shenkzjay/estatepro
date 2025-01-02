@@ -348,7 +348,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
           ref={deleteCodeRef}
         >
           <div className="flex flex-col gap-4 mt-6">
-            <p>Do you want to delete this visitor's code?</p>
+            <p>Do you want to delete this visitor&apos;s code?</p>
             <p>Please note that this action is irreversible</p>
             <div className="flex justify-between">
               <button
