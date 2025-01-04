@@ -79,8 +79,8 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
                 />
               </summary>
               {residents.residentData && residents?.residentData?.occupants?.length > 0 ? (
-                residents?.residentData?.occupants.map((occupant) => (
-                  <div className="p-6">
+                residents?.residentData?.occupants.map((occupant, index) => (
+                  <div className="p-6" key={index}>
                     <p>{occupant.occupantsname}</p>
                     <p>{occupant.occupantsnumber}</p>
                   </div>
