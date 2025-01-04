@@ -32,6 +32,7 @@ model Resident {
   housetype     String?
   moveindate    DateTime?
   phonenumber   String?
+  occupants     Occupants[]     @relation("ResidenToOccupants")
   payment       PaymentData[]   @relation("ResidentToPayment")
   visitorcode   VisitorCode[]    @relation("ResidentToVisitorcode")
   vehicle       Vehicle[]       @relation("ResidentToVehicle")
@@ -99,6 +100,15 @@ model Staff {
     phonenumber   String?
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
+}
+
+
+model Occupants {
+      id              String         @id @default(auto()) @map("_id") @db.ObjectId
+      occupantsname   String        
+      occupantsnumber String?
+      resident        Resident       @relation("ResidenToOccupants", fields:[residentId], references:[id], onDelete:Cascade)
+      residentId      String         @db.ObjectId
 }
 
 enum Role {

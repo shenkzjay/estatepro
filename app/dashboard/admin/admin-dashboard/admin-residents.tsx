@@ -15,6 +15,7 @@ export interface residentShit {
   id: string;
   name: string | null;
   email: string | null;
+  password: string;
   createdAt: Date;
   residentData?: houseData | null;
 }
@@ -27,6 +28,7 @@ interface houseData {
   moveindate?: string;
   vehicle: vehicleData[];
   payment: Payment[];
+  occupants: Occupants[];
 }
 
 interface Payment {
@@ -39,10 +41,15 @@ interface Payment {
 }
 
 interface vehicleData {
-  vehicleMake?: string;
-  vehicleNumber?: string;
-  vehicleModel?: string;
-  vehicleColor?: string;
+  vehiclemake?: string;
+  vehiclenumber?: string;
+  vehiclemodel?: string;
+  vehiclecolor?: string;
+}
+
+interface Occupants {
+  occupantsname: string;
+  occupantsnumber: number;
 }
 
 interface residentProp {

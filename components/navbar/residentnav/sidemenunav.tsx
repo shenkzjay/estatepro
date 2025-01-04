@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 import { User } from "@prisma/client";
 import { signOutAction } from "@/app/actions/handlesignin-action";
 import { Suspense } from "react";
+import { SettingsIcon } from "@/public/svgIcons/settings";
 
 interface SideMenuProps {
   isCollapse: boolean;
@@ -204,6 +205,35 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                       icon={MarketplaceIcon}
                       color="white"
                       tooltip="Marketplace"
+                    />
+                  </Link>
+                </div>
+              )}
+            </li>
+            <li>
+              {isCollapse ? (
+                <div className="relative hover:bg-primary rounded-[4px] mt-12 ">
+                  <Link href={"/dashboard/resident/settings"}>
+                    <Pills
+                      pillText="Settings"
+                      bgColor="transparent"
+                      iconAlign="before"
+                      icon={SettingsIcon}
+                      color="white"
+                    />
+                  </Link>
+                </div>
+              ) : (
+                <div className="relative hover:bg-primary rounded-[4px] mt-12">
+                  <Link href={"/dashboard/resident/settings"}>
+                    {" "}
+                    <Pills
+                      pillText=""
+                      bgColor="transparent"
+                      iconAlign="before"
+                      icon={SettingsIcon}
+                      color="white"
+                      tooltip="Settings"
                     />
                   </Link>
                 </div>
