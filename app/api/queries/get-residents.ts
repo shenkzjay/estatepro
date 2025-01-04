@@ -49,5 +49,5 @@ export const getResidents = unstable_cache(
     }
   },
   ["get-residents"],
-  { tags: ["get-residents"] }
+  { tags: ["get-residents"], revalidate: 60 }
 );

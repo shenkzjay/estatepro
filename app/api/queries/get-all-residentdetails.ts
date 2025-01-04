@@ -55,6 +55,6 @@ export const getAllResidentDetails = unstable_cache(
       console.error("Error fetching users:", error);
     }
   },
-  ["get-residents"],
-  { tags: ["get-residents"] }
+  ["get-all-residents"],
+  { tags: ["get-all-residents"], revalidate: 60 }
 );

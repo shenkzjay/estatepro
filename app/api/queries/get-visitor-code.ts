@@ -49,5 +49,5 @@ export const GetVisitorsCode = unstable_cache(
     }
   },
   ["get-visitors"],
-  { tags: ["get-visitors"] }
+  { tags: ["get-visitors"], revalidate: 60 }
 );

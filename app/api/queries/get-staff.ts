@@ -29,5 +29,5 @@ export const getStaff = unstable_cache(
     }
   },
   ["get-staff"],
-  { tags: ["get-staff"] }
+  { tags: ["get-staff"], revalidate: 60 }
 );

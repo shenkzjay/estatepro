@@ -212,7 +212,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             </li>
             <li>
               {isCollapse ? (
-                <div className="relative hover:bg-primary rounded-[4px] mt-12 ">
+                <div
+                  className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] mt-20`}
+                >
                   <Link href={"/dashboard/resident/settings"}>
                     <Pills
                       pillText="Settings"
@@ -224,7 +226,9 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                   </Link>
                 </div>
               ) : (
-                <div className="relative hover:bg-primary rounded-[4px] mt-12">
+                <div
+                  className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] mt-20`}
+                >
                   <Link href={"/dashboard/resident/settings"}>
                     {" "}
                     <Pills

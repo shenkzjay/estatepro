@@ -329,10 +329,10 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
           </p>
           <form className="flex flex-col gap-6 justify-center items-center">
             <Inputs
-              label="Current password"
-              title="currentpwd"
+              label="New password"
+              title="newpassword"
               placeholder=""
-              arialabel="currentpassword"
+              arialabel="new password"
               BorderRadius="10px"
               inputtype="text"
               required={true}
@@ -340,10 +340,10 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
             />
 
             <Inputs
-              label="New password"
-              title="newpwd"
+              label="Confirm new password"
+              title="confirm newpwd"
               placeholder=""
-              arialabel="newpwd"
+              arialabel="confirm newpwd"
               BorderRadius="10px"
               inputtype="text"
               required={true}
