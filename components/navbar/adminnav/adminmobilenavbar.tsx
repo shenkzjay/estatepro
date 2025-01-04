@@ -13,7 +13,7 @@ export const AdminMobileMenuNavbar = () => {
   //init pathname
   const pathname = usePathname();
   return (
-    <nav className="relative" role="navigation" aria-labelledby="mobile-navigation">
+    <nav className="fixed w-full z-20" role="navigation" aria-labelledby="mobile-navigation">
       <div className="flex  px-6 items-center justify-between bg-[#021412]  w-full z-20">
         <a>
           <Logo color="white" />

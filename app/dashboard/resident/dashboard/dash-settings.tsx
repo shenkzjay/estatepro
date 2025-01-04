@@ -194,8 +194,8 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
         </form>
       </Modal>
 
-      <div className="flex flex-row gap-6 m-6">
-        <div className="h-full w-1/2 bg-white p-6 rounded-xl flex flex-col gap-8">
+      <div className="flex md:flex-row flex-col gap-6 m-6">
+        <div className="h-full md:w-1/2 bg-white p-6 rounded-xl flex flex-col gap-8">
           <h3 className="text-xl font-semibold text-buttongray">Resident details</h3>
           <div>
             <p className="text-buttongray">Resident name</p>
@@ -238,7 +238,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
                 <Button
                   variant="Primary"
                   iconAlign="after"
-                  label="Add occupants"
+                  label="Add"
                   icon={LinkArrow}
                   onClick={handleOpenOccupantsModal}
                   color="#139D8F"
@@ -279,7 +279,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
               <Button
                 variant="Primary"
                 iconAlign="after"
-                label="Add Vehicles"
+                label="Add"
                 icon={LinkArrow}
                 onClick={handleOpenVehicleModal}
                 color="#139D8F"
@@ -290,13 +290,13 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
                 residents?.residentData?.vehicle.map((vehicles, index) => {
                   return (
                     <div className="px-3 py-2 " key={index}>
-                      <div className="bg-slate-50 flex justify-between items-center gap-2 rounded-xl">
+                      <div className="bg-slate-50 flex md:flex-row flex-col justify-between items-center gap-2 rounded-xl">
                         <div className=" [transform:scale(-1,1)]">
                           <div className=" ">
                             <CarIcon />
                           </div>
                         </div>
-                        <div className="text-sm w-1/2">
+                        <div className="text-sm md:w-1/2">
                           <p className="text-black">
                             vehicle make: <b>{vehicles.vehiclemake}</b>
                           </p>
@@ -322,7 +322,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
             </div>
           </details>
         </div>
-        <div className="w-1/2 flex flex-col p-6 h-fit bg-white rounded-xl">
+        <div className="md:w-1/2 flex flex-col p-6 h-fit bg-white rounded-xl">
           <h3 className="text-xl font-semibold text-buttongray">Change password</h3>
           <p className="mb-14 mt-4">
             Input your current password and new password to change password

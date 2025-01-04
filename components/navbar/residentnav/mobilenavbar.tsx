@@ -1,3 +1,5 @@
+"use client";
+
 import { Logo } from "@/public/svgIcons/logo";
 import { Pills } from "@/stories/Pill/Pills";
 import { HomeIcon } from "@/public/svgIcons/homeIcon";
@@ -8,12 +10,16 @@ import { MaintenanceIcon } from "@/public/svgIcons/maitainanceIcon";
 import { UpdatesIcon } from "@/public/svgIcons/updatesIcon";
 import { LogOutIcon } from "@/public/svgIcons/logoutIcon";
 import { usePathname } from "next/navigation";
+import { useAdminContext } from "@/app/dashboard/provider";
+import { SettingsIcon } from "@/public/svgIcons/settings";
 
 export const MobileMenuNavbar = () => {
   //init pathname hook
   const pathname = usePathname();
+
+  const { user } = useAdminContext();
   return (
-    <nav className="relative" role="navigation" aria-labelledby="mobile-navigation">
+    <nav className="fixed w-full z-50" role="navigation" aria-labelledby="mobile-navigation">
       <div className="flex  px-6 items-center justify-between bg-[#021412]  w-full z-20">
         <a>
           <Logo color="white" />
@@ -40,9 +46,9 @@ export const MobileMenuNavbar = () => {
         </li>
         <li
           id="mobile"
-          className={`${pathname === "/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] `}
+          className={`${pathname === "/dashboard/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] `}
         >
-          <a href={"/resident"}>
+          <a href={"/dashboard/resident"}>
             <Pills
               pillText="Home"
               bgColor="transparent"
@@ -64,9 +70,9 @@ export const MobileMenuNavbar = () => {
           </a>
         </li> */}
         <li
-          className={`${pathname === "/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+          className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
         >
-          <a href={"/resident/payment"}>
+          <a href={"/dashboard/resident/payment"}>
             <Pills
               pillText="Payment"
               bgColor="transparent"
@@ -77,9 +83,9 @@ export const MobileMenuNavbar = () => {
           </a>
         </li>
         <li
-          className={`${pathname === "/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+          className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
         >
-          <a href={"/resident/maintenance"}>
+          <a href={"/dashboard/resident/maintenance"}>
             <Pills
               pillText="Maintenance & issues"
               bgColor="transparent"
@@ -90,9 +96,9 @@ export const MobileMenuNavbar = () => {
           </a>
         </li>
         <li
-          className={`${pathname === "/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+          className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
         >
-          <a href={"/resident/estate-updates"}>
+          <a href={"/dashboard/resident/estate-updates"}>
             <Pills
               pillText="Estate Updates"
               bgColor="transparent"
@@ -113,11 +119,23 @@ export const MobileMenuNavbar = () => {
             />
           </a>
         </li>
+
+        <li className="mt-12">
+          <a href={"/dashboard/resident/settings"}>
+            <Pills
+              pillText="Settings"
+              bgColor="transparent"
+              iconAlign="before"
+              icon={SettingsIcon}
+              color="white"
+            />
+          </a>
+        </li>
         <li className="flex flex-row text-white mt-6 text-[14px] w-full justify-between p-2">
           <div className="flex flex-col gap-6 ">
             <div>
-              <h3>Alison Eyo</h3>
-              <p>alison@rayna.ui</p>
+              <h3>{user?.name}</h3>
+              <p>{user?.email}</p>
             </div>
 
             <div className="flex gap-3 w-full">
