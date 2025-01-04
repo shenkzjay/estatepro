@@ -2,8 +2,10 @@ import { Button } from "@/stories/Button/Button";
 import { Logo } from "@/public/svgIcons/logo";
 import Link from "next/link";
 import { XIcon } from "@/public/svgIcons/xIcon";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
+  const router = useRouter();
   return (
     <nav
       role="navigation"
@@ -45,20 +47,22 @@ export function Navbar() {
             </a>
           </li>
           <li className="flex md:hidden">
-            <Button
-              variant="Primary"
-              label="Login"
-              iconAlign="after"
-              color="white"
-              bgColor="#1AD9C5"
-              onClick={() => "hello"}
-            />
+            <Link href={"/dashboard"}>
+              <Button
+                variant="Primary"
+                label="Login"
+                iconAlign="after"
+                color="white"
+                bgColor="#1AD9C5"
+                onClick={() => "hi"}
+              />
+            </Link>
           </li>
         </ul>
       </div>
       <div>
         <div className=" flex-row md:flex hidden">
-          <Link href={"/admin"}>
+          <Link href={"/dashboard"}>
             <Button
               variant="Primary"
               label="Login"

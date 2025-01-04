@@ -21,6 +21,7 @@ export interface residentShit {
 }
 
 interface houseData {
+  id?: string;
   phonenumber?: string;
   housenumber?: string;
   streetaddress?: string;

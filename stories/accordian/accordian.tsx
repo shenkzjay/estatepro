@@ -7,7 +7,7 @@ interface AccordianProps {
 
 export const Accordian = ({ title, content }: AccordianProps) => {
   return (
-    <details className="">
+    <details className="accordian">
       <summary>{title}</summary>
       <p className="">{content}</p>
     </details>

@@ -14,6 +14,10 @@ export default async function Page() {
 
   const residents = await getAllResidentDetails(residentId ?? "");
 
+  if (!residents) {
+    return <div>No resident found</div>;
+  }
+
   // console.log(residents);
 
   return (
