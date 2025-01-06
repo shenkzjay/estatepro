@@ -1,5 +1,5 @@
 import { compare, hash } from "bcryptjs";
-import { SignJWT, jwtVerify } from "jose";
+import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { Role } from "@prisma/client";
 
@@ -19,6 +19,16 @@ interface User {
   image: string | null;
   role: Role | null;
 }
+
+type UploadPayload = {
+  uploadPayload: {
+    fileName: string;
+    useUniqueFileName: string;
+    tags: string;
+  };
+  expire: number;
+  publicKey: string;
+};
 
 export async function hashPassword(password: string) {
   return hash(password, SALT_ROUND);
@@ -66,4 +76,22 @@ export async function setSession(user: User) {
     secure: true,
     sameSite: "lax",
   });
+}
+
+export async function getImageKitToken(
+  privateKey: string,
+  publicKey: string,
+  payload: UploadPayload
+) {
+  const privatekey = new TextEncoder().encode(privateKey);
+
+  return await new SignJWT(payload.uploadPayload)
+    .setProtectedHeader({
+      alg: "HS256",
+      typ: "JWT",
+      kid: publicKey,
+    })
+    .setIssuedAt()
+    .setExpirationTime("1 day from now")
+    .sign(privatekey);
 }

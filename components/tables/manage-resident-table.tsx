@@ -278,7 +278,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                       {new Date(resident?.createdAt).toDateString()}
                     </td>
                     <td className="text-[12px]  flex">
-                      <StatusPill title="Residing" status="success" />
+                      {/* <StatusPill title="Residing" status="success" /> */}
+                      <button className="text-green-500">View →</button>
                     </td>
 
                     <td className="relative">

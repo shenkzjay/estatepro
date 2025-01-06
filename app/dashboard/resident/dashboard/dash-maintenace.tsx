@@ -1,3 +1,5 @@
+"use client";
+
 import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
 import { DashBreadcrumbs } from "@/components/dashboardheader/dash-breadcrumbs";
 import { SearchBox } from "@/stories/searchbox/search";
@@ -15,41 +17,41 @@ import { LinkArrow } from "@/public/svgIcons/linkarrow";
 import { Modal } from "@/stories/modal/modal";
 import { SucessIcon } from "@/public/svgIcons/successIcon";
 import Link from "next/link";
+import { CreateMaintenanceIssues } from "../actions/create-maintainanceissues";
+import { useAdminContext } from "../../provider";
+import { MaintenanceProps } from "../maintenance/page";
+import Image from "next/image";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
 }
 
-export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
+interface MaintainanceIssuesProp {
+  maintenance: MaintenanceProps[];
+}
+
+export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp) => {
+  console.log(maintenance);
+
+  const { isCollapse, user } = useAdminContext();
   //select option value array
   const data = ["Plumbing", "Electricity", "Water"];
-  const address = ["House 44a", "House 35fa", "House 221"];
+  // const address = ["House 44a", "House 35fa", "House 221"];
 
   //init selectedItem
   const [selectedItem, setSelectedItem] = useState("");
 
-  //init selectedItem
-  const [selectedAddress, setSelectedAddress] = useState("");
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
   //init textareaInput
   const [textareaInput, setTextareaInput] = useState("");
 
-  //init fileupload
-  const [fileUpload, setFileUpload] = useState<string>("");
-
   //init modal
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const modalRef = useRef<HTMLDialogElement | null>(null);
 
-  /**
-   *
-   * @param e
-   * @description function that handles file upload
-   */
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFileUpload(e.target.files[0].name);
-    }
-  };
+  const FormIssuesRef = useRef<HTMLFormElement | null>(null);
+
+  const viewMaintenanceRef = useRef<HTMLDialogElement | null>(null);
 
   /**
    *
@@ -63,43 +65,119 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
    *
    * @description handles submit
    */
-  const handleSubmitRequest = () => {
-    //check if an item is selected or textareainput is not empty
-    if (!selectedItem || !textareaInput) {
-      console.log("please slect item or enter description");
-      return;
-    } else {
-      //opens modal
-      handleModalOpen();
+  const handleSubmitRequest = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (FormIssuesRef.current) {
+      const formData = new FormData(FormIssuesRef.current);
+
+      formData.append("selectedItem", selectedItem);
+
+      console.log(formData);
+
+      const residentId = user?.id;
+
+      if (!residentId) return;
+
+      formData.append("residentId", residentId);
+
+      await CreateMaintenanceIssues(formData);
     }
   };
 
-  /**
-   *
-   * @description handles handleTextareaInput
-   */
-
-  const handleTextareaInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.preventDefault();
-
-    setTextareaInput(e.target.value);
+  const OpenMaintenanceDetailsModal = () => {
+    viewMaintenanceRef.current?.showModal();
   };
+
+  const handleViewMaintenance = (index: number) => {
+    setCurrentIndex(index);
+
+    OpenMaintenanceDetailsModal();
+  };
+
+  const openIssues = maintenance && maintenance.filter((issues) => issues.status === "OPEN").length;
+
+  const closedIssues =
+    maintenance && maintenance.filter((issues) => issues.status === "CLOSED").length;
+
+  const inProgress =
+    maintenance && maintenance.filter((issues) => issues.status === "INPROGRESS").length;
 
   return (
     <div
       className={`${isCollapse ? "md:ml-[18vw] ml-0" : "md:ml-[4vw] ml-0"} [transition:_margin-left_.2s_ease-out] bg-[#F8F8F8]`}
     >
-      <Modal title="" handleOpenModal={handleModalOpen} ref={modalRef}>
+      {/* this modal was meant for success notification */}
+      {/* <Modal title="" handleOpenModal={handleModalOpen} ref={modalRef}>
         <span className="flex justify-center py-6">
           <SucessIcon />
         </span>
         <p className="flex pb-6 text-buttongray">Your request has been submitted successfully</p>
         <div className="flex flex-col justify-center items-center text-[12px] text-buttongray">
-          <span>{textareaInput}</span>
-          <span>{selectedItem}</span>
-          <span>{fileUpload}</span>
+          <span>{}</span>
+          <span>{}</span>
+          <span>{}</span>
+        </div>
+      </Modal> */}
+
+      {/**View maintenance modal */}
+
+      <Modal
+        title="View maintenance"
+        handleOpenModal={OpenMaintenanceDetailsModal}
+        ref={viewMaintenanceRef}
+      >
+        <div className="w-[25rem] flex flex-col gap-4 mt-6">
+          {currentIndex !== null && maintenance && maintenance[currentIndex]?.image ? (
+            <div className="flex items-center justify-center">
+              <Image
+                src={maintenance[currentIndex].image}
+                width={200}
+                height={200}
+                className=""
+                alt="thumbnail images"
+                priority
+              />
+            </div>
+          ) : (
+            <div
+              style={{
+                width: 200,
+                height: 200,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#f0f0f0",
+              }}
+            >
+              <p>No image available</p>
+            </div>
+          )}
+          <div>
+            <p className="">
+              {(currentIndex !== null && maintenance && maintenance[currentIndex]?.status) ||
+                "No description available"}
+            </p>
+          </div>
+
+          <div>
+            <p className="">
+              {(currentIndex !== null &&
+                maintenance &&
+                new Date(maintenance[currentIndex]?.createdAt).toDateString()) ||
+                "No description available"}
+            </p>
+          </div>
+
+          <div>
+            <p className="">
+              {(currentIndex !== null && maintenance && maintenance[currentIndex]?.description) ||
+                "No description available"}
+            </p>
+          </div>
         </div>
       </Modal>
+
       <DashBoardHeader title="Maintenance & Issues" />
       <DashBreadcrumbs title="Maintenance & Issues" />
 
@@ -108,15 +186,15 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
           <div className="grid grid-cols-[repeat(auto-fit,minmax(20ch,1fr))] gap-6 justify-between p-6 ">
             <div className="bg-white rounded-[10px] p-[36px] flex flex-col gap-4 ">
               <h4 className="text-graytext">Open issues</h4>
-              <p className="font-semibold text-2xl text-black text-left">10</p>
+              <p className="font-semibold text-2xl text-black text-left">{openIssues || "Nill"}</p>
             </div>
             <div className="bg-white rounded-[10px] p-[36px] flex flex-col gap-4">
               <h4 className="text-graytext">In-progress</h4>
-              <p className="font-semibold text-2xl text-black text-left">4</p>
+              <p className="font-semibold text-2xl text-black text-left">{inProgress || "Nil"}</p>
             </div>
             <div className="bg-white rounded-[10px] p-[36px] flex flex-col gap-4">
               <h4 className="text-graytext">Closed</h4>
-              <p className="font-semibold text-2xl text-black text-left">7</p>
+              <p className="font-semibold text-2xl text-black text-left">{closedIssues || "Nil"}</p>
             </div>
           </div>
 
@@ -166,132 +244,61 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
                       <th className="text-start">S/N</th>
                       <th className="text-start">Category</th>
                       <th className="text-start">Description</th>
-                      <th className="text-start text-nowrap">Location</th>
+                      {/* <th className="text-start text-nowrap">Location</th> */}
                       <th className="text-start">Date</th>
                       <th>Status</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody className="bg-white p-0 w-full">
-                    <tr className="border-b border-[#F0F2F5] w-full p-4">
-                      <td className="" width={10}>
-                        1
-                      </td>
-                      <td className="">
-                        <div className="">
-                          <p className="text-buttongray">Electricity</p>
-                        </div>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap text-[12px] ">
-                        <p>My power keeps..</p>
-                      </td>
+                    {maintenance && maintenance.length > 0 ? (
+                      maintenance.map((issues, index) => (
+                        <tr key={issues.id} className="border-b border-[#F0F2F5] w-full p-4">
+                          <td className="" width={10}>
+                            {index + 1}
+                          </td>
+                          <td className="">
+                            <div className="">
+                              <p className="text-buttongray">{issues.category}</p>
+                            </div>
+                          </td>
+                          <td className="text-buttongray py-6 text-nowrap text-[12px] ">
+                            <p>{`${issues.description.split(" ").slice(0, 5).join(" ")}...`}</p>
+                          </td>
 
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>House 231..</p>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>Apr 14, 2024</p>
-                      </td>
-                      <td className="text-[12px]">
-                        <StatusPill title="Closed" status="success" />
-                      </td>
+                          {/* <td className="text-buttongray py-6 text-nowrap">
+                            <p></p>
+                          </td> */}
+                          <td className="text-buttongray py-6 text-nowrap">
+                            <p>{new Date(issues.createdAt).toDateString()}</p>
+                          </td>
+                          <td className="text-[12px]">
+                            <StatusPill
+                              title={issues.status}
+                              status={
+                                issues.status === "OPEN"
+                                  ? "danger"
+                                  : issues.status === "INPROGRESS"
+                                    ? "warning"
+                                    : "success"
+                              }
+                            />
+                          </td>
 
-                      <td>
-                        <span className="underline text-blue-500">
-                          <Link href={"#"}>Imagelink</Link>
-                        </span>
-                      </td>
-                    </tr>
-
-                    <tr className="border-b border-[#F0F2F5] w-full p-4">
-                      <td className="" width={10}>
-                        2
-                      </td>
-                      <td className="">
-                        <div className="">
-                          <p className="text-buttongray">Electricity</p>
-                        </div>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap text-[12px] ">
-                        <p>My power keeps..</p>
-                      </td>
-
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>House 231..</p>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>Apr 14, 2024</p>
-                      </td>
-                      <td className="text-[12px]">
-                        <StatusPill title="Open" status="danger" />
-                      </td>
-
-                      <td>
-                        <span className="underline text-blue-500">
-                          <Link href={"#"}>Imagelink</Link>
-                        </span>
-                      </td>
-                    </tr>
-
-                    <tr className="border-b border-[#F0F2F5] w-full p-4">
-                      <td className="" width={10}>
-                        3
-                      </td>
-                      <td className="">
-                        <div className="">
-                          <p className="text-buttongray">Electricity</p>
-                        </div>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap text-[12px] ">
-                        <p>My power keeps..</p>
-                      </td>
-
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>House 231..</p>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>Apr 14, 2024</p>
-                      </td>
-                      <td className="text-[12px]">
-                        <StatusPill title="Closed" status="success" />
-                      </td>
-
-                      <td>
-                        <span className="underline text-blue-500">
-                          <Link href={"#"}>Imagelink</Link>
-                        </span>
-                      </td>
-                    </tr>
-
-                    <tr className="border-b border-[#F0F2F5] w-full p-4">
-                      <td className="" width={10}>
-                        4
-                      </td>
-                      <td className="">
-                        <div className="">
-                          <p className="text-buttongray">Electricity</p>
-                        </div>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap text-[12px] ">
-                        <p>My power keeps..</p>
-                      </td>
-
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>House 231..</p>
-                      </td>
-                      <td className="text-buttongray py-6 text-nowrap">
-                        <p>Apr 14, 2024</p>
-                      </td>
-                      <td className="text-[12px]">
-                        <StatusPill title="In-progress" status="warning" />
-                      </td>
-
-                      <td>
-                        <span className="underline text-blue-500">
-                          <Link href={"#"}>Imagelink</Link>
-                        </span>
-                      </td>
-                    </tr>
+                          <td>
+                            <span className="underline text-blue-500">
+                              <button type="button" onClick={() => handleViewMaintenance(index)}>
+                                View →
+                              </button>
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td>No issues </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -312,8 +319,8 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
             </section>
           </div>
         </div>
-        <div className="md:w-[35%] m-6 p-6 bg-white flex flex-col  gap-6">
-          <h3 className="font-semibold text-xl text-buttongray">Report new issue</h3>
+        <form ref={FormIssuesRef} className="md:w-[35%] m-6 p-6 bg-white flex flex-col  gap-6">
+          <h4 className="font-semibold text-xl text-buttongray">Report new issue</h4>
 
           <Select
             title="Services"
@@ -331,15 +338,16 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
 
           <Textarea
             placeholder="Write here"
-            name="Short_description"
-            title="Short description"
-            onChange={(e) => handleTextareaInput(e)}
+            name="description"
+            title="description"
+            // onChange={(e) => handleTextareaInput(e)}
+            onChange={() => "hi"}
           />
           <div className=" upload-wrapper w-full relative">
             <label className="sr-only">Upload file</label>
             <input
               required
-              onChange={(e) => handleFileUpload(e)}
+              // onChange={(e) => handleFileUpload(e)}
               type="file"
               name="uploadfile"
               id="uploadfile"
@@ -365,7 +373,7 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
               <span className="success text-buttongray flex py-12 min-h-full ">
                 Your file has been uploaded successfully
                 <br />
-                <i className="text-primary">{fileUpload}</i>
+                {/* <i className="text-primary">{}</i> */}
               </span>
             </div>
           </div>
@@ -380,7 +388,7 @@ export const DashMaintenance = ({ isCollapse }: DashBoardNavProp) => {
               onClick={handleSubmitRequest}
             />
           </div>
-        </div>
+        </form>
       </section>
     </div>
   );

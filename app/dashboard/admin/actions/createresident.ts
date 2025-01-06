@@ -92,8 +92,6 @@ export async function CreateResident(formData: FormData) {
       },
     });
 
-    console.log({ newResident });
-
     revalidateTag("get-residents");
 
     return {

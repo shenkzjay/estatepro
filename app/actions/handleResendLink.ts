@@ -17,8 +17,6 @@ export const handleResendLink = async (prev: any, formData: FormData) => {
       },
     });
 
-    console.log(user);
-
     if (!user) {
       return {
         message: "No user found",

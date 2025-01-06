@@ -38,6 +38,23 @@ export const getResidents = unstable_cache(
                   createdAt: true,
                 },
               },
+              occupants: {
+                select: {
+                  id: true,
+                  occupantsname: true,
+                  occupantsnumber: true,
+                },
+              },
+              maintenance: {
+                select: {
+                  id: true,
+                  description: true,
+                  image: true,
+                  category: true,
+                  createdAt: true,
+                  status: true,
+                },
+              },
             },
           },
         },

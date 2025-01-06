@@ -24,8 +24,6 @@ interface ResidentDashboardSettingsProp {
 export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) => {
   const { isCollapse } = useAdminContext();
 
-  console.log(residents.residentData?.vehicle);
-
   //   const resident = residents.residentData
 
   const occupantsRef = useRef<HTMLDialogElement | null>(null);

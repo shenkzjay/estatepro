@@ -45,6 +45,15 @@ export const getAllResidentDetails = unstable_cache(
                   occupantsnumber: true,
                 },
               },
+              maintenance: {
+                select: {
+                  id: true,
+                  description: true,
+                  category: true,
+                  createdAt: true,
+                  status: true,
+                },
+              },
             },
           },
         },
