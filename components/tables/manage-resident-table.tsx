@@ -11,9 +11,9 @@ import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
 import { CreateResident } from "@/app/dashboard/admin/actions/createresident";
 import { StatusPill } from "@/stories/statuspills/statuspill";
+import Link from "next/link";
 
 import { nameInitials } from "@/utils/nameInitials";
-
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
 
 interface residentDataProps {
@@ -279,7 +279,12 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                     </td>
                     <td className="text-[12px]  flex">
                       {/* <StatusPill title="Residing" status="success" /> */}
-                      <button className="text-green-500">View →</button>
+                      <Link
+                        href={`/dashboard/admin/details/${resident.id}`}
+                        className="text-green-500"
+                      >
+                        View →
+                      </Link>
                     </td>
 
                     <td className="relative">

@@ -21,11 +21,13 @@ export const getAllResidentDetails = unstable_cache(
               streetaddress: true,
               housetype: true,
               phonenumber: true,
+              moveindate: true,
               vehicle: {
                 select: {
                   vehiclemake: true,
                   vehiclemodel: true,
                   vehiclenumber: true,
+                  vehiclecolor: true,
                 },
               },
               payment: {
@@ -52,6 +54,18 @@ export const getAllResidentDetails = unstable_cache(
                   category: true,
                   createdAt: true,
                   status: true,
+                  image: true,
+                },
+              },
+              visitorcode: {
+                select: {
+                  id: true,
+                  visitorname: true,
+                  visitoremail: true,
+                  visitornumber: true,
+                  code: true,
+                  status: true,
+                  createdAt: true,
                 },
               },
             },

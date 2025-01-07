@@ -5,7 +5,7 @@ import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
 import { ManageCreateResidentTable } from "@/components/tables/manage-resident-table";
 import { useAdminContext } from "../../provider";
 import { ManageResidentPaymentTable } from "@/components/tables/manage-payment-table";
-import { PaymentStatus } from "@prisma/client";
+import { MaintenanceStatus, PaymentStatus, VisitorCode } from "@prisma/client";
 
 export interface AdminDashBoardProp {
   isCollapse: boolean;
@@ -25,11 +25,22 @@ interface houseData {
   phonenumber?: string;
   housenumber?: string;
   streetaddress?: string;
-  houseType?: string;
+  housetype?: string;
   moveindate?: string;
   vehicle: vehicleData[];
   payment: Payment[];
   occupants: Occupants[];
+  maintenance: Maintenance[];
+  visitorcode: VisitorCode[];
+}
+
+interface Maintenance {
+  id: string;
+  category: string;
+  image: string;
+  description: string;
+  status: MaintenanceStatus;
+  createdAt?: Date;
 }
 
 interface Payment {

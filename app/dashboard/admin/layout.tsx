@@ -2,7 +2,7 @@
 
 import { Roboto } from "next/font/google";
 import "../../../app/globals.css";
-import { AdminDashboardContent } from "../admin/admin";
+import { AdminDashboardContent } from "./admin";
 import { redirect } from "next/navigation";
 
 import { GetUsers } from "@/app/api/queries/getuser-session";
