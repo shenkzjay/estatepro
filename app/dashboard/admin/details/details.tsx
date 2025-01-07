@@ -23,11 +23,11 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
       <DashBoardHeader title="Resident" />
       <DashBreadcrumbs title="Resident" />
 
-      <div className="flex flex-row">
-        <div className="w-[50%] m-6  h-full flex flex-col  gap-6 ">
-          <figure className="bg-white p-6 rounded-xl">
+      <div className="flex md:flex-row flex-col">
+        <div className="md:w-[50%] m-6  h-full flex flex-col  gap-6 ">
+          <figure className="bg-white p-6 rounded-xl ">
             <figcaption>Personal details</figcaption>
-            <div className="flex flex-row justify-between mt-6">
+            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6">
               <div>
                 <p className="text-sm text-buttongray">Name</p>
                 <p>{resident?.name}</p>
@@ -47,7 +47,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
 
           <figure className="rounded-xl bg-white p-6">
             <figcaption>Residence details</figcaption>
-            <div className="flex flex-row justify-between mt-6">
+            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6">
               <div>
                 <p className="text-sm text-buttongray">Address</p>
                 <p>
@@ -150,7 +150,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
             <figcaption>Vehicles</figcaption>
             <div className="flex flex-row justify-between mt-6">
               <div className="w-full">
-                <div className="w-full mt-2 grid grid-cols-2 gap-6">
+                <div className="w-full mt-2 grid md:grid-cols-2 gap-6">
                   {resident.residentData?.vehicle && resident.residentData?.vehicle?.length > 0 ? (
                     resident.residentData?.vehicle.map((cars, index) => {
                       return (
@@ -183,7 +183,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                     })
                   ) : (
                     <div className="flex justify-center mt-6">
-                      <p>No maintenance</p>
+                      <p>No vehicle</p>
                     </div>
                   )}
                 </div>
@@ -191,8 +191,8 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
             </div>
           </figure>
         </div>
-        <div className="w-[50%] m-6 grid gap-6">
-          <figure className="rounded-xl bg-white p-6">
+        <div className="md:w-[50%] md:m-6 grid gap-6">
+          <figure className="rounded-xl bg-white md:p-6">
             <figcaption>Maintenance</figcaption>
             <div className="flex flex-row justify-between mt-6">
               <div className="w-full">
@@ -203,7 +203,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                       return (
                         <div
                           key={index}
-                          className="grid grid-cols-[auto,1fr] gap-6 items-center bg-[#f4f4f4] p-2 rounded-xl "
+                          className="grid md:grid-cols-[auto,1fr] gap-6 items-center bg-[#f4f4f4] mx-6 md:mx-0 md:p-2 rounded-xl "
                         >
                           {issues.image ? (
                             <div>
@@ -255,10 +255,10 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
             </div>
           </figure>
 
-          <figure className="rounded-xl bg-white p-6">
+          <figure className="rounded-xl bg-white md:p-6 mx-6 md:mx-0 mt-6 md:mt-0">
             <figcaption>Visitor&apos;s code history</figcaption>
             <div className=" mt-6">
-              <div className="grid grid-cols-6 text-sm">
+              <div className="grid grid-cols-6 text-sm overflow-auto">
                 <p>Name</p>
                 <p>Phone No</p>
                 <p className="col-span-2">Email</p>
@@ -271,7 +271,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                   resident.residentData?.visitorcode.map((code, index) => {
                     return (
                       <div key={index} className="bg-[#f4f4f4] rounded-xl grid gap-6 mt-6 p-4">
-                        <div className="grid grid-cols-6 w-full items-center justify-center">
+                        <div className="grid md:grid-cols-6 w-full md:items-center md:justify-center">
                           <div className="text-sm">
                             <p>{code.visitorname}</p>
                           </div>

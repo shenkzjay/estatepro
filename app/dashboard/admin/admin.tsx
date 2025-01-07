@@ -9,7 +9,7 @@ export const AdminDashboardContent = ({ children }: { children: React.ReactNode 
 
   return (
     <section className="h-full flex">
-      <div className=" mt-10">
+      <div className=" md:mt-10">
         <AdminDashBoardNav isCollapse={isCollapse} SetIsCollapse={SetIsCollapse} user={user} />
       </div>
       <div className=" w-full h-screen border bg-[#f5f5f5]">{children}</div>
