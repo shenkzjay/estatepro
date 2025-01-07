@@ -18,9 +18,10 @@ model User {
   Magiclink            Magiclink[]      @relation("MagiclinkToUser")
   residentData         Resident?        @relation("UserToResident")
   staffData            Staff?           @relation("UserToStaff")
+  estateUpdates        EstateUpdates[]  @relation("UserToUpdates")
   createdBy            User?            @relation("CreatedBy", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdById          String?          @db.ObjectId
-  createdUsers         User[]          @relation("CreatedBy")
+  createdUsers         User[]           @relation("CreatedBy")
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
 }
@@ -30,11 +31,12 @@ model Resident {
   housenumber   String?
   streetaddress String?
   housetype     String?
+  residentcode  String?
   moveindate    DateTime?
   phonenumber   String?
   occupants     Occupants[]     @relation("ResidenToOccupants")
   payment       PaymentData[]   @relation("ResidentToPayment")
-  visitorcode   VisitorCode[]    @relation("ResidentToVisitorcode")
+  visitorcode   VisitorCode[]   @relation("ResidentToVisitorcode")
   vehicle       Vehicle[]       @relation("ResidentToVehicle")
   maintenance   Maintenance[]   @relation("ResidentToMaintenance")
   user          User            @relation("UserToResident", fields: [userId], references: [id], onDelete:Cascade)
@@ -122,6 +124,17 @@ model Maintenance {
       status          MaintenanceStatus  @default(OPEN)
       resident        Resident       @relation("ResidentToMaintenance", fields:[residentId], references:[id], onDelete:Cascade)
       residentId      String         @db.ObjectId      
+}
+
+model EstateUpdates {
+     id             String         @id @default(auto()) @map("_id") @db.ObjectId
+     title          String
+     description    String
+     tags           String
+     createdAt      DateTime       @default(now())
+     updatedAt      DateTime       @updatedAt
+     user           User         @relation("UserToUpdates", fields:[userId], references:[id], onDelete:Cascade)
+     userId         String       @db.ObjectId
 }
 
 enum Role {

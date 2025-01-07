@@ -6,6 +6,7 @@ import nodemailer from "nodemailer";
 import { Role, User } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { revalidateTag } from "next/cache";
+import { generateRandomCodes } from "@/utils/randomcodes";
 
 export async function CreateResident(formData: FormData) {
   const residentData = {
@@ -58,12 +59,15 @@ export async function CreateResident(formData: FormData) {
 
     const tokenExpiration = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
+    const residentCode = generateRandomCodes(8);
+
     // If the email sends successfully, create the user
     const newResident = await prisma.user.create({
       data: {
         name: residentData.fullname,
         email: residentData.email,
         role: Role.RESIDENT,
+
         Magiclink: {
           create: {
             token: completesignuptoken,
@@ -75,6 +79,7 @@ export async function CreateResident(formData: FormData) {
             housenumber: residentData.houseNumber,
             housetype: residentData.houseType,
             streetaddress: residentData.streetAddress,
+            residentcode: residentCode,
             phonenumber: residentData.phoneNumber,
             moveindate: new Date(residentData.moveInDate).toISOString(),
             vehicle: {
