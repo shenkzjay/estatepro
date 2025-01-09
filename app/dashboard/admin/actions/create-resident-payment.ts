@@ -39,6 +39,7 @@ export async function ResidentPayment(formData: FormData) {
     });
 
     revalidateTag("get-residents");
+    revalidateTag("get-all-users");
 
     return {
       message: "Payment successfully created",

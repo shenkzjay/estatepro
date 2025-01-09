@@ -130,7 +130,7 @@ model EstateUpdates {
      id             String         @id @default(auto()) @map("_id") @db.ObjectId
      title          String
      description    String
-     tags           String
+     tags           String[]
      createdAt      DateTime       @default(now())
      updatedAt      DateTime       @updatedAt
      user           User         @relation("UserToUpdates", fields:[userId], references:[id], onDelete:Cascade)

@@ -52,6 +52,7 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
   const verifyCodeFormRef = useRef<HTMLFormElement | null>(null);
 
   const [visitorDetails, setVisitorDetails] = useState<visitorProps>();
+  const [resident, setResident] = useState<visitorProps>();
 
   const handleVerifyCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,6 +63,8 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
       const visitor = await VerifyVisitorCode(formData);
 
       const visitorDetail = visitor.visitor as visitorProps;
+
+      console.log(visitorDetails);
 
       setVisitorDetails(visitorDetail);
     }
@@ -80,46 +83,124 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
       className={`${isCollapse ? "md:ml-[18vw] ml-0" : "md:ml-[4vw] ml-0"} [transition:_margin-left_.2s_ease-out]`}
     >
       <Modal title="Verify Code" handleOpenModal={handleOpenModal} ref={verifycodeRef}>
-        {visitorDetails ? (
-          visitorDetails.status === "REVOKED" ? (
-            <div className="flex flex-col justify-center items-center gap-4 mt-6">
-              <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
-                This code has been REVOKED by the resident!
-              </p>
-              <span className="text-6xl">⚠️</span>
-              <p className="text-buttongray w-2/3 text-center">
-                Please input a new code and try again
-              </p>
-            </div>
-          ) : visitorDetails.status === "EXPIRED" ? (
-            <div className="mt-6 flex flex-col justify-center items-center gap-4">
-              <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
-                This code has expired!
-              </p>
-              <span className="text-6xl">⚠️</span>
-              <p className="text-buttongray w-2/3 text-center">
-                Please input the correct code and try again
-              </p>
-            </div>
-          ) : Object.keys(visitorDetails).length > 0 ? ( // Use Object.keys for checking emptiness
-            <section className="mt-6 w-[25rem] flex flex-col gap-4 justify-center items-center">
-              <div>
-                <span
-                  className={`font-semibold ${
-                    visitorDetails?.status === "ACTIVE"
-                      ? "bg-[#e7f6ec] text-[#139d8f]"
-                      : visitorDetails?.status === "EXPIRED"
-                        ? "bg-[#fef6e7] text-[#865503]"
-                        : "bg-[#fbeae9] text-[#9e0a05]"
-                  } flex w-fit px-4 py-2 rounded-xl`}
-                >
-                  {`CODE ${visitorDetails?.status}`}
-                </span>
+        <section>
+          {visitorDetails ? (
+            visitorDetails.status === "REVOKED" ? (
+              <div className="flex flex-col justify-center items-center gap-4 mt-6">
+                <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
+                  This code has been REVOKED by the resident!
+                </p>
+                <span className="text-6xl">⚠️</span>
+                <p className="text-buttongray w-2/3 text-center">
+                  Please input a new code and try again
+                </p>
               </div>
-              {/* ... (rest of the visitor details section) */}
-            </section>
+            ) : visitorDetails.status === "EXPIRED" ? (
+              <div className="mt-6 flex flex-col justify-center items-center gap-4">
+                <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
+                  This code has expired!
+                </p>
+                <span className="text-6xl">⚠️</span>
+                <p className="text-buttongray w-2/3 text-center">
+                  Please input the correct code and try again
+                </p>
+              </div>
+            ) : Object.keys(visitorDetails).length > 0 ? ( // Use Object.keys for checking emptiness
+              <section className="mt-6 md:w-[25rem] flex flex-col gap-2 ">
+                <div className="w-full">
+                  <div className="flex w-full justify-center">
+                    <p
+                      className={`font-semibold ${
+                        visitorDetails?.status === "ACTIVE" ? "bg-[#e7f6ec] text-[#139d8f]" : ""
+                      } flex px-4 py-2 rounded-xl mb-6`}
+                    >
+                      {`CODE ${visitorDetails?.status}`}
+                    </p>
+                  </div>
+                  <h3 className="text-xl text-buttongray font-semibold">Visitor&apos;s details</h3>
+
+                  <div className=" bg-[#e7f6ec] p-6 rounded-xl flex flex-row mt-4 w-full justify-between">
+                    <div className="flex flex-col gap-6 ">
+                      <div>
+                        <p className="text-buttongray text-sm">NAME</p>
+                        <p className="font-semibold  text-sm">{visitorDetails.visitorname}</p>
+                      </div>
+
+                      <div>
+                        <p className="text-buttongray text-sm">NUMBER</p>
+                        <p className="font-semibold  text-sm">{visitorDetails.visitornumber}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                      <div>
+                        <p className="text-buttongray text-sm">EMAIL</p>
+                        <p className="font-semibold  text-sm">{visitorDetails.visitoremail}</p>
+                      </div>
+                      <div>
+                        <p className="text-buttongray text-sm">DATE OF VISIT</p>
+                        <p className="font-semibold  text-sm">
+                          {new Date(visitorDetails.Dateofvisit).toDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-12 ">
+                    <h3 className=" mb-4 text-xl text-buttongray font-semibold">
+                      Resident details
+                    </h3>
+                    <div className="grid grid-cols-2 justify-between w-full gap-6">
+                      <div className=" grid  gap-6">
+                        <div>
+                          <p className="text-buttongray text-sm"> Name</p>
+                          <p className="font-semibold  text-sm">
+                            {visitorDetails.resident.user.name}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-buttongray text-sm">House adddress</p>
+                          <p className="font-semibold  text-sm">
+                            {visitorDetails.resident.housenumber}{" "}
+                            {visitorDetails.resident.streetaddress}
+                          </p>
+                        </div>
+                      </div>
+                      <div className=" grid gap-6 justify-end">
+                        <div>
+                          <p className="text-buttongray text-sm">NUMBER</p>
+                          <p className="font-semibold  text-sm">
+                            {visitorDetails?.resident?.phonenumber}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="text-buttongray text-sm">EMAIL</p>
+                          <p className="font-semibold  text-sm">
+                            {visitorDetails?.resident?.user?.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ... (rest of the visitor details section) */}
+              </section>
+            ) : (
+              // Default case: visitorDetails exists, but doesn't match other conditions
+              <div className="flex flex-col justify-center items-center gap-4 mt-6">
+                <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
+                  Invalid code!
+                </p>
+                <span className="text-6xl">⚠️</span>
+                <p className="text-buttongray w-2/3 text-center">
+                  Please input a new code and try again
+                </p>
+              </div>
+            )
           ) : (
-            // Default case: visitorDetails exists, but doesn't match other conditions
+            // Handle the case where visitorDetails is null or undefined
             <div className="flex flex-col justify-center items-center gap-4 mt-6">
               <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
                 Invalid code!
@@ -129,19 +210,8 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
                 Please input a new code and try again
               </p>
             </div>
-          )
-        ) : (
-          // Handle the case where visitorDetails is null or undefined
-          <div className="flex flex-col justify-center items-center gap-4 mt-6">
-            <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
-              Invalid code!
-            </p>
-            <span className="text-6xl">⚠️</span>
-            <p className="text-buttongray w-2/3 text-center">
-              Please input a new code and try again
-            </p>
-          </div>
-        )}
+          )}
+        </section>
       </Modal>
 
       <DashBoardHeader title="Home" />

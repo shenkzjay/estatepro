@@ -1,15 +1,29 @@
-"use client";
-
+import { GetUsers } from "@/app/api/queries/getuser-session";
 import { ManagedUpdates } from "../admin-dashboard/admin-updates";
-import { useContext } from "react";
-import { ToggleAdminContext } from "../../provider";
+import { GetUpdates } from "@/app/api/queries/get-updates";
 
-export default function AdminEstateUpdate() {
-  const contextValue = useContext(ToggleAdminContext);
-  const isCollapse = contextValue?.isCollapse ?? false;
+export interface Updates {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  description: string;
+  tags: string[];
+}
+
+export default async function AdminEstateUpdate() {
+  const user = await GetUsers();
+
+  if (!user) return;
+
+  const userId = user?.id;
+
+  const updates = await GetUpdates(userId);
+
+  const estate = updates.updates?.estateUpdates;
   return (
     <section>
-      <ManagedUpdates isCollapse={isCollapse} />
+      <ManagedUpdates updates={estate as Updates[]} />
     </section>
   );
 }

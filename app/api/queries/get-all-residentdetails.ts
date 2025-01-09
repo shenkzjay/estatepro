@@ -13,6 +13,7 @@ export const getAllResidentDetails = unstable_cache(
           name: true,
           email: true,
           password: true,
+          estateUpdates: true,
           createdAt: true,
           residentData: {
             select: {

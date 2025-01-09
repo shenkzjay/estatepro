@@ -99,6 +99,8 @@ export async function CreateResident(formData: FormData) {
 
     revalidateTag("get-residents");
 
+    revalidateTag("get-all-residents");
+
     return {
       message: "Magic link sent successfully",
       newResident,

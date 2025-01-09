@@ -15,6 +15,7 @@ export interface residentShit {
   id: string;
   name: string | null;
   email: string | null;
+  estateUpdates: string[];
   password: string;
   createdAt: Date;
   residentData?: houseData | null;
