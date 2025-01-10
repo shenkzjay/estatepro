@@ -37,6 +37,8 @@ export async function UpdatePaymentStatus(status: string, paymentId: string) {
 
   revalidateTag("get-residents");
 
+  revalidateTag("get-all-residents");
+
   return {
     message: "Payment status succesffully updated",
   };

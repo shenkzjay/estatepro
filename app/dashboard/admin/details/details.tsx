@@ -15,6 +15,10 @@ interface ViewResidentProps {
 export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
   console.log(resident);
 
+  if (Object.values(resident).length === 0) {
+    return;
+  }
+
   const { isCollapse } = useAdminContext();
   return (
     <section
@@ -62,7 +66,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
 
               <div>
                 <p className="text-sm text-buttongray">Move-in-date</p>
-                <p>{resident.residentData?.moveindate}</p>
+                <p>{new Date(resident?.residentData?.moveindate || "").toDateString()}</p>
               </div>
             </div>
           </figure>
@@ -83,7 +87,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                       return (
                         <div
                           key={pay.id}
-                          className="grid grid-cols-4 items-center justify-center space-y-2  w-full"
+                          className="grid grid-cols-4 items-center justify-center space-y-2  w-full text-sm"
                         >
                           <div>
                             <p>{pay.paymenttype}</p>
@@ -110,7 +114,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
             </div>
           </figure>
 
-          <figure className="rounded-xl bg-white p-6">
+          <figure className="rounded-xl bg-white p-6 text-sm">
             <figcaption>Occupants</figcaption>
             <div className="flex flex-row justify-between mt-6">
               <div className="w-full">

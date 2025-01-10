@@ -39,7 +39,7 @@ export const CompleteSignUp = () => {
           variant="Primary"
           label="Reset link"
           iconAlign="after"
-          onClick={() => router.push("/auth/resend-link")}
+          onClick={() => router.push("/resend-link")}
           bgColor="#1AD9C5"
         />
       </div>

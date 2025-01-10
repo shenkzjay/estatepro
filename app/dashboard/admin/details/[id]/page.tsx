@@ -17,7 +17,7 @@ export default async function Page({ params }: Pageprops) {
 
   return (
     <div>
-      <SingleResdientDetails resident={resident as residentShit} />
+      <SingleResdientDetails resident={resident as any} />
     </div>
   );
 }

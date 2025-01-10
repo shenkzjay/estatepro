@@ -42,7 +42,7 @@ export async function CompleteResidentSignUp(formData: FormData) {
     }
 
     if (magiclink.expiresAt === null || new Date() > magiclink.expiresAt) {
-      redirect("/auth/resend-link");
+      redirect("/resend-link");
     }
 
     await prisma.user.update({
@@ -66,5 +66,5 @@ export async function CompleteResidentSignUp(formData: FormData) {
     };
   }
 
-  redirect("/auth/signin");
+  redirect("/signin");
 }

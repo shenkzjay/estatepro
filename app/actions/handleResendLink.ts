@@ -3,6 +3,7 @@
 import { prisma } from "@/utils/prisma";
 import { v4 as uuidv4 } from "uuid";
 import nodemailer from "nodemailer";
+import { revalidateTag } from "next/cache";
 
 export const handleResendLink = async (prev: any, formData: FormData) => {
   const email = formData.get("email") as string;
@@ -50,7 +51,7 @@ export const handleResendLink = async (prev: any, formData: FormData) => {
       });
     }
 
-    const magiclink = `http://localhost:3000/auth/completesignup?token=${resendtoken}`;
+    const magiclink = `http://localhost:3000/completesignup?token=${resendtoken}`;
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -72,6 +73,11 @@ export const handleResendLink = async (prev: any, formData: FormData) => {
               <p>This link will expire in 24 hours.</p>
             `,
     });
+
+    revalidateTag("users");
+    revalidateTag("get-residents");
+    revalidateTag("get-all-residents");
+    revalidateTag("get-all-users");
 
     return {
       message: "Resend link sent successfully",

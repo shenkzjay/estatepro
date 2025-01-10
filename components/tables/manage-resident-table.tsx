@@ -16,6 +16,8 @@ import Link from "next/link";
 import { nameInitials } from "@/utils/nameInitials";
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
 
+import { usePagination } from "@/hooks/usePagination";
+
 interface residentDataProps {
   residents: residentShit[];
 }
@@ -34,6 +36,10 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const [selectedCheckbox, setSelectedCheckbox] = useState<number[]>([]);
+
+  const [inputValue, setInputValue] = useState<string | null>(null);
+
+  console.log(inputValue);
 
   const [residentDatas, setResidentDatas] = useState<residentShit[]>([]);
 
@@ -164,6 +170,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   const handleMoreIconButton = (index: number) => {};
 
+  const { currentPage, currentPageData, totalPage, paginate } = usePagination(residents, 3);
+
   return (
     <section>
       {/**Searchbox header */}
@@ -238,8 +246,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
               </tr>
             </thead>
             <tbody className="bg-white p-0 w-full">
-              {residents && residents.length > 0 ? (
-                residents.map((resident, index) => (
+              {currentPageData && currentPageData.length > 0 ? (
+                currentPageData.map((resident, index) => (
                   <tr
                     key={index}
                     className={`border-b  border-[#F0F2F5] w-full p-4 ${selectedCheckbox.includes(index) ? "bg-secondary/30" : ""}`}
@@ -304,21 +312,47 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
             </tbody>
           </table>
         </div>
-        {residents && residents.length > 5 && (
-          <div className="flex gap-2 justify-center bg-white p-4 text-buttongray rounded-b-[20px]">
-            <button className="border py-1 px-3 rounded-md [transform:_scale(-1,1)]">
+        {/* {currentPageData && currentPageData.length > 5 && ( */}
+        <div className="flex bg-white rounded-b-[20px] justify-between p-4">
+          {/* <div>
+            <select
+              // value={Number(inputValue)}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                paginate(Number(inputValue));
+              }}
+            >
+              <option value={""}>1</option>
+              <option value={2}>2</option>
+              <option value={4}>4</option>
+              <option value={6}>6</option>
+            </select>
+          </div> */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => paginate(currentPage - 1)}
+              className="border cursor-pointer py-1 px-3 rounded-md [transform:_scale(-1,1)]"
+              disabled={currentPage === 1}
+            >
               <ArrowIcon color="#344054" />
             </button>
-            <p className="border py-1 px-3 rounded-md">1</p>
-            <p className="border py-1 px-3 rounded-md">2</p>
-            <p className="border py-1 px-3 rounded-md">3</p>
+            <p>
+              Page {currentPage} of {totalPage}
+            </p>
 
-            <button className="border py-1 px-3 rounded-md ">
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              type="button"
+              className="border py-1 px-3 rounded-md cursor-pointer"
+              disabled={currentPage === totalPage}
+            >
               {" "}
               <ArrowIcon color="#344054" />
             </button>
           </div>
-        )}
+        </div>
+        {/* )} */}
       </section>
       {/**create resident modal */}
       <Modal title="Add new Resident" handleOpenModal={handleOpenModal} ref={modalRef}>

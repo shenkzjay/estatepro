@@ -47,6 +47,9 @@ export async function handleSignInAction(prev: any, formData: FormData) {
     await setSession(user);
 
     revalidateTag("users");
+    revalidateTag("get-residents");
+    revalidateTag("get-all-residents");
+    revalidateTag("get-all-users");
 
     // return {
     //   message: `User ${user.name} successfully logged in`,
@@ -66,5 +69,5 @@ export async function signOutAction() {
   clear.getAll().forEach((cookie) => clear.delete(cookie.name));
   revalidateTag("users");
 
-  redirect("/auth/signin");
+  redirect("/signin");
 }
