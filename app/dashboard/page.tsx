@@ -7,7 +7,7 @@ export default async function HomeAdminDashboard() {
   const user = await GetUsers();
 
   if (!user) {
-    redirect("/auth/signin");
+    redirect("/signin");
     // return (
     //   <div>
     //     <span>Oops Error</span>
@@ -24,6 +24,6 @@ export default async function HomeAdminDashboard() {
   } else if (user.role === "STAFF") {
     return redirect("/dashboard/staff");
   } else {
-    return redirect("/auth/signin");
+    return redirect("/signin");
   }
 }

@@ -1,25 +1,33 @@
 "use client";
 
 import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
-import { useAdminContext } from "../../provider";
+import { useAdminContext } from "../../../provider";
 import { DashBreadcrumbs } from "@/components/dashboardheader/dash-breadcrumbs";
-import { residentShit } from "../admin-dashboard/admin-residents";
+import { residentShit } from "../../admin-dashboard/admin-residents";
 import Image from "next/image";
 import { MaintenanceStatus } from "@prisma/client";
 import { CarIcon } from "@/public/svgIcons/carIcon";
+// import { PaymentStatus } from "@/utils/roles";
+
+import { PaymentStatus } from "@prisma/client";
+import { StatusPill } from "@/stories/statuspills/statuspill";
 
 interface ViewResidentProps {
   resident: residentShit;
 }
 
 export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
-  console.log(resident);
-
-  if (Object.values(resident).length === 0) {
-    return;
-  }
+  const getStatusPillType = (paymentStatus: PaymentStatus, dueDate: string) => {
+    const isOverdue = Date.now() > new Date(dueDate).getTime();
+    if (paymentStatus === PaymentStatus.PAID && isOverdue) return "success";
+    if (isOverdue) return "danger";
+    if (paymentStatus === PaymentStatus.PAID) return "success";
+    if (isOverdue) return "success";
+    return "warning";
+  };
 
   const { isCollapse } = useAdminContext();
+
   return (
     <section
       className={`${isCollapse ? "md:ml-[18vw] ml-0" : "md:ml-[4vw] ml-0"} [transition:_margin-left_.2s_ease-out] bg-[#F8F8F8]`}
@@ -96,7 +104,20 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                             <p>{pay.paymentamount}</p>
                           </div>
                           <div className="text-sm text-orange-400">
-                            <p>{pay.paymentstatus}</p>
+                            <StatusPill
+                              status={getStatusPillType(
+                                pay?.paymentstatus as PaymentStatus,
+                                pay.duedate
+                              )}
+                              title={
+                                Date.now() > new Date(pay.duedate).getTime() &&
+                                pay.paymentstatus === "PAID"
+                                  ? (pay.paymentstatus as string)
+                                  : Date.now() > new Date(pay.duedate).getTime()
+                                    ? "Overdue"
+                                    : (pay.paymentstatus as string)
+                              }
+                            />
                           </div>
                           <div className="text-sm">
                             <p>{new Date(pay.duedate).toLocaleDateString()}</p>

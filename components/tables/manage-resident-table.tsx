@@ -37,10 +37,6 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   const [selectedCheckbox, setSelectedCheckbox] = useState<number[]>([]);
 
-  const [inputValue, setInputValue] = useState<string | null>(null);
-
-  console.log(inputValue);
-
   const [residentDatas, setResidentDatas] = useState<residentShit[]>([]);
 
   const houseTypeData = [
@@ -170,7 +166,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   const handleMoreIconButton = (index: number) => {};
 
-  const { currentPage, currentPageData, totalPage, paginate } = usePagination(residents, 3);
+  const { currentPage, setItemsPerPage, currentPageData, setCurrentPage, totalPage, paginate } =
+    usePagination(residents, 3);
 
   return (
     <section>
@@ -288,7 +285,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                     <td className="text-[12px]  flex">
                       {/* <StatusPill title="Residing" status="success" /> */}
                       <Link
-                        href={`/dashboard/admin/details/${resident.id}`}
+                        href={`/dashboard/admin/manage-residents/details/${resident.id}`}
                         className="text-green-500"
                       >
                         View →
@@ -314,20 +311,24 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
         </div>
         {/* {currentPageData && currentPageData.length > 5 && ( */}
         <div className="flex bg-white rounded-b-[20px] justify-between p-4">
-          {/* <div>
+          <div>
             <select
               // value={Number(inputValue)}
+              className="border p-1 rounded-xl"
               onChange={(e) => {
-                setInputValue(e.target.value);
-                paginate(Number(inputValue));
+                const selectedValue = Number(e.target.value);
+                setItemsPerPage(selectedValue);
+                setCurrentPage(1);
               }}
             >
-              <option value={""}>1</option>
+              <option value="" disabled>
+                Select
+              </option>
               <option value={2}>2</option>
               <option value={4}>4</option>
               <option value={6}>6</option>
             </select>
-          </div> */}
+          </div>
           <div className="flex gap-2">
             <button
               type="button"

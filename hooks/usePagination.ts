@@ -1,17 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
-export const usePagination = <T>(data: T[], itemPerPage: number) => {
+export const usePagination = <T>(data: T[], initialItemPerPage: number) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(initialItemPerPage);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const startIndex = (currentPage - 1) * itemPerPage;
-  const endIndex = startIndex + itemPerPage;
-  const currentPageData = data.slice(startIndex, endIndex);
+  const currentPageData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return data.slice(startIndex, endIndex);
+  }, [data, currentPage, itemsPerPage]);
 
-  const totalPage = Math.ceil(data.length / itemPerPage);
+  const totalPage = useMemo(
+    () => Math.ceil(data.length / itemsPerPage),
+    [data.length, itemsPerPage]
+  );
 
   return {
     currentPageData,
@@ -19,5 +25,6 @@ export const usePagination = <T>(data: T[], itemPerPage: number) => {
     currentPage,
     totalPage,
     setCurrentPage,
+    setItemsPerPage,
   };
 };

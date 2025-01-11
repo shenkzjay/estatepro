@@ -34,7 +34,7 @@ export async function CreateResident(formData: FormData) {
 
     console.log({ completesignuptoken });
 
-    const magiclink = `http://localhost:3000/auth/completesignup?token=${completesignuptoken}`;
+    const magiclink = `http://localhost:3000/completesignup?token=${completesignuptoken}`;
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -100,6 +100,7 @@ export async function CreateResident(formData: FormData) {
     revalidateTag("get-residents");
 
     revalidateTag("get-all-residents");
+    revalidateTag("get-all-users");
 
     return {
       message: "Magic link sent successfully",

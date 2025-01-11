@@ -34,7 +34,7 @@ export async function getMagiclink(prevState: any, formData: FormData) {
   //     },
   //   });
 
-  const magiclink = `http://localhost:3000/auth/signup?token=${token}`;
+  const magiclink = `http://localhost:3000/signup?token=${token}`;
 
   try {
     const transporter = nodemailer.createTransport({

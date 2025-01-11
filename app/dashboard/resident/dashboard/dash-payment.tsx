@@ -43,6 +43,7 @@ export const DashPayment = ({ payments }: PaymentProp) => {
                   <th className="text-start">Description</th>
                   <th className="text-start">Amount</th>
                   <th className="text-start text-nowrap">Due Date</th>
+                  <th className="text-start text-nowrap">Status</th>
 
                   {/* <th className="text-start">Status</th> */}
                 </tr>
@@ -66,9 +67,22 @@ export const DashPayment = ({ payments }: PaymentProp) => {
                       <td className="text-buttongray py-6 text-nowrap">
                         <p>{new Date(payment.duedate || "").toDateString()}</p>
                       </td>
+                      <td>
+                        {/* <p className="text-buttongray">{payment.paymentstatus}</p> */}
+                        <StatusPill
+                          title={payment.paymentstatus as PaymentStatus}
+                          status={
+                            payment.paymentstatus === "OVERDUE"
+                              ? "danger"
+                              : payment.paymentstatus === "PENDING"
+                                ? "warning"
+                                : "success"
+                          }
+                        />
+                      </td>
                       {/* <td>0</td>
                   <td className="text-[12px]  flex">
-                    <StatusPill title="Paid" status="success" />
+                   
                   </td> */}
                     </tr>
                   ))}
@@ -159,6 +173,7 @@ export const DashPayment = ({ payments }: PaymentProp) => {
                     <th className="text-start text-nowrap">Amount</th>
                     <th className="text-start">Date</th>
                     <th>Receipt</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white p-0 w-full">
@@ -182,6 +197,18 @@ export const DashPayment = ({ payments }: PaymentProp) => {
                         </td>
                         <td className="text-buttongray py-6 text-nowrap">
                           <p className="text-blue-400 underline">Download ↗</p>
+                        </td>
+                        <td>
+                          <StatusPill
+                            title={payment.paymentstatus as PaymentStatus}
+                            status={
+                              payment.paymentstatus === "OVERDUE"
+                                ? "danger"
+                                : payment.paymentstatus === "PENDING"
+                                  ? "warning"
+                                  : "success"
+                            }
+                          />
                         </td>
                       </tr>
                     ))}

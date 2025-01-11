@@ -1,6 +1,6 @@
 import { getAllResidentDetails } from "@/app/api/queries/get-all-residentdetails";
 import { SingleResdientDetails } from "../details";
-import { residentShit } from "../../admin-dashboard/admin-residents";
+import { residentShit } from "../../../admin-dashboard/admin-residents";
 
 interface Pageprops {
   params: {

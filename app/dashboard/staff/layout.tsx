@@ -1,3 +1,4 @@
+import { CheckUserRole } from "@/app/lib/checkrole";
 import "../../../app/globals.css";
 import { AdminContextProvider } from "../provider";
 import { StaffDashboardContent } from "./staff";
@@ -11,15 +12,7 @@ export default async function ResidentLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await GetUsers();
-
-  if (!user) {
-    redirect("/auth/signin");
-  }
-
-  if (user.role === "RESIDENT") {
-    return <div>UnAuthorized user</div>;
-  }
+  const user = await CheckUserRole(["ADMIN", "STAFF", "SUPERADMIN"]);
 
   return (
     <section>

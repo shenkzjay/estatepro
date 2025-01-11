@@ -37,6 +37,10 @@ export async function UpdatePaymentStatus(status: string, paymentId: string) {
 
   revalidateTag("get-residents");
 
+  revalidateTag("users");
+
+  revalidateTag("get-all-users");
+
   revalidateTag("get-all-residents");
 
   return {

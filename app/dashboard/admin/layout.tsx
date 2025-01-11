@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { GetUsers } from "@/app/api/queries/getuser-session";
 
 import { AdminContextProvider } from "../provider";
+import { CheckUserRole } from "@/app/lib/checkrole";
 
 export const dynamic = "force-dynamic";
 
@@ -16,15 +17,7 @@ export default async function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await GetUsers();
-
-  if (!user) {
-    redirect("/auth/signin");
-  }
-
-  if (user.role === "STAFF" || user.role === "RESIDENT") {
-    return <div>UnAuthorized user</div>;
-  }
+  const user = await CheckUserRole(["ADMIN", "SUPERADMIN"]);
 
   return (
     <AdminContextProvider user={user}>

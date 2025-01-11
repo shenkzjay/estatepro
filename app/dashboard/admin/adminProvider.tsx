@@ -1,5 +1,5 @@
 // import { GetUsers } from "@/app/api/queries/getUser";
-import SignIn from "@/app/auth/signin/page";
+import SignIn from "@/app/(auth)/signin/page";
 // import Admin from "./admin";
 import { User } from "@prisma/client";
 

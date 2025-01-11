@@ -61,8 +61,10 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
 
   const getStatusPillType = (paymentStatus: PaymentStatus, dueDate: string) => {
     const isOverdue = Date.now() > new Date(dueDate).getTime();
-    if (isOverdue) return "danger"; // Overdue if dueDate has passed
+    if (paymentStatus === PaymentStatus.PAID && isOverdue) return "success";
+    if (isOverdue) return "danger";
     if (paymentStatus === PaymentStatus.PAID) return "success";
+    if (isOverdue) return "success";
     return "warning";
   };
 
@@ -107,9 +109,12 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
                     viewpayment.duedate
                   )}
                   title={
-                    Date.now() > new Date(viewpayment.duedate).getTime()
-                      ? "Overdue"
-                      : (viewpayment.paymentstatus as string)
+                    Date.now() > new Date(viewpayment.duedate).getTime() &&
+                    viewpayment.paymentstatus === "PAID"
+                      ? (viewpayment.paymentstatus as string)
+                      : Date.now() > new Date(viewpayment.duedate).getTime()
+                        ? "Overdue"
+                        : (viewpayment.paymentstatus as string)
                   }
                 />
 

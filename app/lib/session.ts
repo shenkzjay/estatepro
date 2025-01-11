@@ -1,5 +1,5 @@
 import { compare, hash } from "bcryptjs";
-import { JWTPayload, SignJWT, jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { Role } from "@prisma/client";
 
