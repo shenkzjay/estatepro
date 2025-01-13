@@ -12,6 +12,8 @@ import { LogOutIcon } from "@/public/svgIcons/logoutIcon";
 import { usePathname } from "next/navigation";
 import { useAdminContext } from "@/app/dashboard/provider";
 import { SettingsIcon } from "@/public/svgIcons/settings";
+import { signOutAction } from "@/app/actions/handlesignin-action";
+import { Suspense } from "react";
 
 export const MobileMenuNavbar = () => {
   //init pathname hook
@@ -132,15 +134,22 @@ export const MobileMenuNavbar = () => {
           </a>
         </li>
         <li className="flex flex-row text-white mt-6 text-[14px] w-full justify-between p-2">
-          <div className="flex flex-col gap-6 ">
+          <div className="flex flex-row justify-between w-full">
             <div>
               <h3>{user?.name}</h3>
               <p>{user?.email}</p>
             </div>
 
-            <div className="flex gap-3 w-full">
-              Logout <LogOutIcon />
-            </div>
+            <Suspense>
+              <button
+                onClick={async () => {
+                  await signOutAction();
+                }}
+                className="flex justify-center items-center md:justify-end  w-full"
+              >
+                <LogOutIcon />
+              </button>
+            </Suspense>
           </div>
         </li>
       </ul>

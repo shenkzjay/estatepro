@@ -8,6 +8,8 @@ import { MaintenanceIcon } from "@/public/svgIcons/maitainanceIcon";
 import { UpdatesIcon } from "@/public/svgIcons/updatesIcon";
 import { LogOutIcon } from "@/public/svgIcons/logoutIcon";
 import { usePathname } from "next/navigation";
+import { signOutAction } from "@/app/actions/handlesignin-action";
+import { Suspense } from "react";
 
 export const AdminMobileMenuNavbar = () => {
   //init pathname
@@ -122,9 +124,16 @@ export const AdminMobileMenuNavbar = () => {
               <p>alison@rayna.ui</p>
             </div>
 
-            <div className="flex gap-3 w-full">
-              Logout <LogOutIcon />
-            </div>
+            <Suspense>
+              <button
+                onClick={async () => {
+                  await signOutAction();
+                }}
+                className="flex justify-center items-center md:justify-end  w-full"
+              >
+                <LogOutIcon />
+              </button>
+            </Suspense>
           </div>
         </li>
       </ul>
