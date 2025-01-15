@@ -2,7 +2,7 @@
 
 import { prisma } from "@/utils/prisma";
 import { Role } from "@prisma/client";
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from "@/app/lib/unstable-cache";
 
 export const getResidents = unstable_cache(
   async (role?: Role) => {
@@ -66,5 +66,5 @@ export const getResidents = unstable_cache(
     }
   },
   ["get-residents"],
-  { tags: ["get-residents"], revalidate: 60 }
+  { revalidate: 3600 }
 );

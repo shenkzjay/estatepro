@@ -2,7 +2,7 @@
 
 import { prisma } from "@/utils/prisma";
 import { redirect } from "next/navigation";
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from "@/app/lib/unstable-cache";
 
 export const ValidateToken = unstable_cache(
   async (token: string) => {
@@ -29,5 +29,5 @@ export const ValidateToken = unstable_cache(
     }
   },
   ["validatetoken"],
-  { tags: ["validatetoken"], revalidate: 60 }
+  { revalidate: 3600 }
 );

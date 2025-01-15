@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/utils/prisma";
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from "@/app/lib/unstable-cache";
 
 export const GetVisitorsCode = unstable_cache(
   async (residentId: string) => {
@@ -49,5 +49,5 @@ export const GetVisitorsCode = unstable_cache(
     }
   },
   ["get-visitors"],
-  { tags: ["get-visitors"], revalidate: 60 }
+  { revalidate: 3600 }
 );

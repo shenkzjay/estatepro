@@ -83,6 +83,9 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
       await CreateMaintenanceIssues(formData);
     }
+
+    FormIssuesRef.current?.reset();
+    setSelectedItem("");
   };
 
   const OpenMaintenanceDetailsModal = () => {
@@ -131,6 +134,7 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
           {currentIndex !== null && maintenance && maintenance[currentIndex]?.image ? (
             <div className="flex items-center justify-center">
               <Image
+                loading="lazy"
                 src={maintenance[currentIndex].image}
                 width={200}
                 height={200}
