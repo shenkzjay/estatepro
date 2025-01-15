@@ -1,3 +1,5 @@
+"use server";
+
 import { getResidents } from "@/app/api/queries/get-residents";
 
 import { ManageResident } from "../admin-dashboard/admin-residents";

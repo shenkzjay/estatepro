@@ -1,5 +1,3 @@
-// "use client";
-
 import { Roboto } from "next/font/google";
 import "../../../app/globals.css";
 import { AdminDashboardContent } from "./admin";

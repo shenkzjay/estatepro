@@ -1,4 +1,4 @@
-"use server";
+// "use server";
 
 import { prisma } from "@/utils/prisma";
 import { unstable_cache } from "@/app/lib/unstable-cache";
