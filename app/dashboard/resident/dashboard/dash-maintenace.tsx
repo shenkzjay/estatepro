@@ -186,15 +186,15 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
           <div className="grid grid-cols-[repeat(auto-fit,minmax(20ch,1fr))] gap-6 justify-between p-6 ">
             <div className="bg-white rounded-[10px] p-[36px] flex flex-col gap-4 ">
               <h4 className="text-graytext">Open issues</h4>
-              <p className="font-semibold text-2xl text-black text-left">{openIssues || "Nill"}</p>
+              <p className="font-semibold text-2xl text-black text-left">{openIssues || "--"}</p>
             </div>
             <div className="bg-white rounded-[10px] p-[36px] flex flex-col gap-4">
               <h4 className="text-graytext">In-progress</h4>
-              <p className="font-semibold text-2xl text-black text-left">{inProgress || "Nil"}</p>
+              <p className="font-semibold text-2xl text-black text-left">{inProgress || "--"}</p>
             </div>
             <div className="bg-white rounded-[10px] p-[36px] flex flex-col gap-4">
               <h4 className="text-graytext">Closed</h4>
-              <p className="font-semibold text-2xl text-black text-left">{closedIssues || "Nil"}</p>
+              <p className="font-semibold text-2xl text-black text-left">{closedIssues || "--"}</p>
             </div>
           </div>
 

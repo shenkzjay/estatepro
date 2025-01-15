@@ -86,7 +86,7 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
   const estateUpdateData: updateDataProps[] = [
     {
       id: 1,
-      title: "Swimmingee pool closed for maintenance",
+      title: "Swimming pool closed for maintenance",
       description: `We apologize for any inconvenience this may cause, and we appreciate your understanding as we work to maintain the pool in optimal condition for your enjoyment. Thank you, Estate Management`,
       date: "10 Apr 2024",
       annoucementPill: <StatusPill title="Announcement" status="default" />,
@@ -102,7 +102,7 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
 
     {
       id: 3,
-      title: "Swimmins poosl closed for maintenance",
+      title: "Swimming pool closed for maintenance",
       description: "We would be closing the community pool for...",
       date: "10 Apr 2024",
       annoucementPill: <StatusPill title="Announcement" status="default" />,

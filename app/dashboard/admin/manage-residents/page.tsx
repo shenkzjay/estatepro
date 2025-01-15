@@ -8,6 +8,8 @@ export default async function AdminResident() {
 
   const residentDatas = responses?.map((res) => res);
 
+  console.log(residentDatas);
+
   if (!residentDatas) null;
 
   // console.log({ residentDatas });

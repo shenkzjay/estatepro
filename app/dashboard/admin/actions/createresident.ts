@@ -98,7 +98,6 @@ export async function CreateResident(formData: FormData) {
     });
 
     revalidateTag("get-residents");
-
     revalidateTag("get-all-residents");
     revalidateTag("get-all-users");
 

@@ -71,6 +71,8 @@ interface residentProp {
 }
 
 export function ManageResident({ resident, residentPayments }: residentProp) {
+  console.log(resident, "residents");
+
   const { isCollapse } = useAdminContext();
 
   return (
