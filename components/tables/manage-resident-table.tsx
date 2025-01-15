@@ -12,6 +12,7 @@ import { Select } from "@/stories/select/select";
 import { CreateResident } from "@/app/dashboard/admin/actions/createresident";
 import { StatusPill } from "@/stories/statuspills/statuspill";
 import Link from "next/link";
+import { Toaster, toast } from "sonner";
 
 import { nameInitials } from "@/utils/nameInitials";
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
@@ -30,6 +31,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   const [currentState, setCurrentState] = useState(1);
   const [selectedItem, setSelectedItem] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isHouseType, setIsHouseType] = useState("");
   const [index, setIndex] = useState<number | null>(null);
@@ -50,9 +52,6 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
   const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (currentState <= 2) {
-      setCurrentState((prev) => prev + 1);
-    }
 
     if (prevFormRef.current) {
       const formData = new FormData(prevFormRef.current);
@@ -68,13 +67,28 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       };
       formData.append("houseType", isHouseType);
 
+      const emptyFields = Object.entries(residentFormData).filter(([key, value]) => !value);
+
+      if (emptyFields.length > 0) {
+        toast.error(
+          `Please fill out the following fields: ${emptyFields.map(([key]) => [key].join(", "))}`
+        );
+
+        return;
+      }
+
       sessionStorage.setItem("resident", JSON.stringify(residentFormData));
+
+      if (currentState <= 2) {
+        setCurrentState((prev) => prev + 1);
+      }
     }
   };
 
   const handleAddNewResident = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     //get the resident details from session
+    setIsLoading(true);
     const prevResidentData = JSON.parse(sessionStorage.getItem("resident") as string);
 
     if (prevFormRef.current) {
@@ -91,6 +105,12 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       const newRes = await CreateResident(formData);
 
       console.log(newRes);
+
+      if (newRes.success === true) {
+        toast.success(newRes.message);
+      } else {
+        toast.error(newRes.error);
+      }
 
       //set resident data to state
       // setResidentData((prevResidentData) => [...prevResidentData, newRes.newResident]);
@@ -110,6 +130,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
       //reset dropdown item
       setSelectedItem("");
+
+      setIsLoading(false);
 
       console.log("resident", residentDatas);
     }
@@ -171,6 +193,18 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   return (
     <section>
+      <Toaster
+        toastOptions={{
+          style: { zIndex: "99999" },
+          classNames: {
+            error: "bg-red-400",
+            success: "text-green-400",
+            warning: "text-yellow-400",
+            info: "bg-blue-400",
+          },
+        }}
+        offset={16}
+      />
       {/**Searchbox header */}
       <div className="flex md:flex-row flex-col justify-between p-6 gap-6 md:gap-0">
         <div className="md:w-[30vw]">
@@ -379,7 +413,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                       arialabel="fullname"
                       BorderRadius="10px"
                       inputtype="text"
-                      required={false}
+                      required={true}
                       Border="1px solid #E3E5E5"
                     />
                   </div>
@@ -533,11 +567,14 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                     color="#139D8F"
                   />
                   <Button
-                    label="Create"
+                    label={isLoading ? "Loading" : "Create resident"}
                     onClick={handleAddNewResident}
                     iconAlign="after"
                     variant="Primary"
                     color="#139D8F"
+                    // bgColor={isLoading ? "#f4f4f4" : "#1AD9C5"}
+                    btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+                    diasbled={isLoading}
                   />
                 </div>
               </fieldset>

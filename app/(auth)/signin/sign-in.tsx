@@ -17,6 +17,7 @@ export const SignIn = () => {
 
   return (
     <section className="logbg ">
+      <Toaster />
       <div className="flex flex-col justify-center items-center mx-6 md:mx-0 h-full">
         <form
           action={formAction}
@@ -29,7 +30,7 @@ export const SignIn = () => {
               <p className="text-[#6D7175] text-sm">Log in to continue</p>
             </div>
           </legend>
-          <Toaster />
+
           <div className="flex flex-col gap-8 pb-2  pt-12">
             <Inputs
               label="Enter your email address"

@@ -7,6 +7,26 @@ import { Role, User } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { revalidateTag } from "next/cache";
 import { generateRandomCodes } from "@/utils/randomcodes";
+import { z } from "zod";
+import { redirect } from "next/navigation";
+
+const residentSchema = z.object({
+  fullname: z
+    .string({
+      required_error: "Fullname is required",
+    })
+    .min(1, "Please provide fullname"),
+  email: z.string().email(),
+  phoneNumber: z.string().min(1, "Please provide Phone number"),
+  houseNumber: z.string().min(1, "Please provide House number"),
+  houseType: z.string().min(1, "Please provide Housetype"),
+  streetAddress: z.string().min(1, "Please provide Street Address"),
+  moveInDate: z.string().date(),
+  vehicleMake: z.string().optional(),
+  vehicleNumber: z.string().optional(),
+  vehicleColor: z.string().optional(),
+  vehicleModel: z.string().optional(),
+});
 
 export async function CreateResident(formData: FormData) {
   const residentData = {
@@ -22,6 +42,35 @@ export async function CreateResident(formData: FormData) {
     vehicleColor: formData.get("vehiclecolor") as string,
     vehicleModel: formData.get("vehiclemodel") as string,
   };
+
+  console.log(residentData.moveInDate);
+
+  const validation = residentSchema.safeParse(residentData);
+
+  if (!validation.success) {
+    return {
+      data: null,
+      success: false,
+      message: "Validation error",
+      error: validation.error.errors.map((error) => error.message),
+    };
+  }
+
+  //check for duplication
+  const duplicateUsers = await prisma.user.findUnique({
+    where: {
+      email: residentData.email,
+    },
+  });
+
+  if (duplicateUsers) {
+    return {
+      success: false,
+      data: null,
+      message: "Duplicate user",
+      error: "Duplicate user found. Please try again with a different email",
+    };
+  }
 
   console.log({ residentData });
 
@@ -102,12 +151,18 @@ export async function CreateResident(formData: FormData) {
     revalidateTag("get-all-users");
 
     return {
-      message: "Magic link sent successfully",
-      newResident,
+      data: newResident,
+      error: null,
+      success: true,
+      message:
+        "Resident successfully created, Please visit your email inbox or spam folder to complete signup",
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
-      message: `Error trying to create resident: ${error}`,
+      data: null,
+      success: false,
+      message: "Error trying to create resident",
+      error: `Error trying to create resident`,
     };
   }
 }

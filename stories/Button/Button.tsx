@@ -34,9 +34,6 @@ export function Button({
   const disabledStyles = diasbled
     ? {
         cursor: "not-allowed",
-        opacity: 0.6,
-        backgroundColor: "#f3f3f3",
-        color: "white",
       }
     : {};
 
