@@ -63,6 +63,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
   //selected state
   const [isSelected, setIsSelected] = useState<number | null>(null);
   const [shareData, setShareData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [gencode, setGencode] = useState("");
 
@@ -109,6 +110,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
   const handleCodeGeneration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // e.stopPropagation();
+    setIsLoading(true);
 
     //checks if formElement is present
     if (formEle.current && user) {
@@ -138,6 +140,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
     }
 
     formEle.current?.reset();
+    setIsLoading(false);
   };
 
   /**
@@ -444,6 +447,7 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
               label="Generate code"
               iconAlign="after"
               bgColor="#1AD9C5"
+              diasbled={isLoading}
             />
             {/* <SubmitButton ButtonName="Generate code" /> */}
           </div>

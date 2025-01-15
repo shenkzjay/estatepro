@@ -1,7 +1,7 @@
-// "use server";
+"use server";
 
 import { prisma } from "@/utils/prisma";
-import { unstable_cache } from "@/app/lib/unstable-cache";
+import { unstable_cache } from "next/cache";
 
 export const GetUpdates = unstable_cache(
   async (id: string) => {
@@ -46,5 +46,5 @@ export const GetUpdates = unstable_cache(
     }
   },
   ["get-updates"],
-  { revalidate: 3600 }
+  { revalidate: 3600, tags: ["get-updates"] }
 );

@@ -78,6 +78,8 @@ export const GenerateCodeFormAction = async (formdata: FormData) => {
 
     revalidateTag("users");
     revalidateTag("get-visitors");
+    revalidateTag("get-all-residents");
+    revalidateTag("get-residents");
 
     return {
       message: "visitor's code successfullly created",

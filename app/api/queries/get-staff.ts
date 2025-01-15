@@ -1,7 +1,7 @@
-// "use server";
+"use server";
 
 import { prisma } from "@/utils/prisma";
-import { unstable_cache } from "@/app/lib/unstable-cache";
+import { unstable_cache } from "next/cache";
 import { Role } from "@prisma/client";
 
 export const getStaff = unstable_cache(
@@ -29,5 +29,5 @@ export const getStaff = unstable_cache(
     }
   },
   ["get-staff"],
-  { revalidate: 3600 }
+  { revalidate: 3600, tags: ["get-staff"] }
 );

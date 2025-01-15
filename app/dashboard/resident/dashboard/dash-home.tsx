@@ -23,7 +23,7 @@ export const DashHome = async () => {
 
   const residentid = user?.id;
 
-  if (!residentid) return redirect("/auth/signin");
+  if (!residentid) return redirect("/signin");
 
   const visitors = await GetVisitorsCode(residentid);
 

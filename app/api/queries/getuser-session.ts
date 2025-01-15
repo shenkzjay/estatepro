@@ -1,8 +1,8 @@
-// "use server";
+"use server";
 
 import { getSession } from "@/app/lib/session";
 import { prisma } from "@/utils/prisma";
-import { unstable_cache } from "@/app/lib/unstable-cache";
+import { unstable_cache } from "next/cache";
 
 export const GetUsers = unstable_cache(
   async () => {
@@ -25,5 +25,5 @@ export const GetUsers = unstable_cache(
     }
   },
   ["users"],
-  { revalidate: 3600 }
+  { revalidate: 3600, tags: ["users"] }
 );
