@@ -31,11 +31,20 @@ export function Button({
 }: ButtonProps) {
   const buttonSize = size === "Large" ? "18px" : size === "Medium" ? "14px" : "12px";
 
+  const disabledStyles = diasbled
+    ? {
+        cursor: "not-allowed",
+        opacity: 0.6,
+        backgroundColor: "#f3f3f3",
+        color: "white",
+      }
+    : {};
+
   return (
     <div style={{ fontSize: buttonSize }}>
       {iconAlign === "after" && (
         <button
-          style={{ backgroundColor: btnbgColor, color: color }}
+          style={{ backgroundColor: btnbgColor, color: color, ...disabledStyles }}
           className={`button ${variant}`}
           {...props}
           onClick={onClick}
