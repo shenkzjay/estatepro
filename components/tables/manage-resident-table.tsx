@@ -32,6 +32,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
   const [currentState, setCurrentState] = useState(1);
   const [selectedItem, setSelectedItem] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const [isHouseType, setIsHouseType] = useState("");
   const [index, setIndex] = useState<number | null>(null);
@@ -108,6 +109,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
       if (newRes.success === true) {
         toast.success(newRes.message);
+        setShowSuccessMessage(true);
       } else {
         toast.error(newRes.error);
       }
@@ -240,6 +242,19 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       {/**create resident table */}
       <section className="px-6 bg-[#F8F8F8] ">
         <h3 className="mb-6 text-xl text-buttongray font-semibold ">Residents</h3>
+        {showSuccessMessage && (
+          <div className="p-6 bg-secondary rounded-xl text-buttongray mb-6  flex w-full">
+            <div className="w-full">
+              <p>A link has been sent to your email address</p>
+              <p className="">
+                Please check your inbox or spam message for the link to complete your acoount setup
+              </p>
+            </div>
+            <button onClick={() => setShowSuccessMessage(false)} className=" flex justify-end">
+              close
+            </button>
+          </div>
+        )}
 
         {selectedCheckbox.length > 0 && residentDatas.length > 0 && (
           <div>
