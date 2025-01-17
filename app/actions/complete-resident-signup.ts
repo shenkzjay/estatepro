@@ -67,7 +67,7 @@ export async function CompleteResidentSignUp(formData: FormData) {
     };
   }
 
-  signOutAction();
+  // signOutAction();
 
   redirect("/signin");
 }

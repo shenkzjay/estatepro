@@ -228,7 +228,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                           key={index}
                           className="grid grid-cols-[auto,1fr] gap-6 items-center bg-[#f4f4f4] p-2 rounded-xl "
                         >
-                          <div>
+                          <div className="">
                             <CarIcon />
                           </div>
 

@@ -28,6 +28,7 @@ interface houseData {
   streetaddress?: string;
   housetype?: string;
   moveindate?: string;
+  residentcode: string;
   vehicle: vehicleData[];
   payment: Payment[];
   occupants: Occupants[];

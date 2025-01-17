@@ -83,7 +83,7 @@ export const SignIn = () => {
           <div className="flex justify-center">
             <SubmitButton ButtonName="Log in" />
           </div>
-          <p>{state.message}</p>
+          <p className="text-red-500">{state.message}</p>
           <div className="flex justify-center mt-8">
             <button className="text-sm text-center text-red-600">Forgot password?</button>
           </div>

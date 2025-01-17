@@ -46,6 +46,8 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
   //init textareaInput
   const [textareaInput, setTextareaInput] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   //init modal
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
@@ -70,6 +72,7 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
     if (FormIssuesRef.current) {
       const formData = new FormData(FormIssuesRef.current);
+      setIsLoading(true);
 
       formData.append("selectedItem", selectedItem);
 
@@ -82,6 +85,8 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
       formData.append("residentId", residentId);
 
       await CreateMaintenanceIssues(formData);
+
+      setIsLoading(false);
     }
 
     FormIssuesRef.current?.reset();
@@ -383,11 +388,13 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
           <div className="flex justify-center w-full mt-6">
             <Button
-              label="Submit request"
+              label={isLoading ? "Loading" : "Submit request"}
               variant="Primary"
               iconAlign="after"
               icon={LinkArrow}
               bgColor="#1AD9C5"
+              diasbled={isLoading}
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
               onClick={handleSubmitRequest}
             />
           </div>

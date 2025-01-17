@@ -56,7 +56,7 @@ export async function handleSignInAction(prev: any, formData: FormData) {
     // };
   } catch (error) {
     return {
-      message: `Failed to sign in user ${error}`,
+      message: `Server Error! Failed to sign in user`,
     };
   }
 
