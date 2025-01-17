@@ -18,6 +18,7 @@ import { nameInitials } from "@/utils/nameInitials";
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
 
 import { usePagination } from "@/hooks/usePagination";
+import { SearchBoxArea } from "../search-box";
 
 interface residentDataProps {
   residents: residentShit[];
@@ -197,10 +198,9 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
     <section>
       <Toaster
         toastOptions={{
-          style: { zIndex: "99999" },
           classNames: {
-            error: "bg-red-400",
-            success: "text-green-400",
+            error: "bg-red-300",
+            success: "text-green-200",
             warning: "text-yellow-400",
             info: "bg-blue-400",
           },
@@ -210,12 +210,13 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       {/**Searchbox header */}
       <div className="flex md:flex-row flex-col justify-between p-6 gap-6 md:gap-0">
         <div className="md:w-[30vw]">
-          <SearchBox
+          {/* <SearchBox
             bgColor="#EFF0F1"
             placeholder="Search house number or name"
             name="SearchResidents"
             color="#b4b4b4"
-          />
+          /> */}
+          <SearchBoxArea />
         </div>
         <div className="flex flex-row gap-6 flex-wrap">
           <Button
@@ -243,11 +244,11 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       <section className="px-6 bg-[#F8F8F8] ">
         <h3 className="mb-6 text-xl text-buttongray font-semibold ">Residents</h3>
         {showSuccessMessage && (
-          <div className="p-6 bg-secondary rounded-xl text-buttongray mb-6  flex w-full">
+          <div className="p-6 bg-secondary rounded-xl text-black mb-6  flex w-full">
             <div className="w-full">
               <p>A link has been sent to your email address</p>
               <p className="">
-                Please check your inbox or spam message for the link to complete your acoount setup
+                Please check your inbox or spam message for the link to complete your account setup
               </p>
             </div>
             <button onClick={() => setShowSuccessMessage(false)} className=" flex justify-end">

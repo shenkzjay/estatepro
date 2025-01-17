@@ -1,5 +1,6 @@
 "use server";
 
+import { signOutAction } from "./handlesignin-action";
 import { revalidateTag } from "next/cache";
 import { hashPassword, comparePassword } from "../lib/session";
 import { prisma } from "@/utils/prisma";
@@ -65,6 +66,8 @@ export async function CompleteResidentSignUp(formData: FormData) {
       message: `Error creating user password: ${error}`,
     };
   }
+
+  signOutAction();
 
   redirect("/signin");
 }

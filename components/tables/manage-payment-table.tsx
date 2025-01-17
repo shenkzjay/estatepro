@@ -13,6 +13,7 @@ import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-reside
 import { ResidentPayment } from "@/app/dashboard/admin/actions/create-resident-payment";
 import { nameInitials } from "@/utils/nameInitials";
 import { ViewPaymentModal } from "@/components/app-modals/viewpayment";
+import { Toaster, toast } from "sonner";
 
 interface residentDataProps {
   residentPayments: residentShit[];
@@ -31,6 +32,8 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
   const [residentDatas, setResidentDatas] = useState<residentShit[]>([]);
   const [createResidentPayment, setCreateResidentPayment] = useState<residentShit[]>([]);
   const [currentViewPayment, setCurrentViewPayment] = useState<residentShit>();
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const data = ["debris", "shale", "wale", "adle"];
 
@@ -45,22 +48,34 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
 
   const handleCreateNewPayment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErrors({});
+    setIsLoading(true);
     if (createPaymentFormRef.current) {
       const formData = new FormData(createPaymentFormRef.current);
 
       formData.append("residentname", selectedItem);
       formData.append("paymenttype", selectedPaymentType);
 
-      await ResidentPayment(formData);
+      const result = await ResidentPayment(formData);
 
-      // setCreateResidentPayment([...createResidentPayment, paymentFormData]);
-
-      createPaymentRef.current?.close();
-
-      console.log(createResidentPayment, "paymentData");
-
-      // sessionStorage.setItem("paymentdata", JSON.stringify(paymentFormData));
+      if (result.success === true) {
+        toast.success(result.message);
+        setIsLoading(false);
+        createPaymentRef.current?.close();
+      } else if (result.error) {
+        setErrors(result?.error as React.SetStateAction<Record<string, string[]>>);
+        toast.error("Please correct the errors in the form.");
+        setIsLoading(false);
+      } else {
+        toast.error("An unexpected error occurred.");
+        setIsLoading(false);
+      }
     }
+    // setCreateResidentPayment([...createResidentPayment, paymentFormData]);
+
+    console.log(createResidentPayment, "paymentData");
+
+    // sessionStorage.setItem("paymentdata", JSON.stringify(paymentFormData));
   };
 
   const handleSelectPaymentCheckbox = (index: number) => {
@@ -97,8 +112,13 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
     OpenViewPaymentModal();
   };
 
+  const closePaymentModal = () => {
+    viewPaymentRef.current?.close();
+  };
+
   return (
     <section className="mt-12">
+      {/* <Toaster /> */}
       {/**Searchbox header */}
       <div className="flex md:flex-row flex-col justify-between p-6 gap-6 md:gap-0">
         <div className="md:w-[30vw]">
@@ -243,14 +263,18 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
         <form ref={createPaymentFormRef} onSubmit={handleCreateNewPayment}>
           <fieldset className="flex flex-col gap-6 mt-6 text-sm text-buttongray">
             <legend className="mb-6 font-semibold  text-base text-primary">Resident details</legend>
-
-            <Select
-              title="Select resident"
-              selectData={residents.map((resident) => resident?.name || "")}
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-              setIndex={setIndex}
-            />
+            <div>
+              <Select
+                title="Select resident"
+                selectData={residents.map((resident) => resident?.name || "")}
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+                setIndex={setIndex}
+              />
+              {!selectedItem
+                ? errors.residentName && <p className="text-red-500">{errors.residentName[0]}</p>
+                : ""}
+            </div>
 
             <div className="flex flex-row gap-6 mt-8 text-buttongray">
               <Inputs
@@ -260,11 +284,12 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
                 arialabel="email"
                 BorderRadius="10px"
                 inputtype="text"
-                required={false}
+                required={true}
                 Border="1px solid #E3E5E5"
                 defaultValue={index !== null ? (residents[index]?.email as string) : ""}
                 readOnly={true}
               />
+
               <Inputs
                 label="Phone number"
                 title="phonenumber"
@@ -272,7 +297,7 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
                 arialabel="phonenumber"
                 BorderRadius="10px"
                 inputtype="text"
-                required={false}
+                required={true}
                 Border="1px solid #E3E5E5"
                 defaultValue={index !== null ? residents[index]?.residentData?.phonenumber : ""}
                 readOnly={true}
@@ -285,7 +310,7 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
                 arialabel="houseaddress"
                 BorderRadius="10px"
                 inputtype="text"
-                required={false}
+                required={true}
                 Border="1px solid #E3E5E5"
                 defaultValue={
                   index !== null
@@ -307,6 +332,9 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
                   setSelectedItem={setSelectedPaymentType}
                   selectedItem={selectedPaymentType}
                 />
+                {!selectedPaymentType
+                  ? errors.residentName && <p className="text-red-500">{errors.paymentType[0]}</p>
+                  : ""}
               </div>
               <div className="mt-8">
                 <Inputs
@@ -318,6 +346,8 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
                   inputtype="number"
                   required={false}
                   Border="1px solid #E3E5E5"
+                  error={errors ? !!errors : false}
+                  errorMessage={errors?.paymentAmount?.[0]}
                 />
               </div>
               <div className="mt-8">
@@ -330,16 +360,20 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
                   inputtype="date"
                   required={false}
                   Border="1px solid #E3E5E5"
+                  error={errors ? !!errors : false}
+                  errorMessage={errors?.dueDate?.[0]}
                 />
               </div>
             </div>
             <div className="flex flex-col justify-center items-center mb-2">
               <Button
-                label="Create payment"
+                label={isLoading ? "Loading" : "Create payment"}
                 onClick={() => console.log("hi")}
                 iconAlign="after"
                 variant="Primary"
                 color="#139D8F"
+                diasbled={isLoading}
+                btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
               />
             </div>
           </fieldset>
@@ -348,7 +382,10 @@ export const ManageResidentPaymentTable = ({ residentPayments, residents }: resi
 
       {/* view payment modal */}
       <Modal title="View payments" handleOpenModal={OpenViewPaymentModal} ref={viewPaymentRef}>
-        <ViewPaymentModal currentViewPayment={currentViewPayment} />
+        <ViewPaymentModal
+          currentViewPayment={currentViewPayment}
+          closePaymentModal={closePaymentModal}
+        />
       </Modal>
     </section>
   );

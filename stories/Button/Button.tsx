@@ -5,7 +5,7 @@ interface ButtonProps {
   label: string;
   variant: "Primary" | "Secondary" | "Tertiary";
   iconAlign?: "before" | "after" | "none";
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   bgColor?: string;
   color?: string;
   icon?: () => JSX.Element;
@@ -13,6 +13,7 @@ interface ButtonProps {
   btnbgColor?: string;
   size?: "Large" | "Medium" | "Small";
   diasbled?: boolean;
+  type?: "button" | "submit";
 }
 
 export function Button({
@@ -25,6 +26,7 @@ export function Button({
   icon = LinkArrow,
   textcolor,
   diasbled = false,
+  type,
   btnbgColor,
   size = "Large",
   ...props
@@ -46,6 +48,7 @@ export function Button({
           {...props}
           onClick={onClick}
           disabled={diasbled}
+          type={type}
         >
           <p className="slide-up" style={{ color: textcolor, fontSize: buttonSize }}>
             {label}
@@ -62,6 +65,7 @@ export function Button({
           {...props}
           onClick={onClick}
           disabled={diasbled}
+          type={type}
         >
           <div style={{ backgroundColor: bgColor }}>{icon && icon()}</div>
           <p style={{ color: textcolor, fontSize: buttonSize }}>{label}</p>
@@ -75,6 +79,7 @@ export function Button({
           {...props}
           onClick={onClick}
           disabled={diasbled}
+          type={type}
         >
           <p className="" style={{ color: textcolor, fontSize: buttonSize }}>
             {label}

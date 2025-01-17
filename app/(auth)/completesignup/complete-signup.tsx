@@ -3,7 +3,7 @@
 import { ValidateToken } from "@/app/api/queries/validateToken";
 import { Button } from "@/stories/Button/Button";
 import { Inputs } from "@/stories/input/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { CompleteResidentSignUp } from "@/app/actions/complete-resident-signup";
 import { Logo } from "@/public/svgIcons/logo";
@@ -15,6 +15,8 @@ export const CompleteSignUp = () => {
   const router = useRouter();
 
   const searchquery = search.get("token");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleTokenValidation = async () => {
@@ -51,12 +53,16 @@ export const CompleteSignUp = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     const formData = new FormData(e.currentTarget);
     formData.append("token", searchquery as string);
 
     await CompleteResidentSignUp(formData);
 
     console.log(formData);
+
+    setIsLoading(false);
   };
   return (
     <form
@@ -91,11 +97,13 @@ export const CompleteSignUp = () => {
         Border="1px solid #E3E5E5"
       />
       <Button
-        label="create password"
+        label={isLoading ? "Loading" : "Create password"}
         variant="Primary"
         iconAlign="after"
         size="Large"
         onClick={() => console.log("hi")}
+        diasbled={isLoading}
+        btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
       />
     </form>
   );

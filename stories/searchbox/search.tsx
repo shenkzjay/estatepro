@@ -7,9 +7,19 @@ interface SearchProps {
   value?: string;
   color: string;
   bgColor: string;
+  onKeyDown?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const SearchBox = ({ name, placeholder, value, color, bgColor }: SearchProps) => {
+export const SearchBox = ({
+  name,
+  placeholder,
+  value,
+  color,
+  bgColor,
+  onKeyDown,
+  onChange,
+}: SearchProps) => {
   return (
     <div className="searchbox">
       <span>
@@ -22,6 +32,8 @@ export const SearchBox = ({ name, placeholder, value, color, bgColor }: SearchPr
         placeholder={placeholder}
         value={value}
         style={{ backgroundColor: bgColor }}
+        onKeyDown={onKeyDown}
+        onChange={onChange}
       />
     </div>
   );

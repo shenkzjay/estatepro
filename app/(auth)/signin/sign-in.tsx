@@ -26,7 +26,7 @@ export const SignIn = () => {
           <legend>
             <div className="text-center flex flex-col justify-center items-center gap-2">
               <Logo color="#635F19" />
-              <h3 className="text-2xl font-semibold text-[#202223]">Welcome back</h3>
+              <h3 className="text-2xl font-semibold text-[#202223]"></h3>
               <p className="text-[#6D7175] text-sm">Log in to continue</p>
             </div>
           </legend>

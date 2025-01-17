@@ -11,12 +11,21 @@ import { CarIcon } from "@/public/svgIcons/carIcon";
 
 import { PaymentStatus } from "@prisma/client";
 import { StatusPill } from "@/stories/statuspills/statuspill";
+import { Button } from "@/stories/Button/Button";
+import { Inputs } from "@/stories/input/input";
+import { useRef, useState } from "react";
+import { DeleleResidentAction } from "../../actions/deleteresident";
+import { toast, Toaster } from "sonner";
 
 interface ViewResidentProps {
   resident: residentShit;
 }
 
 export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const deleteResidentRef = useRef<HTMLFormElement | null>(null);
+
   const getStatusPillType = (paymentStatus: PaymentStatus, dueDate: string) => {
     const isOverdue = Date.now() > new Date(dueDate).getTime();
     if (paymentStatus === PaymentStatus.PAID && isOverdue) return "success";
@@ -26,12 +35,48 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
     return "warning";
   };
 
+  const handleDeleteResident = async (
+    residentId: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    if (deleteResidentRef.current) {
+      const formData = new FormData(deleteResidentRef.current);
+      setIsLoading(true);
+
+      const result = await DeleleResidentAction(formData, residentId);
+
+      if (result?.success === true) {
+        toast.success(result?.message);
+        setIsLoading(true);
+      } else {
+        toast.error(result?.message);
+        setIsLoading(false);
+      }
+
+      setIsLoading(false);
+    }
+
+    deleteResidentRef.current?.reset();
+  };
+
   const { isCollapse } = useAdminContext();
 
   return (
     <section
       className={`${isCollapse ? "md:ml-[18vw] ml-0" : "md:ml-[4vw] ml-0"} [transition:_margin-left_.2s_ease-out] bg-[#F8F8F8]`}
     >
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: "bg-red-300",
+            success: "text-green-200",
+            warning: "text-yellow-400",
+            info: "bg-blue-400",
+          },
+        }}
+        offset={16}
+      />
       <DashBoardHeader title="Resident" />
       <DashBreadcrumbs title="Resident" />
 
@@ -214,6 +259,38 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                 </div>
               </div>
             </div>
+          </figure>
+
+          <figure className="rounded-xl bg-white p-6">
+            <figcaption className="text-red-600">
+              To delete <i>{resident.name}</i> , type <b>DELETE</b> in the box below
+            </figcaption>
+
+            <form className="mt-12" ref={deleteResidentRef}>
+              <Inputs
+                label="Confirm delete"
+                title="Confirm delete"
+                placeholder=""
+                arialabel="Confirm delete"
+                BorderRadius="10px"
+                inputtype="text"
+                required={true}
+                Border="1px solid red"
+                inputBg=""
+              />
+
+              <Button
+                label={isLoading ? "Loading" : "Delete"}
+                onClick={(e) => handleDeleteResident(resident.id, e)}
+                iconAlign="none"
+                variant="Tertiary"
+                color="#139D8F"
+                textcolor="red"
+                type="submit"
+                diasbled={isLoading}
+                btnbgColor={isLoading ? "#c4c4c4" : "#FFC9CF"}
+              />
+            </form>
           </figure>
         </div>
         <div className="md:w-[50%] md:m-6 grid gap-6">

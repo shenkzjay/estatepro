@@ -2,22 +2,33 @@
 
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
 import { StatusPill } from "@/stories/statuspills/statuspill";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { PaymentStatus } from "@prisma/client";
 import { UpdatePaymentStatus } from "@/app/actions/update-payment-status";
 import { DeleteIcon } from "@/public/svgIcons/deleteIcon";
+import Payment from "@/app/dashboard/resident/payment/page";
+import { DeletePayment } from "@/app/api/queries/delete-payment";
+import { toast } from "sonner";
+import { Modal } from "@/stories/modal/modal";
+import { Button } from "@/stories/Button/Button";
 
 interface viewPaymentProps {
   currentViewPayment: residentShit | undefined;
+  closePaymentModal: () => void;
 }
 
-export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
+export const ViewPaymentModal = ({ currentViewPayment, closePaymentModal }: viewPaymentProps) => {
   console.log(currentViewPayment);
 
   const [selectedStatus, setSelectedStatus] = useState<PaymentStatus>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const confirmRef = useRef<HTMLDialogElement | null>(null);
 
   const [updateIndex, setUpdateIndex] = useState<number | null>(null);
+
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [payments, setPayments] = useState(currentViewPayment?.residentData?.payment || []);
 
   console.log({ payments });
@@ -47,17 +58,16 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
       )
     );
 
-    // Hide the select element
     setUpdateIndex(null);
 
-    // Update the server
     try {
       await UpdatePaymentStatus(newStatus, paymentId);
     } catch (error) {
       console.error("Failed to update payment status:", error);
-      // Optionally, revert the local state change if the server update fails
     }
   };
+
+  const OpenConfirmationModal = () => {};
 
   const getStatusPillType = (paymentStatus: PaymentStatus, dueDate: string) => {
     const isOverdue = Date.now() > new Date(dueDate).getTime();
@@ -66,6 +76,23 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
     if (paymentStatus === PaymentStatus.PAID) return "success";
     if (isOverdue) return "success";
     return "warning";
+  };
+
+  const handleOpenConfirmationModal = (index: number) => {
+    setCurrentIndex(index);
+    confirmRef.current?.showModal();
+    closePaymentModal();
+  };
+
+  const handleDeletePayment = async (paymentId: string) => {
+    const result = await DeletePayment(paymentId);
+
+    if (result.success === true) {
+      toast.success(result.message);
+      setPayments((prevPayment) => prevPayment.filter((payment, _) => payment.id !== paymentId));
+    } else {
+      toast.error(result.message);
+    }
   };
 
   return (
@@ -123,12 +150,37 @@ export const ViewPaymentModal = ({ currentViewPayment }: viewPaymentProps) => {
             )}
             {}
           </div>
-          <button>
+          <button onClick={() => handleDeletePayment(viewpayment.id)}>
             {/* <DeleteIcon /> */}
             delete
           </button>
         </li>
       ))}
+      {/* <Modal title="Delete Payment" handleOpenModal={OpenConfirmationModal} ref={confirmRef}>
+        <div>
+          <p>Do you want to delete this payment</p>
+          <div className="flex justify-between">
+            <Button
+              label={isLoading ? "Loading" : "No"}
+              onClick={() => confirmRef.current?.close()}
+              iconAlign="none"
+              variant="Tertiary"
+              color="#139D8F"
+              diasbled={isLoading}
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+            />
+            <Button
+              label={isLoading ? "Loading" : "Proceed"}
+              onClick={() => handleDeletePayment()}
+              iconAlign="after"
+              variant="Primary"
+              color="#139D8F"
+              diasbled={isLoading}
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+            />
+          </div>
+        </div>
+      </Modal> */}
     </ul>
   );
 };

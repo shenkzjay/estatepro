@@ -2,6 +2,16 @@
 
 import { prisma } from "@/utils/prisma";
 import { revalidateTag } from "next/cache";
+import { z } from "zod";
+
+const PaymentSchema = z.object({
+  residentName: z.string().min(1, "Please provide resident name"),
+  email: z.string().email().min(1),
+  phoneNumber: z.string().min(1, "Please provide Phone number"),
+  paymentType: z.string().min(1, "Please provide Payment type"),
+  dueDate: z.string().date(),
+  paymentAmount: z.number().min(1, "Please provide Payment amount"),
+});
 
 export async function ResidentPayment(formData: FormData) {
   const paymentFormData = {
@@ -12,6 +22,19 @@ export async function ResidentPayment(formData: FormData) {
     dueDate: formData.get("duedate") as string,
     paymentAmount: Number(formData.get("paymentamount")),
   };
+
+  const validation = PaymentSchema.safeParse(paymentFormData);
+
+  if (!validation.success) {
+    const formattedErrors = validation.error.flatten().fieldErrors;
+
+    return {
+      data: null,
+      success: false,
+      message: "Validation error",
+      error: formattedErrors,
+    };
+  }
 
   try {
     const resident = await prisma.user.findUnique({
@@ -43,12 +66,17 @@ export async function ResidentPayment(formData: FormData) {
     revalidateTag("users");
 
     return {
+      data: resident,
+      success: true,
       message: "Payment successfully created",
-      resident,
+      error: null,
     };
   } catch (error) {
     return {
-      message: `Error creating resident payment: ${error}`,
+      data: null,
+      success: false,
+      message: `Error trying to create payment`,
+      error: "Error trying to create payment",
     };
   }
 }

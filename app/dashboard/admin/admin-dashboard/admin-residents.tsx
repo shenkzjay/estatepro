@@ -44,7 +44,7 @@ interface Maintenance {
   createdAt?: Date;
 }
 
-interface Payment {
+export interface Payment {
   id: string;
   duedate: string;
   paymenttype: string;

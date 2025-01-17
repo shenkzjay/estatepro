@@ -24,5 +24,7 @@ export const TextInput: Story = {
     inputtype: "text",
     labelbg: "white",
     required: true,
+    error: true, // Show error state
+    errorMessage: "Fullname is required",
   },
 };
