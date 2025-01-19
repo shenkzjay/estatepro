@@ -129,7 +129,7 @@ export const ViewPaymentModal = ({ currentViewPayment, closePaymentModal }: view
                 ))}
               </select>
             ) : (
-              <div className="flex gap-1 !text-sm">
+              <div className="flex gap-6 !text-sm">
                 <StatusPill
                   status={getStatusPillType(
                     viewpayment?.paymentstatus as PaymentStatus,
@@ -150,9 +150,12 @@ export const ViewPaymentModal = ({ currentViewPayment, closePaymentModal }: view
             )}
             {}
           </div>
-          <button onClick={() => handleDeletePayment(viewpayment.id)}>
+          <button
+            onClick={() => handleDeletePayment(viewpayment.id)}
+            className="text-red-500 flex justify-end"
+          >
             {/* <DeleteIcon /> */}
-            delete
+            <DeleteIcon />
           </button>
         </li>
       ))}

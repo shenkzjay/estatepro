@@ -36,6 +36,7 @@ export interface visitorProps {
     housenumber: string | null;
     streetaddress: string | null;
     phonenumber: string | null;
+    residentcode: string;
   };
   visitorname: string;
   visitornumber: string;
@@ -53,6 +54,9 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
 
   const [visitorDetails, setVisitorDetails] = useState<visitorProps>();
   const [resident, setResident] = useState<visitorProps>();
+  const [visitorCode, setVisitorCode] = useState("");
+
+  console.log(visitorDetails);
 
   const handleVerifyCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,7 +66,7 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
 
       const visitor = await VerifyVisitorCode(formData);
 
-      const visitorDetail = visitor.visitor as visitorProps;
+      const visitorDetail = visitor.data as visitorProps;
 
       console.log(visitorDetails);
 
@@ -77,6 +81,9 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
   const handleOpenModal = () => {
     verifycodeRef.current?.showModal();
   };
+
+  // 8uHtKg6f
+  // 6kx5UE3Y
 
   return (
     <div
@@ -188,7 +195,7 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
                 {/* ... (rest of the visitor details section) */}
               </section>
             ) : (
-              // Default case: visitorDetails exists, but doesn't match other conditions
+              // Handle the case where visitorDetails is null or undefined
               <div className="flex flex-col justify-center items-center gap-4 mt-6">
                 <p className="w-full text-center px-4 py-2 rounded-xl bg-[#fbeae9] text-[#9e0a05] font-semibold text-2xl">
                   Invalid code!
@@ -246,6 +253,7 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
                 Border="1px solid #E3E5E5"
                 arialabel="visitorcode"
                 required={true}
+                onChange={(e) => setVisitorCode(e.target.value)}
               />
               <Button
                 variant="Primary"

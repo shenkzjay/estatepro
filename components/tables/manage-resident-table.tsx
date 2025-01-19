@@ -6,7 +6,7 @@ import { SearchBox } from "@/stories/searchbox/search";
 import { MoreIcon } from "@/public/svgIcons/moreIcon";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { Modal } from "@/stories/modal/modal";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, SetStateAction } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
 import { CreateResident } from "@/app/dashboard/admin/actions/createresident";
@@ -34,6 +34,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
   const [selectedItem, setSelectedItem] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errors, setErrors] = useState<string[]>();
 
   const [isHouseType, setIsHouseType] = useState("");
   const [index, setIndex] = useState<number | null>(null);
@@ -54,6 +55,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
   const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    setErrors([]);
 
     if (prevFormRef.current) {
       const formData = new FormData(prevFormRef.current);
@@ -75,6 +77,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
         toast.error(
           `Please fill out the following fields: ${emptyFields.map(([key]) => [key].join(", "))}`
         );
+
+        setErrors(emptyFields.map(([key]) => [key].join(", ")));
 
         return;
       }
@@ -337,6 +341,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                       <Link
                         href={`/dashboard/admin/manage-residents/details/${resident.id}`}
                         className="text-green-500"
+                        prefetch={true}
                       >
                         View →
                       </Link>

@@ -18,6 +18,7 @@ interface Input {
   defaultValue?: string;
   error?: boolean;
   errorMessage?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const Inputs = ({
@@ -37,6 +38,7 @@ export const Inputs = ({
   readOnly,
   error = false,
   errorMessage = "",
+  onChange,
 }: Input) => {
   return (
     <div className="inputwrapper">
@@ -52,6 +54,7 @@ export const Inputs = ({
           required={required}
           readOnly={readOnly}
           defaultValue={defaultValue}
+          onChange={onChange}
         />
         <label htmlFor={title} style={{ color: color, backgroundColor: labelbg }}>
           {label}

@@ -14,6 +14,7 @@ import { createNewStaffProps } from "@/app/dashboard/admin/admin-dashboard/admin
 import { StaffProps } from "@/app/dashboard/admin/manage-staffs/page";
 import { StatusPill } from "@/stories/statuspills/statuspill";
 import { nameInitials } from "@/utils/nameInitials";
+import Link from "next/link";
 
 interface ManageCreateStaffProps {
   staff: StaffProps[];
@@ -100,7 +101,7 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
                   <th className="text-start text-nowrap">Phone number</th>
                   <th className="text-start text-nowrap">Position</th>
                   <th className="text-start">Date created</th>
-                  <th className="text-start">Status</th>
+                  <th className="text-start"></th>
                   <th></th>
                 </tr>
               </thead>
@@ -134,7 +135,12 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
                       </td>
 
                       <td className="text-[12px]  flex">
-                        <StatusPill title="Paid" status="success" />
+                        <Link
+                          href={`/dashboard/admin/manage-staffs/details/${staff.id}`}
+                          className="text-primary underline"
+                        >
+                          View →
+                        </Link>
                       </td>
 
                       <td>
