@@ -26,7 +26,7 @@ export async function handleSignInAction(prev: any, formData: FormData) {
 
     if (!user) {
       return {
-        message: "Invalid username and password",
+        message: "No user found. Please contact the administrator",
       };
     }
 

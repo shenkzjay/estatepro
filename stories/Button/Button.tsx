@@ -50,7 +50,10 @@ export function Button({
           disabled={diasbled}
           type={type}
         >
-          <p className="slide-up" style={{ color: textcolor, fontSize: buttonSize }}>
+          <p
+            className="slide-up"
+            style={{ color: textcolor, fontSize: buttonSize, ...disabledStyles }}
+          >
             {label}
           </p>
 
@@ -60,7 +63,7 @@ export function Button({
 
       {iconAlign === "before" && (
         <button
-          style={{ backgroundColor: btnbgColor, color: color }}
+          style={{ backgroundColor: btnbgColor, color: color, ...disabledStyles }}
           className={`button ${variant}`}
           {...props}
           onClick={onClick}
@@ -74,7 +77,7 @@ export function Button({
 
       {iconAlign === "none" && (
         <button
-          style={{ backgroundColor: btnbgColor, color: color }}
+          style={{ backgroundColor: btnbgColor, color: color, ...disabledStyles }}
           className={`button ${variant}`}
           {...props}
           onClick={onClick}

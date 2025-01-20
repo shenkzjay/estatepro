@@ -15,6 +15,7 @@ import { StaffProps } from "@/app/dashboard/admin/manage-staffs/page";
 import { StatusPill } from "@/stories/statuspills/statuspill";
 import { nameInitials } from "@/utils/nameInitials";
 import Link from "next/link";
+import { toast, Toaster } from "sonner";
 
 interface ManageCreateStaffProps {
   staff: StaffProps[];
@@ -26,6 +27,8 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
   const createNewStaffModalRef = useRef<HTMLDialogElement | null>(null);
   const newStaffFormRef = useRef<HTMLFormElement | null>(null);
   const [allStaffs, setAllStaffs] = useState<createNewStaffProps[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   console.log(allStaffs, "allstaffs");
 
@@ -39,12 +42,22 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
 
   const handleCreateNewStaff = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     if (newStaffFormRef.current) {
       const formData = new FormData(newStaffFormRef.current);
 
-      await CreateStaff(formData);
+      const result = await CreateStaff(formData);
+
+      if (result.success === true) {
+        setShowSuccessMessage(true);
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
 
       // setAllStaffs([...allStaffs, newStaffData]);
+
+      setIsLoading(false);
 
       newStaffFormRef.current.reset();
 
@@ -55,6 +68,17 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
   return (
     <section>
       {/**Searchbox header */}
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: "bg-red-300",
+            success: "text-green-600",
+            warning: "text-yellow-600",
+            info: "bg-blue-500",
+          },
+        }}
+        offset={16}
+      />
       <section>
         <div className="flex md:flex-row flex-col justify-between p-6 gap-6 md:gap-0">
           <div className="md:w-[30vw]">
@@ -86,6 +110,20 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
             />
           </div>
         </div>
+
+        {showSuccessMessage && (
+          <div className="p-6 m-6 bg-secondary rounded-xl text-black mb-6  flex justify-between">
+            <div className="">
+              <p>A link has been sent to your email address</p>
+              <p className="">
+                Please check your inbox or spam message for the link to complete your account setup
+              </p>
+            </div>
+            <button onClick={() => setShowSuccessMessage(false)} className=" flex justify-end">
+              close
+            </button>
+          </div>
+        )}
 
         {/**create staff table */}
         <section className="px-6 bg-[#F8F8F8] ">
@@ -242,6 +280,8 @@ export function ManageCreateStaff({ staff }: ManageCreateStaffProps) {
                 iconAlign="after"
                 color="#139D8F"
                 label="Create Staff"
+                btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+                diasbled={isLoading}
               />
             </div>
           </fieldset>
