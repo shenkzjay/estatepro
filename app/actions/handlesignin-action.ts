@@ -26,7 +26,7 @@ export async function handleSignInAction(prev: any, formData: FormData) {
 
     if (!user) {
       return {
-        message: "Invalid username and password",
+        message: "No user found. Please contact the administrator",
       };
     }
 
@@ -56,7 +56,7 @@ export async function handleSignInAction(prev: any, formData: FormData) {
     // };
   } catch (error) {
     return {
-      message: `Failed to sign in user ${error}`,
+      message: `Server Error! Failed to sign in user`,
     };
   }
 

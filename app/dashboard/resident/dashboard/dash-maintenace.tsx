@@ -21,6 +21,9 @@ import { CreateMaintenanceIssues } from "../actions/create-maintainanceissues";
 import { useAdminContext } from "../../provider";
 import { MaintenanceProps } from "../maintenance/page";
 import Image from "next/image";
+import { toast, Toaster } from "sonner";
+import { DeleteIcon } from "@/public/svgIcons/deleteIcon";
+import { DeleteIssues } from "@/app/api/queries/deleteissues";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
@@ -42,14 +45,19 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
   const [selectedItem, setSelectedItem] = useState("");
 
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   //init textareaInput
   const [textareaInput, setTextareaInput] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   //init modal
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
   const FormIssuesRef = useRef<HTMLFormElement | null>(null);
+
+  const deleteConfirmationRef = useRef<HTMLDialogElement | null>(null);
 
   const viewMaintenanceRef = useRef<HTMLDialogElement | null>(null);
 
@@ -70,10 +78,9 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
     if (FormIssuesRef.current) {
       const formData = new FormData(FormIssuesRef.current);
+      setIsLoading(true);
 
       formData.append("selectedItem", selectedItem);
-
-      console.log(formData);
 
       const residentId = user?.id;
 
@@ -81,7 +88,15 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
       formData.append("residentId", residentId);
 
-      await CreateMaintenanceIssues(formData);
+      const result = await CreateMaintenanceIssues(formData);
+
+      if (result.success === true) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.error);
+      }
+
+      setIsLoading(false);
     }
 
     FormIssuesRef.current?.reset();
@@ -98,6 +113,32 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
     OpenMaintenanceDetailsModal();
   };
 
+  const OpenDeleteConfirmationModal = (index: number) => {
+    setDeleteIndex(index);
+    deleteConfirmationRef.current?.showModal();
+  };
+
+  const handleDeleteMaintenance = async () => {
+    // if (!currentIndex) return;
+    setIsLoading(true);
+    console.log("hi");
+    const issuesId = maintenance[deleteIndex!]?.id;
+
+    console.log(issuesId);
+
+    const result = await DeleteIssues(issuesId);
+
+    if (result.success === true) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+    }
+
+    setIsLoading(false);
+
+    deleteConfirmationRef.current?.close();
+  };
+
   const openIssues = maintenance && maintenance.filter((issues) => issues.status === "OPEN").length;
 
   const closedIssues =
@@ -110,6 +151,17 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
     <div
       className={`${isCollapse ? "md:ml-[18vw] ml-0" : "md:ml-[4vw] ml-0"} [transition:_margin-left_.2s_ease-out] bg-[#F8F8F8]`}
     >
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: "bg-red-300",
+            success: "text-green-200",
+            warning: "text-yellow-400",
+            info: "bg-blue-400",
+          },
+        }}
+        offset={16}
+      />
       {/* this modal was meant for success notification */}
       {/* <Modal title="" handleOpenModal={handleModalOpen} ref={modalRef}>
         <span className="flex justify-center py-6">
@@ -123,6 +175,35 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
         </div>
       </Modal> */}
 
+      {/* Delete modal */}
+      <Modal title="Delete" handleOpenModal={handleModalOpen} ref={deleteConfirmationRef}>
+        <div className="space-y-6 mt-6">
+          <p>Do you want to Delete this maintenance issue?</p>
+          <div className="flex justify-between mt-6">
+            <Button
+              bgColor=""
+              variant="Tertiary"
+              iconAlign="none"
+              btnbgColor="#FFCED3"
+              label="Cancel"
+              onClick={() => deleteConfirmationRef.current?.close()}
+              color="red"
+            />
+            <Button
+              bgColor=""
+              variant="Tertiary"
+              iconAlign="none"
+              // btnbgColor="#f4f4f4"
+              label={isLoading ? "Please wait" : "Continue"}
+              onClick={() => handleDeleteMaintenance()}
+              color="#139D8F"
+              // btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+              diasbled={isLoading}
+            />
+          </div>
+        </div>
+      </Modal>
+
       {/**View maintenance modal */}
 
       <Modal
@@ -134,7 +215,6 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
           {currentIndex !== null && maintenance && maintenance[currentIndex]?.image ? (
             <div className="flex items-center justify-center">
               <Image
-                loading="lazy"
                 src={maintenance[currentIndex].image}
                 width={200}
                 height={200}
@@ -242,16 +322,17 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
             <section className="mt-6">
               <div className="flex flex-col overflow-auto relative ">
-                <table className="tabler w-full [font-size:_clamp(.7rem,5vw,.9rem)]  rounded-t-[20px] text-left border-collapse overflow-hidden">
+                <table className="tabler w-full [font-size:_clamp(.7rem,5vw,.9rem)] rounded-t-[20px] text-left border-collapse overflow-hidden">
                   <thead className="sticky top-0">
                     <tr className="bg-[#F0F2F5] text-buttongray">
                       <th className="text-start">S/N</th>
-                      <th className="text-start">Category</th>
-                      <th className="text-start">Description</th>
+                      <th className="text-start">Services</th>
+
                       {/* <th className="text-start text-nowrap">Location</th> */}
                       <th className="text-start">Date</th>
                       <th>Status</th>
-                      <th></th>
+                      <th className="text-start"></th>
+                      <th className=""></th>
                     </tr>
                   </thead>
                   <tbody className="bg-white p-0 w-full">
@@ -265,9 +346,6 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
                             <div className="">
                               <p className="text-buttongray">{issues.category}</p>
                             </div>
-                          </td>
-                          <td className="text-buttongray py-6 text-nowrap text-[12px] ">
-                            <p>{`${issues.description.split(" ").slice(0, 5).join(" ")}...`}</p>
                           </td>
 
                           {/* <td className="text-buttongray py-6 text-nowrap">
@@ -296,11 +374,20 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
                               </button>
                             </span>
                           </td>
+                          <td className="text-buttongray py-6 text-nowrap text-[12px] ">
+                            <button
+                              className="text-red-600"
+                              type="button"
+                              onClick={() => OpenDeleteConfirmationModal(index)}
+                            >
+                              <DeleteIcon />
+                            </button>
+                          </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td>No issues </td>
+                        <td className="col-span-6">No issues </td>
                       </tr>
                     )}
                   </tbody>
@@ -384,11 +471,13 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
 
           <div className="flex justify-center w-full mt-6">
             <Button
-              label="Submit request"
+              label={isLoading ? "Loading" : "Submit request"}
               variant="Primary"
               iconAlign="after"
               icon={LinkArrow}
               bgColor="#1AD9C5"
+              diasbled={isLoading}
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
               onClick={handleSubmitRequest}
             />
           </div>

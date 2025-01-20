@@ -444,9 +444,10 @@ export const VisitorsCodeTable = ({ visitors }: VisitorTableProp) => {
             <Button
               variant="Primary"
               onClick={() => console.log("hi")}
-              label="Generate code"
+              label={isLoading ? "Loading" : "Generate code"}
               iconAlign="after"
               bgColor="#1AD9C5"
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
               diasbled={isLoading}
             />
             {/* <SubmitButton ButtonName="Generate code" /> */}

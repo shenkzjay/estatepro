@@ -16,6 +16,9 @@ interface Input {
   required: boolean;
   readOnly?: boolean;
   defaultValue?: string;
+  error?: boolean;
+  errorMessage?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const Inputs = ({
@@ -33,27 +36,31 @@ export const Inputs = ({
   arialabel,
   required,
   readOnly,
+  error = false,
+  errorMessage = "",
+  onChange,
 }: Input) => {
   return (
-    <div
-      className="inputwrapper"
-      style={{ backgroundColor: inputBg, border: Border, borderRadius: BorderRadius }}
-    >
-      <input
-        type={inputtype}
-        name={title}
-        value={value}
-        className="inputbox"
-        placeholder={placeholder}
-        aria-label={arialabel}
-        id={title}
-        required={required}
-        readOnly={readOnly}
-        defaultValue={defaultValue}
-      />
-      <label htmlFor={title} style={{ color: color, backgroundColor: labelbg }}>
-        {label}
-      </label>
+    <div className="inputwrapper">
+      <div style={{ backgroundColor: inputBg, border: Border, borderRadius: BorderRadius }}>
+        <input
+          type={inputtype}
+          name={title}
+          value={value}
+          className={`inputbox ${error ? "error" : ""}`}
+          placeholder={placeholder}
+          aria-label={arialabel}
+          id={title}
+          required={required}
+          readOnly={readOnly}
+          defaultValue={defaultValue}
+          onChange={onChange}
+        />
+        <label htmlFor={title} style={{ color: color, backgroundColor: labelbg }}>
+          {label}
+        </label>
+      </div>
+      {error && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };

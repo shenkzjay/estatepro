@@ -28,6 +28,7 @@ interface houseData {
   streetaddress?: string;
   housetype?: string;
   moveindate?: string;
+  residentcode: string;
   vehicle: vehicleData[];
   payment: Payment[];
   occupants: Occupants[];
@@ -44,7 +45,7 @@ interface Maintenance {
   createdAt?: Date;
 }
 
-interface Payment {
+export interface Payment {
   id: string;
   duedate: string;
   paymenttype: string;

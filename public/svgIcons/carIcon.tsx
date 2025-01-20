@@ -7,8 +7,8 @@ export const CarIcon = () => {
         fill="#000000"
         version="1.1"
         id="Capa_1"
-        width="150px"
-        height="100px"
+        width="100px"
+        height="80px"
         viewBox="0 0 31.445 31.445"
         xmlSpace="preserve"
       >

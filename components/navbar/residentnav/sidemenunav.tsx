@@ -53,7 +53,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div className="hover:bg-primary rounded-[4px]">
-                  <Link href={"/dashboard/resident"}>
+                  <Link href={"/dashboard/resident"} prefetch={true}>
                     <Pills
                       pillText="Home"
                       bgColor="transparent"
@@ -67,7 +67,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/dashboard/resident"}>
+                  <Link href={"/dashboard/resident"} prefetch={true}>
                     {" "}
                     <Pills
                       pillText=""
@@ -87,7 +87,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/dashboard/resident/payment"}>
+                  <Link href={"/dashboard/resident/payment"} prefetch={true}>
                     <Pills
                       pillText="Payments"
                       bgColor="transparent"
@@ -101,7 +101,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/dashboard/resident/payment"}>
+                  <Link href={"/dashboard/resident/payment"} prefetch={true}>
                     {" "}
                     <Pills
                       pillText=""
@@ -120,7 +120,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/dashboard/resident/maintenance"}>
+                  <Link href={"/dashboard/resident/maintenance"} prefetch={true}>
                     <Pills
                       pillText="Maintenance & issues"
                       bgColor="transparent"
@@ -134,7 +134,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/dashboard/resident/maintenance"}>
+                  <Link href={"/dashboard/resident/maintenance"} prefetch={true}>
                     {" "}
                     <Pills
                       pillText=""
@@ -167,7 +167,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
                 >
-                  <Link href={"/dashboard/resident/estate-updates"}>
+                  <Link href={"/dashboard/resident/estate-updates"} prefetch={true}>
                     {" "}
                     <Pills
                       pillText=""
@@ -215,7 +215,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] mt-20`}
                 >
-                  <Link href={"/dashboard/resident/settings"}>
+                  <Link href={"/dashboard/resident/settings"} prefetch={true}>
                     <Pills
                       pillText="Settings"
                       bgColor="transparent"
@@ -229,7 +229,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 <div
                   className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] mt-20`}
                 >
-                  <Link href={"/dashboard/resident/settings"}>
+                  <Link href={"/dashboard/resident/settings"} prefetch={true}>
                     {" "}
                     <Pills
                       pillText=""

@@ -22,6 +22,7 @@ export const getAllResidentDetails = unstable_cache(
               streetaddress: true,
               housetype: true,
               phonenumber: true,
+              residentcode: true,
               moveindate: true,
               vehicle: {
                 select: {

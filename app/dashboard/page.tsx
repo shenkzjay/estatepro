@@ -1,29 +1,12 @@
-import { redirect } from "next/navigation";
-import { GetUsers } from "../api/queries/getuser-session";
+import { DashboardSuspense } from "./dashboard";
+import { Suspense } from "react";
+import { CircleSpinner } from "@/components/app-modals/spinners/circlespinner";
 
 export const dynamic = "force-dynamic";
-
 export default async function HomeAdminDashboard() {
-  const user = await GetUsers();
-
-  if (!user) {
-    redirect("/signin");
-    // return (
-    //   <div>
-    //     <span>Oops Error</span>
-    //     <p>You don&apos;t have sufficient clearance to view this page</p>
-    //     <Link href="/auth/signin">Please login to continue</Link>
-    //   </div>
-    // );
-  }
-
-  if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
-    return redirect("/dashboard/admin");
-  } else if (user.role === "RESIDENT") {
-    return redirect("/dashboard/resident");
-  } else if (user.role === "STAFF") {
-    return redirect("/dashboard/staff");
-  } else {
-    return redirect("/signin");
-  }
+  return (
+    <Suspense fallback={<CircleSpinner />}>
+      <DashboardSuspense />
+    </Suspense>
+  );
 }

@@ -31,13 +31,15 @@ export async function CreateStaff(formData: FormData) {
 
     if (duplicateUser) {
       return {
+        success: false,
+        message: "Duplicate user",
         error: "Duplicate user",
       };
     }
 
     console.log({ completesignuptoken });
 
-    const magiclink = `http://localhost:3000/auth/completesignup?token=${completesignuptoken}`;
+    const magiclink = `http://localhost:3000/completesignup?token=${completesignuptoken}`;
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -88,11 +90,15 @@ export async function CreateStaff(formData: FormData) {
     revalidateTag("get-staff");
 
     return {
+      error: null,
       message: "new Staff created successfully",
+      success: true,
     };
   } catch (error) {
     return {
-      message: `Error creating new staff: ${error}`,
+      message: `Error creating new staff`,
+      error: error,
+      success: false,
     };
   }
 }

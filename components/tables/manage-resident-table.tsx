@@ -6,17 +6,19 @@ import { SearchBox } from "@/stories/searchbox/search";
 import { MoreIcon } from "@/public/svgIcons/moreIcon";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
 import { Modal } from "@/stories/modal/modal";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, SetStateAction } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Select } from "@/stories/select/select";
 import { CreateResident } from "@/app/dashboard/admin/actions/createresident";
 import { StatusPill } from "@/stories/statuspills/statuspill";
 import Link from "next/link";
+import { Toaster, toast } from "sonner";
 
 import { nameInitials } from "@/utils/nameInitials";
 import { residentShit } from "@/app/dashboard/admin/admin-dashboard/admin-residents";
 
 import { usePagination } from "@/hooks/usePagination";
+import { SearchBoxArea } from "../search-box";
 
 interface residentDataProps {
   residents: residentShit[];
@@ -30,6 +32,9 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   const [currentState, setCurrentState] = useState(1);
   const [selectedItem, setSelectedItem] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errors, setErrors] = useState<string[]>();
 
   const [isHouseType, setIsHouseType] = useState("");
   const [index, setIndex] = useState<number | null>(null);
@@ -50,9 +55,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
   const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (currentState <= 2) {
-      setCurrentState((prev) => prev + 1);
-    }
+    setErrors([]);
 
     if (prevFormRef.current) {
       const formData = new FormData(prevFormRef.current);
@@ -68,13 +71,30 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       };
       formData.append("houseType", isHouseType);
 
+      const emptyFields = Object.entries(residentFormData).filter(([key, value]) => !value);
+
+      if (emptyFields.length > 0) {
+        toast.error(
+          `Please fill out the following fields: ${emptyFields.map(([key]) => [key].join(", "))}`
+        );
+
+        setErrors(emptyFields.map(([key]) => [key].join(", ")));
+
+        return;
+      }
+
       sessionStorage.setItem("resident", JSON.stringify(residentFormData));
+
+      if (currentState <= 2) {
+        setCurrentState((prev) => prev + 1);
+      }
     }
   };
 
   const handleAddNewResident = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     //get the resident details from session
+    setIsLoading(true);
     const prevResidentData = JSON.parse(sessionStorage.getItem("resident") as string);
 
     if (prevFormRef.current) {
@@ -91,6 +111,13 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       const newRes = await CreateResident(formData);
 
       console.log(newRes);
+
+      if (newRes.success === true) {
+        toast.success(newRes.message);
+        setShowSuccessMessage(true);
+      } else {
+        toast.error(newRes.error);
+      }
 
       //set resident data to state
       // setResidentData((prevResidentData) => [...prevResidentData, newRes.newResident]);
@@ -110,6 +137,8 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
       //reset dropdown item
       setSelectedItem("");
+
+      setIsLoading(false);
 
       console.log("resident", residentDatas);
     }
@@ -171,15 +200,27 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
 
   return (
     <section>
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: "bg-red-300",
+            success: "text-green-200",
+            warning: "text-yellow-400",
+            info: "bg-blue-400",
+          },
+        }}
+        offset={16}
+      />
       {/**Searchbox header */}
       <div className="flex md:flex-row flex-col justify-between p-6 gap-6 md:gap-0">
         <div className="md:w-[30vw]">
-          <SearchBox
+          {/* <SearchBox
             bgColor="#EFF0F1"
             placeholder="Search house number or name"
             name="SearchResidents"
             color="#b4b4b4"
-          />
+          /> */}
+          <SearchBoxArea />
         </div>
         <div className="flex flex-row gap-6 flex-wrap">
           <Button
@@ -206,6 +247,19 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
       {/**create resident table */}
       <section className="px-6 bg-[#F8F8F8] ">
         <h3 className="mb-6 text-xl text-buttongray font-semibold ">Residents</h3>
+        {showSuccessMessage && (
+          <div className="p-6 bg-secondary rounded-xl text-black mb-6  flex w-full">
+            <div className="w-full">
+              <p>A link has been sent to your email address</p>
+              <p className="">
+                Please check your inbox or spam message for the link to complete your account setup
+              </p>
+            </div>
+            <button onClick={() => setShowSuccessMessage(false)} className=" flex justify-end">
+              close
+            </button>
+          </div>
+        )}
 
         {selectedCheckbox.length > 0 && residentDatas.length > 0 && (
           <div>
@@ -287,6 +341,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                       <Link
                         href={`/dashboard/admin/manage-residents/details/${resident.id}`}
                         className="text-green-500"
+                        prefetch={true}
                       >
                         View →
                       </Link>
@@ -379,7 +434,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                       arialabel="fullname"
                       BorderRadius="10px"
                       inputtype="text"
-                      required={false}
+                      required={true}
                       Border="1px solid #E3E5E5"
                     />
                   </div>
@@ -533,11 +588,14 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                     color="#139D8F"
                   />
                   <Button
-                    label="Create"
+                    label={isLoading ? "Loading" : "Create resident"}
                     onClick={handleAddNewResident}
                     iconAlign="after"
                     variant="Primary"
                     color="#139D8F"
+                    // bgColor={isLoading ? "#f4f4f4" : "#1AD9C5"}
+                    btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+                    diasbled={isLoading}
                   />
                 </div>
               </fieldset>

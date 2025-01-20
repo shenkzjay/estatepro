@@ -195,17 +195,27 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
       <div className="flex md:flex-row flex-col gap-6 m-6">
         <div className="h-full md:w-1/2 bg-white p-6 rounded-xl flex flex-col gap-8">
           <h3 className="text-xl font-semibold text-buttongray">Resident details</h3>
-          <div>
-            <p className="text-buttongray">Resident name</p>
-            <p className="font-semibold"> {residents?.name}</p>
-          </div>
-          <div>
-            <p className="text-buttongray">Resident Phone number</p>
-            <p className="font-semibold"> {residents?.residentData?.phonenumber}</p>
-          </div>
-          <div>
-            <p className="text-buttongray">Resident email</p>
-            <p className="font-semibold"> {residents?.email}</p>
+          <div className="flex flex-row">
+            <div className="w-1/2 flex flex-col gap-6">
+              <div>
+                <p className="text-buttongray">Resident name</p>
+                <p className="font-semibold"> {residents?.name}</p>
+              </div>
+              <div>
+                <p className="text-buttongray">Resident Phone number</p>
+                <p className="font-semibold"> {residents?.residentData?.phonenumber}</p>
+              </div>
+              <div>
+                <p className="text-buttongray">Resident email</p>
+                <p className="font-semibold"> {residents?.email}</p>
+              </div>
+            </div>
+            <div>
+              <div>
+                <p className="text-buttongray">Resident code</p>
+                <p className="font-semibold text-2xl"> {residents?.residentData?.residentcode}</p>
+              </div>
+            </div>
           </div>
           <div>
             <div className="flex justify-between items-center">
