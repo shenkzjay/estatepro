@@ -83,7 +83,7 @@ export async function CreateResident(formData: FormData) {
 
     console.log({ completesignuptoken });
 
-    const magiclink = `${process.env.APPLICATION_URL}/completesignup?token=${completesignuptoken}`;
+    const magiclink = `${process.env.NEXT_PUBLIC_APPLICATION_URL}/completesignup?token=${completesignuptoken}`;
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
