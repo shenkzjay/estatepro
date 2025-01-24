@@ -204,9 +204,9 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
         toastOptions={{
           classNames: {
             error: "bg-red-300",
-            success: "text-green-200",
-            warning: "text-yellow-400",
-            info: "bg-blue-400",
+            success: "text-green-600",
+            warning: "text-yellow-600",
+            info: "bg-blue-500",
           },
         }}
         offset={16}
@@ -341,7 +341,7 @@ export const ManageCreateResidentTable = ({ residents }: residentDataProps) => {
                       <Link
                         href={`/dashboard/admin/manage-residents/details/${resident.id}`}
                         className="text-green-500"
-                        prefetch={true}
+                        prefetch={false}
                       >
                         View →
                       </Link>
