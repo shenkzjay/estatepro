@@ -11,18 +11,34 @@ import { FilterIcon } from "@/public/svgIcons/filter";
 import { DownoadIcon } from "@/public/svgIcons/downloadIcon";
 import { useAdminContext } from "../../provider";
 import { PaymentStatus } from "@prisma/client";
-import { PaymentProp } from "../payment/page";
+import { PaymentProp, ResidentPaymentProp } from "../payment/page";
+import { useState, useEffect, SetStateAction } from "react";
 
 export const DashPayment = ({ payments }: PaymentProp) => {
   console.log({ payments });
 
-  const pendingPayment = payments?.payments.filter(
-    (payment) => payment.paymentstatus === "PENDING"
-  );
+  const [payment, setPayment] = useState(payments || []);
 
-  const paidPayment = payments.payments.filter((payment) => payment.paymentstatus === "PAID");
+  useEffect(() => {
+    if (payments) {
+      setPayment(payments);
+    }
+  }, [payments]);
+
+  const pendingPayment = payment?.payments.filter((payment) => payment.paymentstatus === "PENDING");
+
+  const paidPayment = payment.payments.filter((payment) => payment.paymentstatus === "PAID");
 
   const { isCollapse } = useAdminContext();
+
+  const getStatusPillType = (paymentStatus: PaymentStatus, dueDate: Date | null) => {
+    const isOverdue = Date.now() > new Date(dueDate!).getTime();
+    if (paymentStatus === PaymentStatus.PAID && isOverdue) return "success";
+    if (isOverdue) return "danger";
+    if (paymentStatus === PaymentStatus.PAID) return "success";
+    if (isOverdue) return "success";
+    return "warning";
+  };
 
   return (
     <div>
@@ -70,13 +86,17 @@ export const DashPayment = ({ payments }: PaymentProp) => {
                       <td>
                         {/* <p className="text-buttongray">{payment.paymentstatus}</p> */}
                         <StatusPill
-                          title={payment.paymentstatus as PaymentStatus}
-                          status={
-                            payment.paymentstatus === "OVERDUE"
-                              ? "danger"
-                              : payment.paymentstatus === "PENDING"
-                                ? "warning"
-                                : "success"
+                          status={getStatusPillType(
+                            payment?.paymentstatus as PaymentStatus,
+                            payment.duedate
+                          )}
+                          title={
+                            Date.now() > new Date(payment?.duedate!).getTime() &&
+                            payment.paymentstatus === "PAID"
+                              ? (payment.paymentstatus as string)
+                              : Date.now() > new Date(payment.duedate!).getTime()
+                                ? "Overdue"
+                                : (payment.paymentstatus as string)
                           }
                         />
                       </td>

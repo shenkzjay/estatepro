@@ -63,6 +63,7 @@ model Vehicle {
   vehiclemake   String?
   vehiclemodel  String?
   vehiclecolor  String?
+
 }
 
 

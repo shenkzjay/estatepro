@@ -155,7 +155,7 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
         toastOptions={{
           classNames: {
             error: "bg-red-300",
-            success: "text-green-200",
+            success: "text-green-500",
             warning: "text-yellow-400",
             info: "bg-blue-400",
           },

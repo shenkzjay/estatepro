@@ -38,7 +38,7 @@ export async function AddVehicle(formData: FormData) {
           create: {
             vehiclecolor: vehicleDetails.vehiclecolor,
             vehiclemake: vehicleDetails.vehiclemake,
-            vehiclemodel: vehicleDetails.vehiclemake,
+            vehiclemodel: vehicleDetails.vehiclemodel,
             vehiclenumber: vehicleDetails.vehiclenumber,
           },
         },
