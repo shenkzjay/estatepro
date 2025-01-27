@@ -211,7 +211,7 @@ export const ResidentDashMaintenance = ({ maintenance }: MaintainanceIssuesProp)
         handleOpenModal={OpenMaintenanceDetailsModal}
         ref={viewMaintenanceRef}
       >
-        <div className="w-[25rem] flex flex-col gap-4 mt-6">
+        <div className="md:w-[25rem] flex flex-col gap-4 mt-6">
           {currentIndex !== null && maintenance && maintenance[currentIndex]?.image ? (
             <div className="flex items-center justify-center">
               <Image

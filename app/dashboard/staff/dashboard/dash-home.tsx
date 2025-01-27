@@ -223,7 +223,7 @@ export const StaffHome = ({ isCollapse }: DashBoardNavProp) => {
 
       <DashBoardHeader title="Home" />
       <section className="bg-[#F8F8F8] p-6 flex md:flex-row flex-col gap-6 w-full">
-        <div className="w-[40%] flex flex-col h-full ">
+        <div className="md:w-[40%] flex flex-col h-full ">
           <div className=" py-10 flex flex-col gap-2 items-center bg-white p-6 rounded-xl">
             <h3>Scan QR Code</h3>
             <QRCode />
