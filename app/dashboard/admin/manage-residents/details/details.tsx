@@ -87,7 +87,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
         <div className="md:w-[50%] m-6  h-full flex flex-col  gap-6 ">
           <figure className="bg-white p-6 rounded-xl ">
             <figcaption>Personal details</figcaption>
-            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6">
+            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6 text-sm">
               <div>
                 <p className="text-sm text-buttongray">Name</p>
                 <p>{resident?.name}</p>
@@ -107,7 +107,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
 
           <figure className="rounded-xl bg-white p-6">
             <figcaption>Residence details</figcaption>
-            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6">
+            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6 text-sm">
               <div>
                 <p className="text-sm text-buttongray">Address</p>
                 <p>
@@ -129,7 +129,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
 
           <figure className="rounded-xl bg-white p-6">
             <figcaption>Payments</figcaption>
-            <div className="flex flex-row justify-between mt-6">
+            <div className="flex flex-row justify-between mt-6 text-sm">
               <div className="w-full">
                 <div className="grid grid-cols-4 text-sm text-buttongray">
                   <p>Name</p>

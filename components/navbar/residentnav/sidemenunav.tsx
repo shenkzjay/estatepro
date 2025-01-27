@@ -52,7 +52,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
           <ul className="text-[14px] mt-12 flex flex-col gap-1 text-nowrap" id="collapse">
             <li>
               {isCollapse ? (
-                <div className="hover:bg-primary rounded-[4px]">
+                <div className="hover:bg-white/20 rounded-[4px]">
                   <Link href={"/dashboard/resident"} prefetch={true}>
                     <Pills
                       pillText="Home"
@@ -65,7 +65,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident"} prefetch={true}>
                     {" "}
@@ -85,7 +85,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident/payment"} prefetch={true}>
                     <Pills
@@ -99,7 +99,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/payment" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident/payment"} prefetch={true}>
                     {" "}
@@ -118,7 +118,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident/maintenance"} prefetch={true}>
                     <Pills
@@ -132,7 +132,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/maintenance" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident/maintenance"} prefetch={true}>
                     {" "}
@@ -151,7 +151,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident/estate-updates"}>
                     <Pills
@@ -165,7 +165,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/resident/estate-updates" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/resident/estate-updates"} prefetch={true}>
                     {" "}
@@ -183,7 +183,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             </li>
             <li>
               {isCollapse ? (
-                <div className="relative hover:bg-primary rounded-[4px]">
+                <div className="relative hover:bg-white/20 rounded-[4px]">
                   <Link href={"/"}>
                     <Pills
                       pillText="Marketplace"
@@ -195,7 +195,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                   </Link>
                 </div>
               ) : (
-                <div className="relative hover:bg-primary rounded-[4px]">
+                <div className="relative hover:bg-white/20 rounded-[4px]">
                   <Link href={"/"}>
                     {" "}
                     <Pills
@@ -213,7 +213,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] mt-20`}
+                  className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px] mt-20`}
                 >
                   <Link href={"/dashboard/resident/settings"} prefetch={true}>
                     <Pills
@@ -227,7 +227,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-primary rounded-[4px] mt-20`}
+                  className={`${pathname === "/dashboard/resident/settings" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px] mt-20`}
                 >
                   <Link href={"/dashboard/resident/settings"} prefetch={true}>
                     {" "}
