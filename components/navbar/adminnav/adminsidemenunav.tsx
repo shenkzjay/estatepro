@@ -54,7 +54,7 @@ export const AdminSideMenuNav = () => {
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/admin" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin"}>
                     <Pills
@@ -68,7 +68,7 @@ export const AdminSideMenuNav = () => {
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/admin" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin"}>
                     {" "}
@@ -87,7 +87,7 @@ export const AdminSideMenuNav = () => {
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-residents"}>
                     <Pills
@@ -101,7 +101,7 @@ export const AdminSideMenuNav = () => {
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-residents" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-residents"}>
                     {" "}
@@ -120,7 +120,7 @@ export const AdminSideMenuNav = () => {
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-staffs" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-staffs" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-staffs"}>
                     <Pills
@@ -134,7 +134,7 @@ export const AdminSideMenuNav = () => {
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-staffs" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-staffs" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-staffs"}>
                     {" "}
@@ -153,7 +153,7 @@ export const AdminSideMenuNav = () => {
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-vendors" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-vendors" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-vendors"}>
                     <Pills
@@ -167,7 +167,7 @@ export const AdminSideMenuNav = () => {
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-vendors" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-vendors" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-vendors"}>
                     {" "}
@@ -186,7 +186,7 @@ export const AdminSideMenuNav = () => {
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-updates" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-updates"}>
                     <Pills
@@ -200,7 +200,7 @@ export const AdminSideMenuNav = () => {
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/admin/manage-updates" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/admin/manage-updates" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/admin/manage-updates"}>
                     {" "}

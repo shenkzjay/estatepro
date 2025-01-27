@@ -92,7 +92,7 @@ export const AdminHome = ({ users }: AdminDashBoardProp) => {
           </div>
           <div className="bg-white p-6 rounded-[12px] space-y-4">
             <h4 className="text-sm">Vendors</h4>
-            <p className="font-bold text-3xl flex text-left">48</p>
+            <p className="font-bold text-3xl flex text-left">--</p>
           </div>
           <div className="bg-white p-6 rounded-[12px] space-y-4">
             <h4 className="text-sm">Staff</h4>
@@ -104,7 +104,7 @@ export const AdminHome = ({ users }: AdminDashBoardProp) => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row gap-2">
               <h3 className="font-semibold">Today&apos;s updates</h3>
-              <span className="text-buttongray">{`(${updates ? updates.length : ""})`}</span>
+              <span className="text-buttongray">{`(${updates ? updates.length : "No updates"})`}</span>
             </div>
             {/* <div>
               <p className="text-sm">See all</p>

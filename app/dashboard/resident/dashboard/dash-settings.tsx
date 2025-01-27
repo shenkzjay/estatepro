@@ -4,7 +4,7 @@ import { DashBreadcrumbs } from "@/components/dashboardheader/dash-breadcrumbs";
 import { DashBoardHeader } from "@/components/dashboardheader/dash-header";
 
 import { useAdminContext } from "../../provider";
-import { residentShit } from "../../admin/admin-dashboard/admin-residents";
+import { residentShit, vehicleData } from "../../admin/admin-dashboard/admin-residents";
 import { Button } from "@/stories/Button/Button";
 import { FilterIcon } from "@/public/svgIcons/filter";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
@@ -12,16 +12,26 @@ import { LinkArrow } from "@/public/svgIcons/linkarrow";
 import { CarIcon } from "@/public/svgIcons/carIcon";
 import { Inputs } from "@/stories/input/input";
 import { Modal } from "@/stories/modal/modal";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { AddVehicle } from "../actions/addvehicle";
 import { ProfileIcon } from "@/public/svgIcons/profileIcon";
 import { AddOccupants } from "../actions/addoccupants";
+import Image from "next/image";
+import Car from "@/public/img/car.png";
+import { DeleteIcon } from "@/public/svgIcons/deleteIcon";
+import { updateVehicle } from "../actions/updateVehicle";
+import { toast, Toaster } from "sonner";
+import { deleteVehicle } from "../actions/deleteVehicle";
+import { EditIcon } from "@/public/svgIcons/editIcon";
+import { updateResidentName } from "../actions/updateName";
 
 interface ResidentDashboardSettingsProp {
   residents: residentShit;
 }
 
 export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) => {
+  console.log(residents);
+
   const { isCollapse } = useAdminContext();
 
   //   const resident = residents.residentData
@@ -33,6 +43,18 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
   const vehicleFormRef = useRef<HTMLFormElement | null>(null);
 
   const occupantsFormRef = useRef<HTMLFormElement | null>(null);
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+
+  const [isEditingPhoneNumber, setIsEditingPhoneNumber] = useState<boolean>(false);
+
+  const [updatedText, setUpdatedText] = useState("");
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [currentVehicle, setCurrentVehicle] = useState<vehicleData>();
 
   const OpenOccupantsModal = () => {
     occupantsRef.current?.showModal();
@@ -51,6 +73,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
 
   const handleAddVehicle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     if (vehicleFormRef.current) {
       const formData = new FormData(vehicleFormRef.current);
 
@@ -62,6 +85,8 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
 
       await AddVehicle(formData);
     }
+
+    setIsLoading(false);
 
     vehicleFormRef.current?.reset();
 
@@ -87,10 +112,75 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
     occupantsRef.current?.close();
   };
 
+  const handleUpdateVehicle = (index: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    const vehicle = residents.residentData?.vehicle[index];
+
+    setCurrentVehicle(vehicle);
+
+    setIsEditing(true);
+    OpenVehicleModal();
+  };
+
+  const handleSubmitUpdateVehicle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    if (vehicleFormRef.current) {
+      const formData = new FormData(vehicleFormRef.current);
+
+      formData.append("vehicleId", currentVehicle?.id || "");
+
+      const result = await updateVehicle(formData);
+
+      if (result.success === true) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+
+      setIsLoading(false);
+      setIsEditing(false);
+      vehicleFormRef.current.reset();
+      vehicleRef.current?.close();
+    }
+  };
+
+  const handleDeleteVehicle = async (vehicleId: string) => {
+    const result = await deleteVehicle(vehicleId);
+
+    if (result.success === true) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+    }
+  };
+
+  const handleUpdateResidentName = async (residentId: string) => {
+    console.log(updatedText, residentId);
+
+    setIsEditing(true);
+
+    await updateResidentName(residentId, updatedText);
+
+    setIsEditingName(false);
+
+    setIsEditing(false);
+  };
+
   return (
     <div
       className={`${isCollapse ? "md:ml-[18vw] ml-0" : "md:ml-[4vw] ml-0"} [transition:_margin-left_.2s_ease-out] bg-[#F8F8F8]`}
     >
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: "bg-red-300",
+            success: "text-green-500",
+            warning: "text-yellow-400",
+            info: "bg-blue-400",
+          },
+        }}
+        offset={16}
+      />
       <DashBoardHeader title="Settings" />
       <DashBreadcrumbs title="Settings" />
 
@@ -144,6 +234,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
               BorderRadius="10px"
               inputtype="text"
               required={true}
+              defaultValue={isEditing ? currentVehicle?.vehiclemake : ""}
               Border="1px solid #E3E5E5"
             />
 
@@ -156,6 +247,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
               inputtype="text"
               required={true}
               Border="1px solid #E3E5E5"
+              defaultValue={isEditing ? currentVehicle?.vehiclemodel : ""}
             />
 
             <Inputs
@@ -167,6 +259,7 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
               inputtype="text"
               required={true}
               Border="1px solid #E3E5E5"
+              defaultValue={isEditing ? currentVehicle?.vehiclenumber : ""}
             />
 
             <Inputs
@@ -178,40 +271,145 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
               inputtype="text"
               required={true}
               Border="1px solid #E3E5E5"
+              defaultValue={isEditing ? currentVehicle?.vehiclecolor : ""}
             />
           </div>
 
-          <Button
-            variant="Primary"
-            iconAlign="after"
-            label="Add vehicle"
-            icon={LinkArrow}
-            onClick={handleAddVehicle}
-            color="#139D8F"
-          />
+          {isEditing ? (
+            <Button
+              variant="Primary"
+              iconAlign="after"
+              label="Update vehicle"
+              icon={LinkArrow}
+              onClick={handleSubmitUpdateVehicle}
+              color="#139D8F"
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+              diasbled={isLoading}
+            />
+          ) : (
+            <Button
+              variant="Primary"
+              iconAlign="after"
+              label="Add vehicle"
+              icon={LinkArrow}
+              onClick={handleAddVehicle}
+              color="#139D8F"
+              btnbgColor={isLoading ? "#c4c4c4" : "#139D8F"}
+              diasbled={isLoading}
+            />
+          )}
         </form>
       </Modal>
 
       <div className="flex md:flex-row flex-col gap-6 m-6">
         <div className="h-full md:w-1/2 bg-white p-6 rounded-xl flex flex-col gap-8">
           <h3 className="text-xl font-semibold text-buttongray">Resident details</h3>
-          <div className="flex flex-row">
+          <div className="flex md:flex-row flex-col">
             <div className="w-1/2 flex flex-col gap-6">
-              <div>
+              {/* edit resident name */}
+              <div className="">
                 <p className="text-buttongray">Resident name</p>
-                <p className="font-semibold"> {residents?.name}</p>
+                <div className="flex flex-row gap-6 item-center mt-0">
+                  {isEditingName ? (
+                    <div>
+                      <input
+                        type="text"
+                        className="w-[10rem] border px-4 py-2 rounded-[8px]"
+                        defaultValue={residents.name || ""}
+                        autoFocus={isEditingName}
+                        onBlur={() => setIsEditingName(false)}
+                        // value={updatedText}
+                        onChange={(e) => setUpdatedText(e.target.value)}
+                      />
+                      <div className="flex gap-6 text-xs mt-2">
+                        <button
+                          type="button"
+                          className="py-1 px-2  rounded-[8px]"
+                          onClick={() => setIsEditingName(false)}
+                        >
+                          cancel
+                        </button>
+                        <button
+                          disabled={isEditing}
+                          type="button"
+                          onClick={() => handleUpdateResidentName(residents.id)}
+                          className={`py-1 px-2 ${isEditing ? "bg-slate-100 cursor-not-allowed" : "bg-secondary"} rounded-[8px]`}
+                        >
+                          update
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      role="button"
+                      onClick={() => setIsEditingName(true)}
+                      className="flex flex-row gap-6"
+                    >
+                      <span className=" font-semibold "> {residents?.name}</span>
+                      <button className="text-blue-500">
+                        <EditIcon />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/**Edit resident phone number */}
               <div>
                 <p className="text-buttongray">Resident Phone number</p>
-                <p className="font-semibold"> {residents?.residentData?.phonenumber}</p>
+                {isEditingPhoneNumber ? (
+                  <div>
+                    <input
+                      type="text"
+                      className="w-[10rem] border px-4 py-2 rounded-[8px] text-sm"
+                      defaultValue={residents.residentData?.phonenumber || ""}
+                      autoFocus={isEditingPhoneNumber}
+                      onBlur={() => setIsEditingPhoneNumber(false)}
+                      // value={updatedText}
+                      onChange={(e) => setUpdatedText(e.target.value)}
+                    />
+                    <div className="flex gap-6 text-xs mt-2">
+                      <button
+                        type="button"
+                        className="py-1 px-2  rounded-[8px]"
+                        onClick={() => setIsEditingPhoneNumber(false)}
+                      >
+                        cancel
+                      </button>
+                      <button
+                        disabled={isEditing}
+                        type="button"
+                        onClick={() => ""}
+                        className={`py-1 px-2 ${isEditing ? "bg-slate-100 cursor-not-allowed" : "bg-secondary"} rounded-[8px]`}
+                      >
+                        update
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div
+                      role="button"
+                      onClick={() => setIsEditingPhoneNumber(true)}
+                      className="flex flex-row gap-6"
+                    >
+                      <span className="font-semibold"> {residents?.residentData?.phonenumber}</span>
+
+                      <button className="text-blue-500">
+                        <EditIcon />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+
               <div>
                 <p className="text-buttongray">Resident email</p>
                 <p className="font-semibold"> {residents?.email}</p>
               </div>
             </div>
             <div>
-              <div>
+              <div className="mt-6 md:mt-0">
                 <p className="text-buttongray">Resident code</p>
                 <p className="font-semibold text-2xl"> {residents?.residentData?.residentcode}</p>
               </div>
@@ -299,24 +497,55 @@ export const DashBoardSettings = ({ residents }: ResidentDashboardSettingsProp) 
                   return (
                     <div className="px-3 py-2 " key={index}>
                       <div className="bg-slate-50 flex md:flex-row flex-col justify-between items-center gap-2 rounded-xl">
-                        <div className=" [transform:scale(-1,1)]">
-                          <div className=" ">
-                            <CarIcon />
+                        <div className="w-1/4 ">
+                          <Image
+                            src={Car}
+                            width={150}
+                            height={150}
+                            alt="car Icon"
+                            className="object-cover h-[50px] w-[150px]"
+                          />
+                        </div>
+
+                        <div className="flex flex-row text-xs md:w-2/4 justify-center gap-6 p-4">
+                          <div className="flex flex-col gap-2">
+                            <div className="">
+                              <p className="text-buttongray"> vehicle make</p>
+                              <p className="text-black uppercase">
+                                <b>{vehicles.vehiclemake}</b>
+                              </p>
+                            </div>
+
+                            <div>
+                              <p className="text-buttongray">vehicle model</p>
+                              <p className="text-black uppercase">
+                                <b>{vehicles.vehiclemodel}</b>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <div>
+                              <p className="text-buttongray"> vehicle number</p>
+                              <p className="text-black uppercase">
+                                <b>{vehicles.vehiclenumber}</b>
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-buttongray"> vehicle color</p>
+                              <p className="text-black uppercase">
+                                <b>{vehicles.vehiclecolor}</b>
+                              </p>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-sm md:w-1/2">
-                          <p className="text-black">
-                            vehicle make: <b>{vehicles.vehiclemake}</b>
-                          </p>
-                          <p>
-                            vehicle model: <b>{vehicles.vehiclemodel}</b>
-                          </p>
-                          <p>
-                            vehicle number: <b>{vehicles.vehiclenumber}</b>
-                          </p>
-                          <p>
-                            vehicle color: <b>{vehicles.vehiclecolor}</b>
-                          </p>
+                        <div className="text-sm flex gap-6 px-2">
+                          <button onClick={(e) => handleUpdateVehicle(index, e)}>Edit</button>
+                          <button
+                            className="text-red-500"
+                            onClick={() => handleDeleteVehicle(vehicles.id)}
+                          >
+                            <DeleteIcon />
+                          </button>
                         </div>
                       </div>
                     </div>

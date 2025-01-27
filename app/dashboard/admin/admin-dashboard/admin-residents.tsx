@@ -54,7 +54,8 @@ export interface Payment {
   createdAt: Date;
 }
 
-interface vehicleData {
+export interface vehicleData {
+  id: string;
   vehiclemake?: string;
   vehiclenumber?: string;
   vehiclemodel?: string;

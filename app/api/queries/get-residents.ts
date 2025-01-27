@@ -9,6 +9,9 @@ export const getResidents = unstable_cache(
     try {
       const residents = await prisma.user.findMany({
         where: role ? { role } : {},
+        orderBy: {
+          createdAt: "asc",
+        },
         select: {
           id: true,
           name: true,
@@ -23,12 +26,17 @@ export const getResidents = unstable_cache(
               phonenumber: true,
               vehicle: {
                 select: {
+                  id: true,
                   vehiclemake: true,
                   vehiclemodel: true,
                   vehiclenumber: true,
+                  vehiclecolor: true,
                 },
               },
               payment: {
+                orderBy: {
+                  duedate: "asc",
+                },
                 select: {
                   id: true,
                   paymentamount: true,
@@ -46,6 +54,9 @@ export const getResidents = unstable_cache(
                 },
               },
               maintenance: {
+                orderBy: {
+                  createdAt: "asc",
+                },
                 select: {
                   id: true,
                   description: true,

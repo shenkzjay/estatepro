@@ -2,7 +2,9 @@
 
 import { getAllResidentDetails } from "@/app/api/queries/get-all-residentdetails";
 import { SingleResdientDetails } from "../details";
-import { residentShit } from "../../../admin-dashboard/admin-residents";
+// import { residentShit } from "../../../admin-dashboard/admin-residents";
+import { Suspense } from "react";
+import { CircleSpinner } from "@/components/app-modals/spinners/circlespinner";
 
 interface Pageprops {
   params: {
@@ -19,7 +21,9 @@ export default async function Page({ params }: Pageprops) {
 
   return (
     <div>
-      <SingleResdientDetails resident={resident as any} />
+      <Suspense fallback={<CircleSpinner />}>
+        <SingleResdientDetails resident={resident as any} />
+      </Suspense>
     </div>
   );
 }

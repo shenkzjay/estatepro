@@ -26,6 +26,7 @@ export const getAllResidentDetails = unstable_cache(
               moveindate: true,
               vehicle: {
                 select: {
+                  id: true,
                   vehiclemake: true,
                   vehiclemodel: true,
                   vehiclenumber: true,

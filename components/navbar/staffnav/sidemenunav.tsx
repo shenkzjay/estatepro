@@ -64,7 +64,7 @@ export const StaffSideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuPr
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/resident" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/resident" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/resident"}>
                     {" "}
@@ -84,7 +84,7 @@ export const StaffSideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuPr
             <li>
               {isCollapse ? (
                 <div
-                  className={`${pathname === "/dashboard/staff/logs" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/staff/logs" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/staff/logs"}>
                     <Pills
@@ -98,7 +98,7 @@ export const StaffSideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuPr
                 </div>
               ) : (
                 <div
-                  className={`${pathname === "/dashboard/staff/logs" ? "bg-primary" : ""} hover:bg-primary rounded-[4px]`}
+                  className={`${pathname === "/dashboard/staff/logs" ? "bg-primary" : ""} hover:bg-white/20 rounded-[4px]`}
                 >
                   <Link href={"/dashboard/staff/logs"}>
                     {" "}

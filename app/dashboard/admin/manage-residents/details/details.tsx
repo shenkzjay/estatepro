@@ -7,6 +7,7 @@ import { residentShit } from "../../admin-dashboard/admin-residents";
 import Image from "next/image";
 import { MaintenanceStatus } from "@prisma/client";
 import { CarIcon } from "@/public/svgIcons/carIcon";
+
 // import { PaymentStatus } from "@/utils/roles";
 
 import { PaymentStatus } from "@prisma/client";
@@ -16,6 +17,8 @@ import { Inputs } from "@/stories/input/input";
 import { useRef, useState } from "react";
 import { DeleleResidentAction } from "../../actions/deleteresident";
 import { toast, Toaster } from "sonner";
+import Car from "@/public/img/car.png";
+import { DeleteIcon } from "@/public/svgIcons/deleteIcon";
 
 interface ViewResidentProps {
   resident: residentShit;
@@ -84,7 +87,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
         <div className="md:w-[50%] m-6  h-full flex flex-col  gap-6 ">
           <figure className="bg-white p-6 rounded-xl ">
             <figcaption>Personal details</figcaption>
-            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6">
+            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6 text-sm">
               <div>
                 <p className="text-sm text-buttongray">Name</p>
                 <p>{resident?.name}</p>
@@ -104,7 +107,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
 
           <figure className="rounded-xl bg-white p-6">
             <figcaption>Residence details</figcaption>
-            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6">
+            <div className="flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-6 text-sm">
               <div>
                 <p className="text-sm text-buttongray">Address</p>
                 <p>
@@ -126,7 +129,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
 
           <figure className="rounded-xl bg-white p-6">
             <figcaption>Payments</figcaption>
-            <div className="flex flex-row justify-between mt-6">
+            <div className="flex flex-row justify-between mt-6 text-sm">
               <div className="w-full">
                 <div className="grid grid-cols-4 text-sm text-buttongray">
                   <p>Name</p>
@@ -180,22 +183,22 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
             </div>
           </figure>
 
-          <figure className="rounded-xl bg-white p-6 text-sm">
-            <figcaption>Occupants</figcaption>
-            <div className="flex flex-row justify-between mt-6">
+          <figure className="rounded-xl bg-white p-6 ">
+            <figcaption className="font-semibold text-buttongray">Occupants</figcaption>
+            <div className="flex flex-row justify-between mt-6 text-sm ">
               <div className="w-full">
                 <div className="grid grid-cols-2 text-sm text-buttongray">
                   <p>Name</p>
                   <p>Phone number</p>
                 </div>
-                <div className="w-full mt-2">
+                <ul className="w-full mt-2 ">
                   {resident.residentData?.occupants &&
                   resident.residentData?.occupants?.length > 0 ? (
                     resident.residentData?.occupants.map((occupants, index) => {
                       return (
-                        <div
+                        <li
                           key={index}
-                          className="grid grid-cols-2 items-center justify-center space-y-2  w-full"
+                          className="odd:bg-slate-100 p-2 rounded-xl grid grid-cols-2 items-center justify-center space-y-2   w-full"
                         >
                           <div>
                             <p>{occupants.occupantsname}</p>
@@ -203,7 +206,7 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                           <div>
                             <p>{occupants.occupantsnumber}</p>
                           </div>
-                        </div>
+                        </li>
                       );
                     })
                   ) : (
@@ -211,41 +214,55 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                       <p>No occupants</p>
                     </div>
                   )}
-                </div>
+                </ul>
               </div>
             </div>
           </figure>
 
           <figure className="rounded-xl bg-white p-6">
-            <figcaption>Vehicles</figcaption>
-            <div className="flex flex-row justify-between mt-6">
+            <figcaption className="font-semibold text-buttongray">Vehicles</figcaption>
+            <div className="flex flex-row justify-between mt-4 h-[20rem] overflow-auto">
               <div className="w-full">
-                <div className="w-full mt-2 grid md:grid-cols-2 gap-6">
+                <div className="w-full mt-2 flex flex-col gap-6">
                   {resident.residentData?.vehicle && resident.residentData?.vehicle?.length > 0 ? (
                     resident.residentData?.vehicle.map((cars, index) => {
                       return (
                         <div
                           key={index}
-                          className="grid grid-cols-[auto,1fr] gap-6 items-center bg-[#f4f4f4] p-2 rounded-xl "
+                          className="flex flex-row gap-2 items-center bg-[#f4f4f4] p-2 rounded-xl  "
                         >
-                          <div className="">
-                            <CarIcon />
+                          <div className="w-1/3">
+                            <Image
+                              src={Car}
+                              width={150}
+                              height={50}
+                              alt="car Icon"
+                              className="object-cover h-[50px] w-[150px]"
+                            />
                           </div>
 
-                          <div>
-                            <div className="flex flex-row gap-6">
-                              <div className="text-sm">
-                                <p>{cars.vehiclemake}</p>
+                          <div className="w-2/3 flex flex-row justify-center gap-6 text-[8px] flex-nowrap ">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-row gap-6">
+                                <div className="text-xs">
+                                  <p className="text-buttongray">Vehicle make</p>
+                                  <p className="font-bold uppercase">{cars.vehiclemake}</p>
+                                </div>
+                              </div>
+                              <div className="text-xs">
+                                <p className="text-buttongray">Vehicle model</p>
+                                <p className="font-bold uppercase">{cars.vehiclemodel}</p>
                               </div>
                             </div>
-                            <div className="text-sm">
-                              <p>{cars.vehiclemodel}</p>
-                            </div>
-                            <div className="text-sm">
-                              <p>{cars.vehiclenumber}</p>
-                            </div>
-                            <div className="text-sm">
-                              <p>{cars.vehiclecolor}</p>
+                            <div className="flex flex-col gap-2">
+                              <div className="text-xs">
+                                <p className="text-buttongray">Vehicle number</p>
+                                <p className="font-bold uppercase">{cars.vehiclenumber}</p>
+                              </div>
+                              <div className="text-xs">
+                                <p className="text-buttongray">Vehicle color</p>
+                                <p className="font-bold uppercase">{cars.vehiclecolor}</p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -373,21 +390,23 @@ export const SingleResdientDetails = ({ resident }: ViewResidentProps) => {
                   resident.residentData?.visitorcode.map((code, index) => {
                     return (
                       <div key={index} className="bg-[#f4f4f4] rounded-xl grid gap-6 mt-6 p-4">
-                        <div className="grid md:grid-cols-6 w-full md:items-center md:justify-center">
-                          <div className="text-sm">
+                        <div className="grid md:grid-cols-6 w-full md:items-center md:justify-center gap-6">
+                          <div className="text-xs">
                             <p>{code.visitorname}</p>
                           </div>
 
-                          <div className="text-sm ">
+                          <div className="text-xs ">
                             <p>{code.visitornumber}</p>
                           </div>
-                          <div className="text-sm col-span-2  ">
-                            <p className="">{code.visitoremail}</p>
+                          <div className="text-xs col-span-2 text-left ">
+                            <p className="">
+                              {`${code.visitoremail?.split(".").slice(0, -1).join("")}..`}
+                            </p>
                           </div>
-                          <div className="text-sm">
+                          <div className="text-xs">
                             <p>{code.code}</p>
                           </div>
-                          <div className="text-sm text-[#9e0a05]">
+                          <div className="text-xs text-[#9e0a05]">
                             <p>{code.status}</p>
                           </div>
                         </div>
