@@ -6,11 +6,11 @@ export const CheckUserRole = async (allowedRoles: Role[]) => {
   const user = await GetUsers();
 
   if (!user) {
-    redirect("/signin");
+    return redirect("/signin");
   }
 
   if (!allowedRoles.includes(user?.role as Role)) {
-    redirect("/dashboard");
+    return redirect("/dashboard");
   }
 
   return user;
