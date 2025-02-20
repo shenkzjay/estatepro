@@ -210,6 +210,7 @@ export const SideMenuNav = ({ isCollapse, SetIsCollapse, user }: SideMenuProps) 
                 </div>
               )}
             </li>
+
             <li>
               {isCollapse ? (
                 <div

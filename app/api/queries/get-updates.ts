@@ -4,24 +4,9 @@ import { prisma } from "@/utils/prisma";
 import { unstable_cache } from "next/cache";
 
 export const GetUpdates = unstable_cache(
-  async (id: string) => {
+  async () => {
     try {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!user) {
-        return {
-          message: "No user found",
-        };
-      }
-
-      const updates = await prisma.user.findUnique({
-        where: {
-          id: id,
-        },
+      const updates = await prisma.user.findMany({
         select: {
           estateUpdates: {
             select: {
@@ -30,7 +15,6 @@ export const GetUpdates = unstable_cache(
               description: true,
               tags: true,
               createdAt: true,
-              updatedAt: true,
             },
           },
         },

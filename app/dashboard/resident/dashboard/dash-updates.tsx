@@ -15,6 +15,10 @@ import { useEffect, useRef, useState } from "react";
 import { Modal } from "@/stories/modal/modal";
 import { title } from "process";
 import { ArrowIcon } from "@/public/svgIcons/arrowIcon";
+import Pusher from "pusher-js";
+import { Updates } from "../../admin/manage-updates/page";
+
+export const dynamic = "force-dynamic";
 
 interface DashBoardNavProp {
   isCollapse: boolean;
@@ -109,31 +113,73 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
     },
   ];
 
-  const [estateUpdates, setEstateUpdates] = useState<updateDataProps[]>(estateUpdateData);
+  // const [estateUpdates, setEstateUpdates] = useState<updateDataProps[]>(estateUpdateData);
 
-  const handleAnnoucementCard = (index: number, event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    if (estateUpdates) {
-      setActiveCard(estateUpdates[index]);
+  const [estateUpdates, setEstateUpdates] = useState<Updates[]>(() => {
+    if (typeof window !== "undefined") {
+      return JSON.parse(localStorage.getItem("notification") || "[]");
     }
-  };
+    return [];
+  });
 
-  const handleAnnoucementCardDeleteButton = (itemId: number, index: number) => {
-    console.log("hello");
+  const PUSHER_KEY = process.env.NEXT_PUBLIC_PUSHER_KEY!;
+  const PUSHER_CLUSTER = process.env.NEXT_PUBLIC_PUSHER_CLUSTER!;
 
-    setAllComments((prevComment) => ({ ...prevComment }));
+  useEffect(() => {
+    Pusher.logToConsole = true;
 
-    // setEstateUpdates((prevUpdates) => prevUpdates.filter((_, id) => id !== itemId));
-    setEstateUpdates((prevUpdates) => prevUpdates.filter((update) => update.id !== itemId));
+    const pusher = new Pusher(PUSHER_KEY, {
+      cluster: PUSHER_CLUSTER,
+    });
 
-    console.log(estateUpdates);
+    const channel = pusher.subscribe("estate-updates");
 
-    if (activeCard?.id === itemId) {
-      setActiveCard(undefined);
-    }
+    let storage: string[] = JSON.parse(localStorage.getItem("notification") || "[]");
 
-    console.log(activeCard, "act");
-  };
+    //we listen for new estate updates from our pusher server
+    //save the updates to localhost because push notification
+    //only stores in memory
+    channel.bind("new-update", function (data: any) {
+      console.log("Recieved new update", data.update);
+      // const notification =
+      //   typeof data.update === "string" ? data.update : JSON.stringify(data.update);
+      setEstateUpdates((prev) => [data.update, ...prev]);
+
+      storage.push(data.update);
+
+      localStorage.setItem("notification", JSON.stringify(storage));
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, []);
+
+  console.log({ estateUpdates });
+
+  // const handleAnnoucementCard = (index: number, event: React.MouseEvent<HTMLElement>) => {
+  //   event.stopPropagation();
+  //   if (estateUpdates) {
+  //     setActiveCard(estateUpdates[index]);
+  //   }
+  // };
+
+  // const handleAnnoucementCardDeleteButton = (itemId: number, index: number) => {
+  //   console.log("hello");
+
+  //   setAllComments((prevComment) => ({ ...prevComment }));
+
+  //   setEstateUpdates((prevUpdates) => prevUpdates.filter((update) => update.id !== itemId));
+
+  //   console.log(estateUpdates);
+
+  //   if (activeCard?.id === itemId) {
+  //     setActiveCard(undefined);
+  //   }
+
+  //   console.log(activeCard, "act");
+  // };
 
   return (
     <section
@@ -173,7 +219,7 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
                     key={index}
                     className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-white rounded-[8px] gap-6 md:gap-0 hover:border"
                     role="button"
-                    onClick={(event) => handleAnnoucementCard(index, event)}
+                    // onClick={(event) => handleAnnoucementCard(index, event)}
                   >
                     <Modal title="Comments" handleOpenModal={handleOpenModal} ref={commentModalRef}>
                       <div className="z-50 flex flex-col gap-6 mt-6">
@@ -235,19 +281,19 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
                       </div>
                     </Modal>
                     <div className="flex flex-col gap-1">
-                      <h4 className="font-semibold text-[15px]">{item.title}</h4>
+                      <h4 className="font-semibold text-[15px]">{item?.title}</h4>
                       <p className="text-[12px] text-buttongray flex w-[200px] whitespace-nowrap overflow-hidden">
-                        {item.description}
+                        {item?.description}
                       </p>
-                      <p className="text-[14px]">{item.date}</p>
+                      <p className="text-[14px]">{item?.createdAt.toDateString()}</p>
                     </div>
                     <div className="flex flex-row h-fit text-[14px] gap-6 w-full md:w-auto ml-0 md:ml-6">
-                      <span className="hidden md:flex">{item.annoucementPill}</span>
+                      <span className="hidden md:flex">{item?.tags}</span>
                       <span className="outline outline-primary rounded-full flex text-[14px]">
                         <Button
                           variant="Tertiary"
                           label="Comments"
-                          onClick={(ev) => handleCommentButton(item, ev)}
+                          // onClick={(ev) => handleCommentButton(item, ev)}
                           iconAlign="none"
                           btnbgColor="#F0FDFC"
                           color="#139D8F"
@@ -257,7 +303,7 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
                       <Button
                         variant="Tertiary"
                         label="Delete"
-                        onClick={() => handleAnnoucementCardDeleteButton(item.id, index)}
+                        // onClick={() => handleAnnoucementCardDeleteButton(item.id, index)}
                         iconAlign="before"
                         btnbgColor="#DA1919"
                         color="white"
@@ -421,14 +467,14 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
         </section>
         <section className="md:w-[40%] m-6 bg-white rounded-[20px] border p-6 h-full">
           <div className="flex flex-col gap-6">
-            <h3 className="font-semibold">
+            {/* <h3 className="font-semibold">
               {activeCard && estateUpdates.length > 0 ? activeCard.title : estateUpdates[0]?.title}
-            </h3>
+            </h3> */}
             <div className="flex flex-row gap-6 text-[14px]">
               <StatusPill title="Annoucement" status="default" />
-              <p>
+              {/* <p>
                 {activeCard && estateUpdates.length > 0 ? activeCard?.date : estateUpdates[0]?.date}
-              </p>
+              </p> */}
             </div>
             <div className="flex h-[40vh]  w-full">
               {/* <Cards cardType="justImage" image={Building} width={500} height={400} /> */}
@@ -455,11 +501,11 @@ export const DashboardEstateUpdate = ({ isCollapse }: DashBoardNavProp) => {
                 understanding as we work to maintain the pool in optimal condition for your
                 enjoyment. Thank you, Estate Management
               </p> */}
-              <p>
+              {/* <p>
                 {activeCard && estateUpdates.length > 0
                   ? activeCard?.description
                   : estateUpdates[0]?.description}
-              </p>
+              </p> */}
             </div>
             {/* <div className="flex items-center justify-center w-full ">
               <Button

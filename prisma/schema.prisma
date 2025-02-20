@@ -19,6 +19,7 @@ model User {
   residentData         Resident?        @relation("UserToResident")
   staffData            Staff?           @relation("UserToStaff")
   estateUpdates        EstateUpdates[]  @relation("UserToUpdates")
+  receivedNotifications  Notification[] @relation("RecipientToNotifications")
   createdBy            User?            @relation("CreatedBy", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdById          String?          @db.ObjectId
   createdUsers         User[]           @relation("CreatedBy")
@@ -136,6 +137,19 @@ model EstateUpdates {
      updatedAt      DateTime       @updatedAt
      user           User         @relation("UserToUpdates", fields:[userId], references:[id], onDelete:Cascade)
      userId         String       @db.ObjectId
+     notifications Notification[] @relation("EstateToNotification")
+}
+
+
+model Notification {
+      id             String          @id @default(auto()) @map("_id") @db.ObjectId
+      estateUpdates  EstateUpdates   @relation("EstateToNotification", fields:[updatesId], references:[id], onDelete:Cascade)
+      updatesId      String          @db.ObjectId
+      user           User            @relation("RecipientToNotifications", fields:[userId], references:[id], onDelete:Cascade)
+      userId         String           @db.ObjectId
+      isRead         Boolean          @default(false)
+      createdAt      DateTime
+
 }
 
 enum Role {

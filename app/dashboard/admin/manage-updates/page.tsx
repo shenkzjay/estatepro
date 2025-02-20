@@ -5,22 +5,16 @@ import { GetUpdates } from "@/app/api/queries/get-updates";
 export interface Updates {
   id: string;
   createdAt: Date;
-  updatedAt: Date;
   title: string;
   description: string;
   tags: string[];
 }
 
 export default async function AdminEstateUpdate() {
-  const user = await GetUsers();
+  const updates = await GetUpdates();
 
-  if (!user) return;
+  const estate = updates.updates?.[0]?.estateUpdates;
 
-  const userId = user?.id;
-
-  const updates = await GetUpdates(userId);
-
-  const estate = updates.updates?.estateUpdates;
   return (
     <section>
       <ManagedUpdates updates={estate as Updates[]} />

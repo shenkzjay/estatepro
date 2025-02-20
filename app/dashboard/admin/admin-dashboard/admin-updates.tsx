@@ -11,17 +11,20 @@ import { StatusPill } from "@/stories/statuspills/statuspill";
 import { EditIcon } from "@/public/svgIcons/editIcon";
 import { useAdminContext } from "../../provider";
 import { Modal } from "@/stories/modal/modal";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Inputs } from "@/stories/input/input";
 import { Textarea } from "@/stories/textarea/textarea";
 import { CreateEstateUpdates } from "../actions/create-updates";
 import { Updates } from "../manage-updates/page";
+import Pusher from "pusher-js";
 
-interface UpdateProps {
+interface updateTypes {
   updates: Updates[];
 }
 
-export const ManagedUpdates = ({ updates }: UpdateProps) => {
+export const ManagedUpdates = (updates: updateTypes) => {
+  console.log("heele", updates);
+
   const { isCollapse, user } = useAdminContext();
 
   const tags = ["entertainment", "health", "news", "sports", "environment", "security"];
@@ -34,8 +37,39 @@ export const ManagedUpdates = ({ updates }: UpdateProps) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const PUSHER_KEY = process.env.NEXT_PUBLIC_PUSHER_KEY!;
+  const PUSHER_CLUSTER = process.env.NEXT_PUBLIC_PUSHER_CLUSTER!;
 
-  console.log(selectedTags);
+  useEffect(() => {
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher(PUSHER_KEY, {
+      cluster: PUSHER_CLUSTER,
+    });
+
+    const channel = pusher.subscribe("estate-updates");
+
+    let storage: string[] = JSON.parse(localStorage.getItem("notification") || "[]");
+
+    //we listen for new estate updates from our pusher server
+    //save the updates to localhost because push notification
+    //only stores in memory
+    channel.bind("new-update", function (data: any) {
+      console.log("Recieved new update", data.update);
+      // const notification =
+      //   typeof data.update === "string" ? data.update : JSON.stringify(data.update);
+      // setEstateUpdates((prev) => [data.update, ...prev]);
+
+      storage.push(data.update);
+
+      localStorage.setItem("notification", JSON.stringify(storage));
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, []);
 
   const OpenEstataUpdateModal = () => {
     updatesRef.current?.showModal();
@@ -65,7 +99,16 @@ export const ManagedUpdates = ({ updates }: UpdateProps) => {
       formData.append("userId", user?.id);
       formData.append("email", user.email);
 
-      await CreateEstateUpdates(formData);
+      // await CreateEstateUpdates(formData);
+
+      const res = await fetch("/api/routes/estateupdates", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      console.log("clienttelle", data);
     }
 
     updateFormRef.current?.reset();
@@ -181,8 +224,8 @@ export const ManagedUpdates = ({ updates }: UpdateProps) => {
       </div>
 
       <section className="pb-6 px-6 space-y-6">
-        {updates && updates.length > 0
-          ? updates.map((update, index) => (
+        {updates.updates && updates.updates.length > 0
+          ? updates.updates.map((update, index) => (
               <article
                 key={update.id}
                 className="grid grid-cols-[1fr,1fr,1fr] justify-between md:items-center px-6 py-4 bg-white rounded-[8px] gap-6 md:gap-0"
@@ -205,17 +248,6 @@ export const ManagedUpdates = ({ updates }: UpdateProps) => {
                   </span>
                 </div>
                 <div className="flex flex-row h-fit text-[14px] gap-6 w-full md:w-auto flex-wrap md:justify-center">
-                  {/* <span className="outline outline-primary rounded-full flex text-[14px]">
-                    <Button
-                      variant="Tertiary"
-                      label="Mark as read"
-                      onClick={() => "hello"}
-                      iconAlign="none"
-                      btnbgColor="#F0FDFC"
-                      color="#139D8F"
-                      size="Medium"
-                    />
-                  </span> */}
                   <span className="outline outline-primary rounded-full flex text-[14px]">
                     <Button
                       variant="Tertiary"
